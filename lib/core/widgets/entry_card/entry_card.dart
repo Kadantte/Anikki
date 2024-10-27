@@ -97,14 +97,16 @@ class _EntryCardState extends State<EntryCard>
       padding: const EdgeInsets.all(12.0),
       child: GestureDetector(
         onTap: () {
-          BlocProvider.of<LayoutBloc>(context).add(
+          final layoutBloc = BlocProvider.of<LayoutBloc>(context);
+
+          layoutBloc.add(
             LayoutDrawerMediaChanged(
               widget.media,
               widget.libraryEntry,
             ),
           );
 
-          if (isDesktop()) {
+          if (layoutBloc.state is LayoutLandscape) {
             Scaffold.of(context).openEndDrawer();
           } else {
             Scaffold.of(context).showBottomSheet(
