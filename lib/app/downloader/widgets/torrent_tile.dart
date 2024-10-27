@@ -29,7 +29,7 @@ class TorrentTile extends StatelessWidget {
         final media = state is DownloaderSuccess ? state.media : null;
 
         if (!isStreaming) {
-          openInBrowser(torrent.magnet);
+          return openInBrowser(torrent.magnet);
         }
 
         final bloc = BlocProvider.of<TorrentBloc>(context);
