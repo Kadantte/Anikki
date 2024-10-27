@@ -54,7 +54,10 @@ class _HomeCarouselImage extends StatelessWidget {
             ),
           ),
           child: InkWell(
-            onTap: () => goToItem(realIndex),
+            onTap: () => goToItem(
+              realIndex,
+              resetTimer: true,
+            ),
             child: AspectRatio(
               aspectRatio: itemAspectRatio,
             ),
