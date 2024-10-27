@@ -253,7 +253,7 @@ void main() {
               .having(
                 (p0) => p0.filteredTorrents.first.parsed.episode,
                 'with the right entry',
-                '01',
+                1,
               ),
         ],
         setUp: () {

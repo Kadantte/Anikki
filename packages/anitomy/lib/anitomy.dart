@@ -109,14 +109,14 @@ class Anitomy {
     return title.isEmpty ? null : title;
   }
 
-  String? get episode {
+  int? get episode {
     final NativeGetEpisode getEpisode = library
         .lookup<NativeFunction<NativeGetEpisode>>('get_episode')
         .asFunction();
 
     final episode = getEpisode(anitomyPtr).toDartString();
 
-    return episode.isEmpty ? null : episode;
+    return episode.isEmpty ? null : int.tryParse(episode);
   }
 
   String? get releaseGroup {

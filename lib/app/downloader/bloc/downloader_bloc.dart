@@ -122,8 +122,9 @@ class DownloaderBloc extends Bloc<DownloaderEvent, DownloaderState> {
 
     if (episode != null && filter.smartFilter) {
       result = result
-          .where((element) =>
-              int.tryParse(element.parsed.episode ?? '') == episode)
+          .where(
+            (element) => element.parsed.episode == episode,
+          )
           .toList();
     }
 

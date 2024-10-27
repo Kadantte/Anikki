@@ -18,7 +18,7 @@ void main() {
       expect(parser.title, equals('Fullmetal Alchemist Brotherhood'));
     });
     test('Gets the right episode', () {
-      expect(parser.episode, equals('01'));
+      expect(parser.episode, equals(1));
     });
     test('Gets the right release group', () {
       expect(parser.releaseGroup, equals('Ouroboros'));
@@ -59,7 +59,7 @@ void main() {
         expect(parser1.title, equals('Fullmetal Alchemist Brotherhood'));
       });
       test('Gets the right episode', () {
-        expect(parser1.episode, equals('01'));
+        expect(parser1.episode, equals(1));
       });
       test('Gets the right release group', () {
         expect(parser1.releaseGroup, equals('Ouroboros'));
@@ -71,7 +71,7 @@ void main() {
         expect(parser2.title, equals('Sakura Trick'));
       });
       test('Gets the right episode', () {
-        expect(parser2.episode, equals('2'));
+        expect(parser2.episode, equals(2));
       });
       test('Gets the right release group', () {
         expect(parser2.releaseGroup, equals('Nyaa'));

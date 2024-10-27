@@ -41,7 +41,7 @@ class LocalFile extends Equatable {
 
     final parser = Anitomy(inputString: basename(path));
     title = parser.title;
-    this.episode = episode ?? int.tryParse(parser.episode ?? '');
+    this.episode = episode ?? parser.episode;
     releaseGroup = parser.releaseGroup;
 
     parser.dispose();
