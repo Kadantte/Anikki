@@ -35,8 +35,9 @@ const lightColorScheme = ColorScheme(
 final _baseLightTheme = ThemeData(
   brightness: Brightness.light,
   colorScheme: lightColorScheme,
+  textTheme: baseTextTheme,
 );
 
 final lightTheme = _baseLightTheme.copyWith(
-  textTheme: GoogleFonts.overpassMonoTextTheme(_baseLightTheme.textTheme),
+  textTheme: GoogleFonts.quicksandTextTheme(_baseLightTheme.textTheme),
 );

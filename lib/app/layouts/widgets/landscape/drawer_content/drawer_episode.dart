@@ -14,7 +14,13 @@ class DrawerEpisode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final episodeTextStyle = context.textTheme.bodySmall;
+    if (localFile == null && (media == null || media?.anilistInfo.id == 0)) {
+      return const SizedBox();
+    }
+
+    final episodeTextStyle = context.textTheme.bodySmall?.copyWith(
+      fontWeight: FontWeight.bold,
+    );
 
     final info = media?.anilistInfo.streamingEpisodes?.firstWhereOrNull(
       (element) =>
@@ -59,7 +65,8 @@ class DrawerEpisode extends StatelessWidget {
                 backgroundImage: (info?.thumbnail == null
                     ? const AssetImage('assets/images/cover_placeholder.jpg')
                     : CachedNetworkImageProvider(
-                        info!.thumbnail!)) as ImageProvider,
+                        info!.thumbnail!,
+                      )) as ImageProvider,
               ),
             ),
             Expanded(

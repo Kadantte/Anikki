@@ -39,7 +39,7 @@ class _DownloaderMoreState extends State<DownloaderMore> {
       child: TextField(
         controller: _controller,
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
+          contentPadding: const EdgeInsets.all(12.0),
           hintText: 'Anything to refine?',
           fillColor: Colors.transparent,
           hoverColor: Colors.transparent,

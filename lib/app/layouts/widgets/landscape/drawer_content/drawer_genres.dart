@@ -27,7 +27,9 @@ class DrawerGenres extends StatelessWidget {
               EntryTag(
                 child: Text(
                   genre,
-                  style: context.textTheme.bodyMedium,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
         ],

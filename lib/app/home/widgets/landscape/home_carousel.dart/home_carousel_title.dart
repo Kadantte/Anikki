@@ -39,7 +39,9 @@ class _HomeCarouselTitle extends StatelessWidget {
       child: Text(
         key: ValueKey<int>(currentMedia.anilistInfo.id),
         currentMedia.title ?? '',
-        style: context.textTheme.bodyLarge,
+        style: context.textTheme.bodyLarge?.copyWith(
+          fontWeight: FontWeight.bold,
+        ),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         textAlign: TextAlign.left,

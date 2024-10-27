@@ -211,7 +211,7 @@ class DrawerContent extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const SizedBox(
-                            height: _horizontalPadding,
+                            height: _horizontalPadding + 12.0,
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(

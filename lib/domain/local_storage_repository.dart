@@ -4,13 +4,17 @@ import 'package:anikki/core/core.dart';
 import 'package:anikki/data/data.dart';
 
 class LocalStorageRepository {
-  const LocalStorageRepository(
-    this.anilist,
-    this.files,
-  );
+  const LocalStorageRepository({
+    required this.anilist,
+    required this.tmdb,
+    required this.files,
+  });
 
   /// The [Anilist] API to use
   final Anilist anilist;
+
+  /// The [Tmdb] API to use
+  final Tmdb tmdb;
 
   /// The [Files] API to use
   final Files files;
@@ -130,13 +134,17 @@ class LocalStorageRepository {
       final info = await anilist.infoFromMultiple(entryNames);
 
       for (int index = 0; index < results.length; index++) {
-        results[index] = results[index].copyWith(
-          media: Media(
+        final media = await tmdb.hydrateMediaWithTmdb(
+          Media(
             anilistInfo: anilist.getInfoFromInfo(
               results[index].title!,
               info,
             ),
           ),
+        );
+
+        results[index] = results[index].copyWith(
+          media: media,
         );
       }
 

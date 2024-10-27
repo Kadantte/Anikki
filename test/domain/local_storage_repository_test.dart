@@ -9,11 +9,13 @@ import 'package:path/path.dart';
 import '../fixtures/anilist.dart';
 import '../fixtures/files.dart';
 import '../fixtures/path.dart';
+import '../fixtures/tmdb.dart';
 
 void main() {
   group('unit test: LocalStorageRepository', () {
     late MockAnilist anilist;
     late MockFiles files;
+    late MockTmdb tmdb;
     late LocalStorageRepository repository;
 
     group('deleteFile method', () {
@@ -28,7 +30,12 @@ void main() {
 
         anilist = MockAnilist();
         files = MockFiles();
-        repository = LocalStorageRepository(anilist, files);
+        tmdb = MockTmdb();
+        repository = LocalStorageRepository(
+          anilist: anilist,
+          files: files,
+          tmdb: tmdb,
+        );
       });
 
       test('deletes the file', () async {

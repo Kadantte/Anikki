@@ -35,8 +35,9 @@ const darkColorScheme = ColorScheme(
 final _baseDarkTheme = ThemeData(
   brightness: Brightness.dark,
   colorScheme: darkColorScheme,
+  textTheme: baseTextTheme,
 );
 
 final darkTheme = _baseDarkTheme.copyWith(
-  textTheme: GoogleFonts.overpassMonoTextTheme(_baseDarkTheme.textTheme),
+  textTheme: GoogleFonts.quicksandTextTheme(_baseDarkTheme.textTheme),
 );

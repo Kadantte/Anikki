@@ -21,6 +21,7 @@ class DrawerTitle extends StatelessWidget {
         media?.title ?? libraryEntry?.entries.first.title ?? 'N/A',
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
+        style: context.textTheme.headlineSmall,
       ),
       subtitle: (media?.anilistInfo.title?.native != null &&
                   media?.anilistInfo.title?.native != media?.title) ||
@@ -29,6 +30,7 @@ class DrawerTitle extends StatelessWidget {
               media?.anilistInfo.title?.native ??
                   dirname(libraryEntry!.entries.first.path),
               overflow: TextOverflow.ellipsis,
+              style: context.textTheme.bodyLarge,
             )
           : null,
       trailing: media != null && isConnected && isInWatchList
