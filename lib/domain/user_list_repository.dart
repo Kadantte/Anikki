@@ -83,7 +83,7 @@ class UserListRepository {
       (element) {
         final progress = element.progress ?? 0;
         final nextEpisode = element.media?.nextAiringEpisode?.episode;
-        final nbEpisodes = element.media?.episodes ?? -1;
+        final nbEpisodes = element.media?.episodes ?? double.infinity;
 
         return nextEpisode != null
             ? progress < nextEpisode - 1

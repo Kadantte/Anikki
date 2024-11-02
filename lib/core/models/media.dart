@@ -70,7 +70,15 @@ class Media extends Equatable {
   }
 
   int? get numberOfEpisodes =>
-      anilistInfo.episodes ?? anilistInfo.nextAiringEpisode?.episode;
+      anilistInfo.episodes ??
+      anilistInfo.nextAiringEpisode?.episode ??
+      int.tryParse(
+        anilistInfo.streamingEpisodes?.last?.title
+                ?.split(' ')
+                .elementAtOrNull(1) ??
+            '',
+      ) ??
+      tmdbInfo?.numberOfEpisodes;
 
   TmdbTvImages? get images => tmdbInfo?.images;
 
