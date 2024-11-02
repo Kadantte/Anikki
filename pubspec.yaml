@@ -69,9 +69,9 @@ dependencies:
     git:
       url: https://github.com/Kylart/marqueer
       ref: main
-  media_kit: ^1.1.10+1 # Primary package.
-  media_kit_video: ^1.2.4 # For video rendering.
-  media_kit_libs_video: ^1.0.4 # Native video dependencies.
+  media_kit: ^1.1.11 # Primary package.
+  media_kit_video: ^1.2.5 # For video rendering.
+  media_kit_libs_video: ^1.0.5 # Native video dependencies.
   settings_ui: ^2.0.2
   super_sliver_list: ^0.4.1
   timelines_plus: ^1.0.3
