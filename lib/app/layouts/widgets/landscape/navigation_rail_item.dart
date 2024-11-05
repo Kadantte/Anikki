@@ -78,7 +78,7 @@ class _NavigationRailItemState extends State<_NavigationRailItem>
               if (widget.imageUrl != null) _buildImage(widget.imageUrl!),
               if (widget.expanded)
                 Expanded(
-                  child: AnimatedPadding(
+                  child: AnimatedContainer(
                     duration: const Duration(milliseconds: 150),
                     padding: EdgeInsets.only(
                       left: hovered && !widget.isTitle ? 16.0 : 8.0,
@@ -91,12 +91,13 @@ class _NavigationRailItemState extends State<_NavigationRailItem>
                           Text(
                             widget.text,
                             style: (widget.isTitle
-                                    ? context.textTheme.labelLarge
+                                    ? context.textTheme.headlineSmall
                                     : context.textTheme.bodyMedium)
                                 ?.copyWith(
                               color: widget.selected
                                   ? context.colorScheme.primary
                                   : null,
+                              fontWeight: hovered ? FontWeight.bold : null,
                             ),
                           ),
                         ],

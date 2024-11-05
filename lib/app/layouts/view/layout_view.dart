@@ -55,12 +55,6 @@ class _LayoutViewState extends State<LayoutView> {
                 child: const HomePage(),
               ),
               AnikkiPage(
-                name: 'Library',
-                icon: HugeIcons.strokeRoundedFolder01,
-                selectedIcon: HugeIcons.strokeRoundedFolderLibrary,
-                child: const LibraryView(),
-              ),
-              AnikkiPage(
                 name: 'Watch Lists',
                 icon: HugeIcons.strokeRoundedCheckList,
                 selectedIcon: HugeIcons.strokeRoundedCheckList,
@@ -68,6 +62,12 @@ class _LayoutViewState extends State<LayoutView> {
                     ? watchListState.message
                     : null,
                 child: const WatchListView(),
+              ),
+              AnikkiPage(
+                name: 'Library',
+                icon: HugeIcons.strokeRoundedFolder01,
+                selectedIcon: HugeIcons.strokeRoundedFolderLibrary,
+                child: const LibraryView(),
               ),
               AnikkiPage(
                 name: settings.torrentType.title,
