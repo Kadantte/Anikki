@@ -36,9 +36,11 @@ class _SearchViewState extends State<SearchView> {
                 ),
               if (state is SearchSuccess)
                 state.isEmpty
-                    ? const EmptyWidget(
-                        title: 'Could not find anything...',
-                        width: 300,
+                    ? const Center(
+                        child: EmptyWidget(
+                          title: 'Could not find anything...',
+                          width: 300,
+                        ),
                       )
                     : Expanded(
                         child: SearchResults(
@@ -46,8 +48,10 @@ class _SearchViewState extends State<SearchView> {
                         ),
                       ),
               if (state is SearchError)
-                CustomErrorWidget(
-                  description: state.message,
+                Center(
+                  child: CustomErrorWidget(
+                    description: state.message,
+                  ),
                 ),
             ],
           ),
