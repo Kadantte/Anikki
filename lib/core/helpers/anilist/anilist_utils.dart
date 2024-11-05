@@ -52,4 +52,8 @@ class AnilistUtils {
         title:
             title == null ? null : Fragment$media$title(userPreferred: title),
       );
+
+  static int? getEpisodeNumberFromEpisodeTItle(String? title) => int.tryParse(
+        title?.split(' ').elementAtOrNull(1) ?? '',
+      );
 }
