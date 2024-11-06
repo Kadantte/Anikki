@@ -180,7 +180,7 @@ class VideoPlayerRepository {
     /// If no entry is given, try to find one in the library
     if (entry == null && library is LibraryLoaded) {
       entry = library.entries.firstWhereOrNull(
-        (element) => element.media?.anilistInfo.id == media?.id,
+        (element) => element.media?.anilistInfo?.id == media?.id,
       );
     }
 

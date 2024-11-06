@@ -140,7 +140,7 @@ class _EntryCardState extends State<EntryCard>
                     Positioned.fill(
                       child: _EntryCardCover(
                         animation: animation,
-                        color: widget.media.anilistInfo.coverImage?.color,
+                        color: widget.media.anilistInfo?.coverImage?.color,
                         url: widget.media.posterImage,
                       ),
                     ),

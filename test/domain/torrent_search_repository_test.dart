@@ -65,7 +65,7 @@ void main() {
       test('with only media', () {
         final result = repository.makeTerm(media: media);
 
-        expect(result, media.anilistInfo.title?.userPreferred);
+        expect(result, media.anilistInfo?.title?.userPreferred);
       });
 
       test('with media and episode', () {
@@ -74,7 +74,7 @@ void main() {
           episode: episode,
         );
 
-        expect(result, '${media.anilistInfo.title?.userPreferred} $episode');
+        expect(result, '${media.anilistInfo?.title?.userPreferred} $episode');
       });
 
       test('with media and entry', () {

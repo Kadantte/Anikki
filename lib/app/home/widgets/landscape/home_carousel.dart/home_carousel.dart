@@ -114,8 +114,8 @@ class _HomeCarouselState extends State<HomeCarousel> {
     currentIndex = max(
       widget.entries.indexWhere(
         (element) =>
-            element.media.anilistInfo.id ==
-            homeBloc.state.currentMedia?.anilistInfo.id,
+            element.media.anilistInfo?.id ==
+            homeBloc.state.currentMedia?.anilistInfo?.id,
       ),
       0,
     );

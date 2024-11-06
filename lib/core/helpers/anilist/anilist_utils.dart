@@ -9,7 +9,7 @@ class AnilistUtils {
     Media media,
   ) {
     return entries.firstWhereOrNull(
-      (element) => element.media?.id == media.anilistInfo.id,
+      (element) => element.media?.id == media.anilistInfo?.id,
     );
   }
 

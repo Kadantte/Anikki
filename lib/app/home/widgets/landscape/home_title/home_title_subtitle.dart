@@ -14,25 +14,25 @@ class _HomeTitleSubtitle extends StatelessWidget {
       );
 
   String? get season {
-    if (media.anilistInfo.seasonYear == null ||
-        media.anilistInfo.season == null) {
+    if (media.anilistInfo?.seasonYear == null ||
+        media.anilistInfo?.season == null) {
       return null;
     }
 
     return [
-      media.anilistInfo.season!.name.capitalize(),
-      media.anilistInfo.seasonYear.toString(),
+      media.anilistInfo?.season!.name.capitalize(),
+      media.anilistInfo?.seasonYear.toString(),
     ].join(' ');
   }
 
   int? get episodes =>
-      media.anilistInfo.episodes ??
-      (media.anilistInfo.nextAiringEpisode?.episode != null
-          ? media.anilistInfo.nextAiringEpisode!.episode - 1
+      media.anilistInfo?.episodes ??
+      (media.anilistInfo?.nextAiringEpisode?.episode != null
+          ? media.anilistInfo!.nextAiringEpisode!.episode - 1
           : null);
 
   List<String>? get genres =>
-      media.anilistInfo.genres?.whereType<String>().toList();
+      media.anilistInfo?.genres?.whereType<String>().toList();
 
   @override
   Widget build(BuildContext context) {

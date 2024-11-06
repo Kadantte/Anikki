@@ -12,7 +12,7 @@ class DrawerEpisodes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final nextAiringEpisode = media?.anilistInfo.nextAiringEpisode?.episode;
+    final nextAiringEpisode = media?.anilistInfo?.nextAiringEpisode?.episode;
     final maxNumberOfEpisodes = <int?>[
       nextAiringEpisode,
       media?.numberOfEpisodes,
@@ -27,12 +27,12 @@ class DrawerEpisodes extends StatelessWidget {
     /// Listening to `LibraryBloc` so that content refreshes whenever library is updated.
     return BlocConsumer<LibraryBloc, LibraryState>(
       listener: (context, state) {
-        if (state is LibraryEmpty && media?.anilistInfo.id == 0) {
+        if (state is LibraryEmpty && media?.anilistInfo?.id == 0) {
           Scaffold.of(context).closeEndDrawer();
         }
 
         if (state is LibraryLoaded &&
-            media?.anilistInfo.id == 0 &&
+            media?.anilistInfo?.id == 0 &&
             libraryEntry?.entries.isEmpty == true) {
           Scaffold.of(context).closeEndDrawer();
         }

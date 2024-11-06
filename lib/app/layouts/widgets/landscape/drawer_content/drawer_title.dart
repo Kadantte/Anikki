@@ -23,11 +23,11 @@ class DrawerTitle extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         style: context.textTheme.headlineSmall,
       ),
-      subtitle: (media?.anilistInfo.title?.native != null &&
-                  media?.anilistInfo.title?.native != media?.title) ||
+      subtitle: (media?.anilistInfo?.title?.native != null &&
+                  media?.anilistInfo?.title?.native != media?.title) ||
               libraryEntry != null
           ? AutoSizeText(
-              media?.anilistInfo.title?.native ??
+              media?.anilistInfo?.title?.native ??
                   dirname(libraryEntry!.entries.first.path),
               overflow: TextOverflow.ellipsis,
               style: context.textTheme.bodyLarge,

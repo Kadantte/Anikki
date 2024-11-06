@@ -19,7 +19,7 @@ class FavouriteButton extends StatefulWidget {
 }
 
 class _FavouriteButtonState extends State<FavouriteButton> {
-  bool get isFavourite => widget.media.anilistInfo.isFavourite == true;
+  bool get isFavourite => widget.media.anilistInfo?.isFavourite == true;
 
   bool _isToggleFavouriteLoading = false;
 
@@ -59,7 +59,7 @@ class _FavouriteButtonState extends State<FavouriteButton> {
 
             BlocProvider.of<WatchListBloc>(context).add(
               WatchListToggleFavourite(
-                mediaId: widget.media.anilistInfo.id,
+                mediaId: widget.media.anilistInfo!.id,
               ),
             );
           },

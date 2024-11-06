@@ -106,7 +106,7 @@ class WatchListBloc extends AutoRefreshBloc<WatchListEvent, WatchListState> {
     final media = event.media ?? entry!.media!;
     final episode = event.episode ?? entry?.episode ?? 1;
 
-    if (entry?.media?.anilistInfo.id == null && event.media == null) return;
+    if (entry?.media?.anilistInfo?.id == null && event.media == null) return;
 
     final currentState = state;
 

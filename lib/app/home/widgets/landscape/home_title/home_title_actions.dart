@@ -31,8 +31,8 @@ class HomeTitleActions extends StatelessWidget {
 
   final Media media;
 
-  String? get trailerSite => media.anilistInfo.trailer?.site;
-  String? get trailerSiteId => media.anilistInfo.trailer?.id;
+  String? get trailerSite => media.anilistInfo?.trailer?.site;
+  String? get trailerSiteId => media.anilistInfo?.trailer?.id;
 
   List<HomeAction> get actions => [
         HomeAction(

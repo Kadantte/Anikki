@@ -62,18 +62,18 @@ class DrawerAction {
 }
 
 List<DrawerAction> _buildLinks(Media? media) => [
-      if (media?.anilistInfo.id != null && media?.anilistInfo.id != 0)
+      if (media?.anilistInfo?.id != null && media?.anilistInfo?.id != 0)
         DrawerAction(
           onPressed: (context) => openInBrowser(
-            'https://anilist.co/anime/${media!.anilistInfo.id}',
+            'https://anilist.co/anime/${media!.anilistInfo?.id}',
           ),
           label: 'See on AniList',
           icon: SimpleIcons.anilist,
         ),
-      if (media?.anilistInfo.idMal != null)
+      if (media?.anilistInfo?.idMal != null)
         DrawerAction(
           onPressed: (context) => openInBrowser(
-            'https://myanimelist.net/anime/${media!.anilistInfo.idMal}',
+            'https://myanimelist.net/anime/${media!.anilistInfo?.idMal}',
           ),
           label: 'See on MyAnimeList',
           icon: SimpleIcons.myanimelist,
@@ -95,8 +95,8 @@ List<DrawerAction> _buildActions({
     [
       DrawerAction(
         onPressed: (context) {
-          final trailerSite = media?.anilistInfo.trailer?.site;
-          final trailerSiteId = media?.anilistInfo.trailer?.id;
+          final trailerSite = media?.anilistInfo?.trailer?.site;
+          final trailerSiteId = media?.anilistInfo?.trailer?.id;
 
           if (trailerSiteId == null || trailerSite == null) {
             return context.notify(
@@ -178,7 +178,7 @@ class DrawerContent extends StatelessWidget {
               anilistInfo: watchListEntry?.media,
             );
 
-            if ((drawerMedia == null || drawerMedia.anilistInfo.id == 0) &&
+            if ((drawerMedia == null || drawerMedia.anilistInfo?.id == 0) &&
                 libraryEntry != null) {
               return ListView(
                 children: [

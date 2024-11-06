@@ -10,7 +10,7 @@ class DrawerDescription extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (media.anilistInfo.description == null) return const SizedBox();
+    if (media.anilistInfo?.description == null) return const SizedBox();
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: _horizontalPadding),
@@ -28,7 +28,7 @@ class DrawerDescription extends StatelessWidget {
           ),
         ),
         child: HtmlWidget(
-          '<div style="text-align: justify">${media.anilistInfo.description!}</div>',
+          '<div style="text-align: justify">${media.anilistInfo!.description!}</div>',
         ),
       ),
     );

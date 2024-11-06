@@ -61,7 +61,7 @@ class LocalStorageRepository {
     final result = List<LibraryEntry>.from(entries);
     final existsIndex = result.indexWhere(
       (element) => file.media != null
-          ? element.media?.anilistInfo.id == file.media?.anilistInfo.id
+          ? element.media?.anilistInfo?.id == file.media?.anilistInfo?.id
           : element.entries.first.title == file.title,
     );
 
@@ -236,7 +236,7 @@ class LocalStorageRepository {
         /// Comparing media IDs if any
         /// This will most likely happen only when online
         if (element.media != null && file.media != null) {
-          return element.media?.anilistInfo.id == file.media?.anilistInfo.id;
+          return element.media?.anilistInfo?.id == file.media?.anilistInfo?.id;
         }
 
         /// Fallback for if there is no medai to compare

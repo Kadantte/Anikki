@@ -20,10 +20,7 @@ class TorrentSearchRepository {
     int? episode,
     String? title,
   }) {
-    String term = title ??
-        entry?.entries.first.title ??
-        media?.anilistInfo.title?.userPreferred ??
-        '';
+    String term = title ?? entry?.entries.first.title ?? media?.title ?? '';
 
     if (episode != null) term += ' $episode';
 

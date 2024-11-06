@@ -45,11 +45,12 @@ class UserListRepository {
     required Media media,
     required WatchListState state,
   }) async {
-    if (media.anilistInfo.id == 0) return;
+    if (media.anilistInfo == null) return;
+    if (media.anilistInfo!.id == 0) return;
 
     await anilist.updateEntry(
       episode: episode,
-      mediaId: media.anilistInfo.id,
+      mediaId: media.anilistInfo!.id,
       status: _getWatchedEntryStatus(state, media, episode),
     );
   }

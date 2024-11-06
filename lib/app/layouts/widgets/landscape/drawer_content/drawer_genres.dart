@@ -10,7 +10,7 @@ class DrawerGenres extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (media.anilistInfo.genres?.isNotEmpty != true) return const SizedBox();
+    if (media.anilistInfo?.genres?.isNotEmpty != true) return const SizedBox();
 
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -22,7 +22,7 @@ class DrawerGenres extends StatelessWidget {
         spacing: 12.0,
         runSpacing: 12.0,
         children: [
-          for (final genre in media.anilistInfo.genres!)
+          for (final genre in media.anilistInfo!.genres!)
             if (genre != null)
               EntryTag(
                 child: Text(

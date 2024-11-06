@@ -41,13 +41,13 @@ class _EntryTileState<T> extends State<EntryTile> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        image: media.anilistInfo.bannerImage != null
+        image: media.anilistInfo?.bannerImage != null
             ? DecorationImage(
                 opacity: 0.25,
                 fit: BoxFit.cover,
                 alignment: Alignment.center,
                 image:
-                    CachedNetworkImageProvider(media.anilistInfo.bannerImage!),
+                    CachedNetworkImageProvider(media.anilistInfo!.bannerImage!),
               )
             : const DecorationImage(
                 alignment: Alignment.topCenter,
@@ -84,10 +84,10 @@ class _EntryTileState<T> extends State<EntryTile> {
                 alignment: WrapAlignment.start,
                 children: [
                   /// Genres
-                  if (media.anilistInfo.genres != null)
-                    ...(media.anilistInfo.genres!.length > 1
-                            ? media.anilistInfo.genres!.sublist(0, 2)
-                            : media.anilistInfo.genres!)
+                  if (media.anilistInfo?.genres != null)
+                    ...(media.anilistInfo!.genres!.length > 1
+                            ? media.anilistInfo!.genres!.sublist(0, 2)
+                            : media.anilistInfo!.genres!)
                         .map(
                       (genre) {
                         return EntryTag(

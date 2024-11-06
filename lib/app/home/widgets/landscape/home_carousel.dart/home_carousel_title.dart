@@ -37,7 +37,7 @@ class _HomeCarouselTitle extends StatelessWidget {
         );
       },
       child: Text(
-        key: ValueKey<int>(currentMedia.anilistInfo.id),
+        key: ValueKey<int>(currentMedia.anilistInfo!.id),
         currentMedia.title ?? '',
         style: context.textTheme.bodyLarge?.copyWith(
           fontWeight: FontWeight.bold,

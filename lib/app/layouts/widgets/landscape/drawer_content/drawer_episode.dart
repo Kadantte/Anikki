@@ -12,9 +12,11 @@ class DrawerEpisode extends StatelessWidget {
   final Media? media;
   final int episodeNumber;
 
+  bool get isNextAiringEpisode => episodeNumber == media?.nextAiringEpisode;
+
   @override
   Widget build(BuildContext context) {
-    if (localFile == null && (media == null || media?.anilistInfo.id == 0)) {
+    if (localFile == null && (media == null || media?.anilistInfo?.id == 0)) {
       return const SizedBox();
     }
 
@@ -22,7 +24,7 @@ class DrawerEpisode extends StatelessWidget {
       fontWeight: FontWeight.bold,
     );
 
-    final info = media?.anilistInfo.streamingEpisodes?.firstWhereOrNull(
+    final info = media?.anilistInfo?.streamingEpisodes?.firstWhereOrNull(
       (element) =>
           element?.title?.split(' - ').firstOrNull == 'Episode $episodeNumber',
     );
@@ -30,12 +32,15 @@ class DrawerEpisode extends StatelessWidget {
     return InkWell(
       borderRadius: const BorderRadius.all(Radius.circular(12.0)),
       onTap: () {
+        if (isNextAiringEpisode) return;
+
         if (localFile != null) {
           VideoPlayerRepository.playFile(
             context: context,
             file: localFile,
             media: media,
           );
+
           return;
         }
 
@@ -88,7 +93,7 @@ class DrawerEpisode extends StatelessWidget {
               DrawerEpisodeDeleteButton(
                 file: localFile!,
               )
-            else if (media != null)
+            else if (media != null && !isNextAiringEpisode)
               IconButton(
                 onPressed: () => BlocProvider.of<DownloaderBloc>(context).add(
                   DownloaderRequested(

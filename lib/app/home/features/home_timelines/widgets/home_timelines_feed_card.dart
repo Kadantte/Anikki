@@ -62,10 +62,10 @@ class HomeTimelineFeedCard extends StatelessWidget {
                       textAlign: TextAlign.center,
                       maxLines: 2,
                     ),
-                    subtitle: media.anilistInfo.title?.native == null
+                    subtitle: media.anilistInfo?.title?.native == null
                         ? const SizedBox()
                         : AutoSizeText(
-                            media.anilistInfo.title!.native!,
+                            media.anilistInfo!.title!.native!,
                             textAlign: TextAlign.center,
                             maxLines: 1,
                           ),
