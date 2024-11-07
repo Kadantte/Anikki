@@ -14,14 +14,18 @@ class DrawerBannerImage extends StatelessWidget {
 
     if (image == null) return const SizedBox();
 
-    return SizedBox(
-      height: 255,
-      width: double.infinity,
-      child: CachedNetworkImage(
-        imageUrl: image,
-        fit: BoxFit.cover,
-        alignment: Alignment.center,
-      ),
+    return BlocBuilder<LayoutBloc, LayoutState>(
+      builder: (context, state) {
+        return SizedBox(
+          height: state is LayoutLandscape ? 255 : 125,
+          width: double.infinity,
+          child: CachedNetworkImage(
+            imageUrl: image,
+            fit: BoxFit.cover,
+            alignment: Alignment.center,
+          ),
+        );
+      },
     );
   }
 }

@@ -39,9 +39,9 @@ class DrawerEpisodes extends StatelessWidget {
       },
       builder: (context, state) {
         return Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: _horizontalPadding,
-            vertical: _horizontalPadding / 4,
+          padding: EdgeInsets.symmetric(
+            horizontal: _getHorizontalPadding(context),
+            vertical: _getHorizontalPadding(context) / 4,
           ),
           child: Paginated(
             initialPage: 0,

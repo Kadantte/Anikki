@@ -1,3 +1,4 @@
+import 'package:anikki/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -14,7 +15,6 @@ import 'package:anikki/app/search/view/search_view.dart';
 import 'package:anikki/app/settings/bloc/settings_bloc.dart';
 import 'package:anikki/app/settings/view/settings_view.dart';
 import 'package:anikki/app/torrent/torrent.dart';
-import 'package:anikki/core/helpers/connectivity_bloc/connectivity_bloc.dart';
 
 class LayoutView extends StatefulWidget {
   const LayoutView({super.key});
@@ -69,11 +69,12 @@ class _LayoutViewState extends State<LayoutView> {
                 selectedIcon: HugeIcons.strokeRoundedFolderLibrary,
                 child: const LibraryView(),
               ),
-              AnikkiPage(
-                name: settings.torrentType.title,
-                icon: HugeIcons.strokeRoundedCloudDownload,
-                child: const TorrentView(),
-              ),
+              if (settings.torrentType != TorrentType.none)
+                AnikkiPage(
+                  name: settings.torrentType.title,
+                  icon: HugeIcons.strokeRoundedCloudDownload,
+                  child: const TorrentView(),
+                ),
               if (portrait)
                 AnikkiPage(
                   name: 'Search',

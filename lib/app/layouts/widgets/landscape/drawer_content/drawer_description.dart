@@ -13,7 +13,9 @@ class DrawerDescription extends StatelessWidget {
     if (media.anilistInfo?.description == null) return const SizedBox();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: _horizontalPadding),
+      padding: EdgeInsets.symmetric(
+        horizontal: _getHorizontalPadding(context),
+      ),
       child: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: 16.0,

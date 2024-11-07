@@ -1,21 +1,19 @@
 part of 'entry_card.dart';
 
 class _EntryCardCover extends StatelessWidget {
-  _EntryCardCover({
-    required this.url,
+  const _EntryCardCover({
     required this.animation,
-    String? color,
-  }) {
-    this.color = color ?? '#0d0d0d';
-  }
+    required this.media,
+  });
 
-  /// Color used when loading the image from `url`
-  late final String color;
-
-  /// The URL of the image to use for this cover
-  final String? url;
+  final Media media;
 
   final Animation animation;
+
+  /// Color used when loading the image from `url`
+  String get color => media.anilistInfo?.coverImage?.color ?? '#0d0d0d';
+
+  String? get url => media.posterImage;
 
   double get translationValue => animation.value * 150;
   Widget get colorContainer => Container(
@@ -28,11 +26,14 @@ class _EntryCardCover extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final image = url != null
-        ? CachedNetworkImage(
-            imageUrl: url!,
-            fit: BoxFit.cover,
-            errorWidget: (context, error, stackTrace) => colorContainer,
-            placeholder: (context, url) => colorContainer,
+        ? Hero(
+            tag: url!,
+            child: CachedNetworkImage(
+              imageUrl: url!,
+              fit: BoxFit.cover,
+              errorWidget: (context, error, stackTrace) => colorContainer,
+              placeholder: (context, url) => colorContainer,
+            ),
           )
         : Image.asset(
             'assets/images/placeholder.jpg',

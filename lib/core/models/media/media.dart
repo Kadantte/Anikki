@@ -35,6 +35,9 @@ final class Media extends IMedia with MediaImages, MediaEpisodes {
       tmdbInfo?.name ??
       anilistInfo?.title?.english;
 
+  String? get originalTitle =>
+      anilistInfo?.title?.native ?? tmdbInfo?.originalName;
+
   @override
   List<Object?> get props => [anilistInfo, tmdbInfo];
 

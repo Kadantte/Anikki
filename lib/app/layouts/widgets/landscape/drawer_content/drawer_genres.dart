@@ -13,8 +13,8 @@ class DrawerGenres extends StatelessWidget {
     if (media.anilistInfo?.genres?.isNotEmpty != true) return const SizedBox();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: _horizontalPadding,
+      padding: EdgeInsets.symmetric(
+        horizontal: _getHorizontalPadding(context),
         vertical: 8.0,
       ),
       child: Wrap(

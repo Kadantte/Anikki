@@ -18,7 +18,12 @@ class DrawerImage extends StatelessWidget {
         borderRadius: const BorderRadius.all(
           Radius.circular(8.0),
         ),
-        child: CachedNetworkImage(imageUrl: media.posterImage!),
+        child: Hero(
+          tag: media.posterImage!,
+          child: CachedNetworkImage(
+            imageUrl: media.posterImage!,
+          ),
+        ),
       ),
     );
   }

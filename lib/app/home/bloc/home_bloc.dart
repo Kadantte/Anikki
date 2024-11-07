@@ -79,8 +79,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       emit(
         HomeLoaded(
           entries: entries,
-          currentMedia: state.currentMedia,
-          currentBackgroundUrl: state.currentBackgroundUrl,
+          currentMedia: state.currentMedia ?? entries.first.media,
+          currentBackgroundUrl:
+              state.currentBackgroundUrl ?? entries.first.media.backgroundImage,
           type: requestedType,
         ),
       );

@@ -22,7 +22,7 @@ class AnikkiNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(4.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -42,7 +42,7 @@ class AnikkiNavigationBar extends StatelessWidget {
                       tooltip: page.error ?? page.name,
                       icon: Icon(page.icon),
                       onPressed: () => onPageChanged(index),
-                      color: page == pages.elementAt(currentIndex)
+                      color: page == pages.elementAtOrNull(currentIndex)
                           ? Theme.of(context).colorScheme.primary
                           : null,
                     ),

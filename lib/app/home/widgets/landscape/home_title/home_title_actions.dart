@@ -58,24 +58,17 @@ class HomeTitleActions extends StatelessWidget {
           HomeAction(
             type: HomeActionType.icon,
             onPressed: (context) {
-              final layoutBloc = BlocProvider.of<LayoutBloc>(context);
               final trailerContent = TrailerVideoPlayer(
                 url:
                     'https://www.${trailerSite!}.com/watch?v=${trailerSiteId!}',
               );
 
-              if (layoutBloc.state is LayoutLandscape) {
-                showAdaptiveDialog(
-                  context: context,
-                  builder: (context) => Dialog(
-                    child: trailerContent,
-                  ),
-                );
-              } else {
-                Scaffold.of(context).showBottomSheet(
-                  (context) => trailerContent,
-                );
-              }
+              showAdaptiveDialog(
+                context: context,
+                builder: (context) => Dialog(
+                  child: trailerContent,
+                ),
+              );
             },
             icon: HugeIcons.strokeRoundedVideoReplay,
             text: 'Watch trailer',

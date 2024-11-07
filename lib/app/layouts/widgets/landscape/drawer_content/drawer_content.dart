@@ -40,7 +40,11 @@ part 'drawer_image.dart';
 part 'drawer_link.dart';
 part 'drawer_title.dart';
 
-const _horizontalPadding = 64.0;
+double _getHorizontalPadding(BuildContext context) {
+  final bloc = BlocProvider.of<LayoutBloc>(context);
+
+  return bloc.state is LayoutLandscape ? 64.0 : 8.0;
+}
 
 enum DrawerActionType {
   full,
@@ -183,9 +187,9 @@ class DrawerContent extends StatelessWidget {
               return ListView(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: _horizontalPadding,
-                      vertical: _horizontalPadding / 2,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: _getHorizontalPadding(context),
+                      vertical: _getHorizontalPadding(context) / 2,
                     ),
                     child: DrawerTitle(
                       isConnected: isConnected,
@@ -210,12 +214,12 @@ class DrawerContent extends StatelessWidget {
                       Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const SizedBox(
-                            height: _horizontalPadding + 12.0,
+                          SizedBox(
+                            height: _getHorizontalPadding(context) + 12.0,
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: _horizontalPadding,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: _getHorizontalPadding(context),
                             ),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
@@ -236,9 +240,9 @@ class DrawerContent extends StatelessWidget {
                             height: 12.0,
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(
-                              left: _horizontalPadding,
-                              right: _horizontalPadding,
+                            padding: EdgeInsets.only(
+                              left: _getHorizontalPadding(context),
+                              right: _getHorizontalPadding(context),
                               bottom: 4.0,
                             ),
                             child: Row(

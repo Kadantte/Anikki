@@ -109,8 +109,13 @@ class _EntryCardState extends State<EntryCard>
           if (layoutBloc.state is LayoutLandscape) {
             Scaffold.of(context).openEndDrawer();
           } else {
-            Scaffold.of(context).showBottomSheet(
-              (context) => const DrawerContent(),
+            Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (context) => Scaffold(
+                  appBar: AppBar(),
+                  body: const DrawerContent(),
+                ),
+              ),
             );
           }
         },
@@ -139,9 +144,8 @@ class _EntryCardState extends State<EntryCard>
                   children: [
                     Positioned.fill(
                       child: _EntryCardCover(
+                        media: widget.media,
                         animation: animation,
-                        color: widget.media.anilistInfo?.coverImage?.color,
-                        url: widget.media.posterImage,
                       ),
                     ),
                     if (widget.text != null)
