@@ -38,6 +38,12 @@ class DrawerEpisodes extends StatelessWidget {
         }
       },
       builder: (context, state) {
+        final currentLibraryEntry = libraryEntry ??
+            (state is LibraryLoaded
+                ? state.entries.firstWhereOrNull((entry) =>
+                    entry.media?.anilistInfo?.id == media?.anilistInfo?.id)
+                : null);
+
         return Padding(
           padding: EdgeInsets.symmetric(
             horizontal: _getHorizontalPadding(context),
@@ -63,13 +69,13 @@ class DrawerEpisodes extends StatelessWidget {
 
                   if (episodeNumber < 1) return const SizedBox();
 
-                  var localFile = libraryEntry?.entries.firstWhereOrNull(
+                  var localFile = currentLibraryEntry?.entries.firstWhereOrNull(
                     (entry) => entry.episode == episodeNumber,
                   );
 
-                  if (media == null && libraryEntry != null) {
+                  if (media == null && currentLibraryEntry != null) {
                     localFile =
-                        libraryEntry?.entries.elementAtOrNull(realIndex);
+                        currentLibraryEntry.entries.elementAtOrNull(realIndex);
                     episodeNumber = localFile?.episode ?? episodeNumber;
                   }
 
