@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="assets/anikki_desktop.png" height="300" />
-  <img src="assets/anikki_mobile.png" height="300" /> 
+  <img src="assets/anikki_mobile.png" height="300" />
 </p>
 
 
@@ -27,10 +27,10 @@
 ## Building
 
 1. Install [Flutter](https://flutter.dev) for you platform
-2. Clone this repo 
+2. Clone this repo
 
 ```bash
-git clone --recursive https://github.com/Kylart/Anikki 
+git clone --recursive https://github.com/Kylart/Anikki
 
 cd Anikki
 cp .env.example .env
@@ -78,6 +78,12 @@ This project is implementing the architecture described by the [BloC library](ht
 ## Contributing
 Any contribution is appreciated.
 
+### What to do
+You can see what are the next things on the roadmap [on this Trello board](https://trello.com/b/HPDfWARB/anikki).
+
+Feel free to contact me on Discord if you need any details on the implementation!
+
+### How to
 1. Fork it!
 2. Create your feature branch: git checkout -b my-new-feature
 3. Commit your changes: git commit -am 'Add some feature'
