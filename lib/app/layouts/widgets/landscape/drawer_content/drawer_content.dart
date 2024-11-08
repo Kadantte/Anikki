@@ -28,6 +28,8 @@ import 'package:anikki/domain/domain.dart';
 
 part 'drawer_action_button.dart';
 part 'drawer_banner_image.dart';
+part 'drawer_content_landscape.dart';
+part 'drawer_content_portrait.dart';
 part 'drawer_description.dart';
 part 'drawer_episode.dart';
 part 'drawer_episode_completed.dart';
@@ -39,7 +41,7 @@ part 'drawer_link.dart';
 part 'drawer_title.dart';
 
 double _getHorizontalPadding(BuildContext context) {
-  final bloc = BlocProvider.of<LayoutBloc>(context, listen: true);
+  final bloc = BlocProvider.of<LayoutBloc>(context);
 
   return bloc.state is LayoutLandscape ? 64.0 : 8.0;
 }
@@ -151,11 +153,6 @@ class DrawerContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isConnected = BlocProvider.of<AnilistAuthBloc>(
-      context,
-      listen: true,
-    ).isConnected;
-
     return BlocBuilder<WatchListBloc, WatchListState>(
       builder: (context, watchListState) {
         return BlocBuilder<LayoutBloc, LayoutState>(
@@ -182,7 +179,7 @@ class DrawerContent extends StatelessWidget {
 
             if ((drawerMedia == null || drawerMedia.anilistInfo?.id == 0) &&
                 libraryEntry != null) {
-              return ListView(
+              final content = ListView(
                 children: [
                   Padding(
                     padding: EdgeInsets.symmetric(
@@ -190,14 +187,25 @@ class DrawerContent extends StatelessWidget {
                       vertical: _getHorizontalPadding(context) / 2,
                     ),
                     child: DrawerTitle(
-                      isConnected: isConnected,
+                      media: drawerMedia,
                       libraryEntry: libraryEntry,
+                      isInWatchList: isInWatchList,
                     ),
                   ),
                   DrawerEpisodes(
                     libraryEntry: libraryEntry,
                   ),
                 ],
+              );
+
+              return BlocBuilder<LayoutBloc, LayoutState>(
+                builder: (context, state) {
+                  return state is LayoutPortrait
+                      ? Scaffold(
+                          body: content,
+                        )
+                      : content;
+                },
               );
             }
 
@@ -206,85 +214,20 @@ class DrawerContent extends StatelessWidget {
                 builder: (context, snapshot) {
                   final media = snapshot.data ?? drawerMedia;
 
-                  return Stack(
-                    children: [
-                      DrawerBannerImage(media: media),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(
-                            height: _getHorizontalPadding(context) + 12.0,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: _getHorizontalPadding(context),
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                DrawerImage(media: media),
-                                Expanded(
-                                  child: DrawerTitle(
-                                    media: media,
-                                    libraryEntry: libraryEntry,
-                                    isConnected: isConnected,
-                                    isInWatchList: isInWatchList,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 12.0,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                              left: _getHorizontalPadding(context),
-                              right: _getHorizontalPadding(context),
-                              bottom: 4.0,
-                            ),
-                            child: Row(
-                              children: [
-                                for (final (index, link)
-                                    in _buildLinks(media).indexed) ...[
-                                  if (index != 0)
-                                    const SizedBox(
-                                      width: 24.0,
-                                    ),
-                                  DrawerLink(
-                                    link: link,
-                                    media: media,
-                                  ),
-                                ],
-                                const Spacer(),
-                                for (final action in _buildActions(
-                                  media: media,
-                                  libraryEntry: libraryEntry,
-                                ))
-                                  DrawerActionButton(
-                                    action: action,
-                                    media: media,
-                                  )
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  DrawerGenres(media: media),
-                                  DrawerDescription(media: media),
-                                  DrawerEpisodes(
-                                    media: media,
-                                    libraryEntry: libraryEntry,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                  return BlocBuilder<LayoutBloc, LayoutState>(
+                    builder: (context, state) {
+                      return state is LayoutPortrait
+                          ? _DrawerContentPortrait(
+                              media: media,
+                              libraryEntry: libraryEntry,
+                              isInWatchList: isInWatchList,
+                            )
+                          : _DrawerContentLandscape(
+                              media: media,
+                              libraryEntry: libraryEntry,
+                              isInWatchList: isInWatchList,
+                            );
+                    },
                   );
                 });
           },

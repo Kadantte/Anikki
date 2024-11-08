@@ -18,6 +18,7 @@ class DrawerGenres extends StatelessWidget {
         vertical: 8.0,
       ),
       child: Wrap(
+        alignment: WrapAlignment.center,
         crossAxisAlignment: WrapCrossAlignment.center,
         spacing: 12.0,
         runSpacing: 12.0,

@@ -10,9 +10,11 @@ class FavouriteButton extends StatefulWidget {
   const FavouriteButton({
     super.key,
     required this.media,
+    this.filled = true,
   });
 
   final Media media;
+  final bool filled;
 
   @override
   State<FavouriteButton> createState() => _FavouriteButtonState();
@@ -51,19 +53,8 @@ class _FavouriteButtonState extends State<FavouriteButton> {
       },
       child: Tooltip(
         message: isFavourite ? 'Remove from favourite' : 'Add to favourite',
-        child: IconButton.filled(
-          onPressed: () {
-            if (isToggleFavouriteLoading) return;
-
-            isToggleFavouriteLoading = true;
-
-            BlocProvider.of<WatchListBloc>(context).add(
-              WatchListToggleFavourite(
-                mediaId: widget.media.anilistInfo!.id,
-              ),
-            );
-          },
-          icon: AnimatedCrossFade(
+        child: Builder(builder: (context) {
+          final icon = AnimatedCrossFade(
             firstChild: _buildLoader(context),
             secondChild: Icon(
               isFavourite ? Icons.favorite : HugeIcons.strokeRoundedFavourite,
@@ -73,8 +64,30 @@ class _FavouriteButtonState extends State<FavouriteButton> {
                 ? CrossFadeState.showFirst
                 : CrossFadeState.showSecond,
             duration: const Duration(milliseconds: 200),
-          ),
-        ),
+          );
+
+          void onPressed() {
+            if (isToggleFavouriteLoading) return;
+
+            isToggleFavouriteLoading = true;
+
+            BlocProvider.of<WatchListBloc>(context).add(
+              WatchListToggleFavourite(
+                mediaId: widget.media.anilistInfo!.id,
+              ),
+            );
+          }
+
+          return widget.filled
+              ? IconButton.filled(
+                  onPressed: onPressed,
+                  icon: icon,
+                )
+              : IconButton(
+                  onPressed: onPressed,
+                  icon: icon,
+                );
+        }),
       ),
     );
   }

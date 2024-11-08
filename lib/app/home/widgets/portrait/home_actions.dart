@@ -43,10 +43,7 @@ class _HomeActions extends StatelessWidget {
 
             Navigator.of(context).push(
               MaterialPageRoute<void>(
-                builder: (context) => Scaffold(
-                  appBar: AppBar(),
-                  body: const DrawerContent(),
-                ),
+                builder: (context) => const DrawerContent(),
               ),
             );
           },

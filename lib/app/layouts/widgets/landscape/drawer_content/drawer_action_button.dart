@@ -5,10 +5,12 @@ class DrawerActionButton extends StatelessWidget {
     super.key,
     required this.action,
     required this.media,
+    this.dense = false,
   });
 
   final DrawerAction action;
   final Media media;
+  final bool dense;
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +32,19 @@ class DrawerActionButton extends StatelessWidget {
           ),
         DrawerActionType.full => FilledButton.tonalIcon(
             style: ButtonStyle(
-              padding: WidgetStateProperty.all<EdgeInsets>(
-                const EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                  vertical: 16.0,
-                ),
-              ),
+              padding: dense
+                  ? WidgetStateProperty.all<EdgeInsets>(
+                      const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 8.0,
+                      ),
+                    )
+                  : WidgetStateProperty.all<EdgeInsets>(
+                      const EdgeInsets.symmetric(
+                        horizontal: 20.0,
+                        vertical: 16.0,
+                      ),
+                    ),
             ),
             onPressed: () => action.onPressed(context),
             icon: Icon(

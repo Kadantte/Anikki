@@ -65,13 +65,18 @@ class DrawerEpisode extends StatelessWidget {
                       index: episodeNumber,
                     )
                   : null,
-              child: CircleAvatar(
-                radius: 40,
-                backgroundImage: (info?.thumbnail == null
-                    ? const AssetImage('assets/images/cover_placeholder.jpg')
-                    : CachedNetworkImageProvider(
-                        info!.thumbnail!,
-                      )) as ImageProvider,
+              child: BlocBuilder<LayoutBloc, LayoutState>(
+                builder: (context, state) {
+                  return CircleAvatar(
+                    radius: state is LayoutPortrait ? 32 : 40,
+                    backgroundImage: (info?.thumbnail == null
+                        ? const AssetImage(
+                            'assets/images/cover_placeholder.jpg')
+                        : CachedNetworkImageProvider(
+                            info!.thumbnail!,
+                          )) as ImageProvider,
+                  );
+                },
               ),
             ),
             Expanded(

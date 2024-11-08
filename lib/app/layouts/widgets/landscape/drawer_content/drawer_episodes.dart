@@ -53,36 +53,44 @@ class DrawerEpisodes extends StatelessWidget {
             initialPage: 0,
             numberOfEntries: numberOfEpisodes,
             pageBuilder: (context, page) {
-              return GridView.builder(
-                physics: const ClampingScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 450,
-                  childAspectRatio: 32 / 9,
-                  crossAxisSpacing: 8.0,
-                ),
-                itemCount: (numberOfEpisodes - (page * kPaginatedPerPage))
-                    .clamp(0, kPaginatedPerPage),
-                itemBuilder: (context, realIndex) {
-                  var episodeNumber =
-                      numberOfEpisodes - realIndex - (page * kPaginatedPerPage);
+              return BlocBuilder<LayoutBloc, LayoutState>(
+                builder: (context, layoutState) {
+                  final portrait = layoutState is LayoutPortrait;
 
-                  if (episodeNumber < 1) return const SizedBox();
+                  return GridView.builder(
+                    physics: const ClampingScrollPhysics(),
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 450,
+                      childAspectRatio: portrait ? 48 / 9 : 32 / 9,
+                      crossAxisSpacing: 8.0,
+                    ),
+                    itemCount: (numberOfEpisodes - (page * kPaginatedPerPage))
+                        .clamp(0, kPaginatedPerPage),
+                    itemBuilder: (context, realIndex) {
+                      var episodeNumber = numberOfEpisodes -
+                          realIndex -
+                          (page * kPaginatedPerPage);
 
-                  var localFile = currentLibraryEntry?.entries.firstWhereOrNull(
-                    (entry) => entry.episode == episodeNumber,
-                  );
+                      if (episodeNumber < 1) return const SizedBox();
 
-                  if (media == null && currentLibraryEntry != null) {
-                    localFile =
-                        currentLibraryEntry.entries.elementAtOrNull(realIndex);
-                    episodeNumber = localFile?.episode ?? episodeNumber;
-                  }
+                      var localFile =
+                          currentLibraryEntry?.entries.firstWhereOrNull(
+                        (entry) => entry.episode == episodeNumber,
+                      );
 
-                  return DrawerEpisode(
-                    localFile: localFile,
-                    media: media,
-                    episodeNumber: episodeNumber,
+                      if (media == null && currentLibraryEntry != null) {
+                        localFile = currentLibraryEntry.entries
+                            .elementAtOrNull(realIndex);
+                        episodeNumber = localFile?.episode ?? episodeNumber;
+                      }
+
+                      return DrawerEpisode(
+                        localFile: localFile,
+                        media: media,
+                        episodeNumber: episodeNumber,
+                      );
+                    },
                   );
                 },
               );
