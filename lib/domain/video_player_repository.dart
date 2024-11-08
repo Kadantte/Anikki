@@ -1,4 +1,3 @@
-import 'package:anikki/core/helpers/anilist/anilist_utils.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,14 +6,14 @@ import 'package:media_kit/media_kit.dart' as mk;
 import 'package:open_file/open_file.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'package:anikki/app/torrent/bloc/torrent_bloc.dart';
 import 'package:anikki/app/anilist_watch_list/bloc/watch_list_bloc.dart';
-import 'package:anikki/app/video_player/bloc/video_player_bloc.dart';
 import 'package:anikki/app/library/bloc/library_bloc.dart';
 import 'package:anikki/app/settings/bloc/settings_bloc.dart';
 import 'package:anikki/app/stream_handler/bloc/stream_handler_bloc.dart';
-import 'package:anikki/data/data.dart';
+import 'package:anikki/app/torrent/bloc/torrent_bloc.dart';
+import 'package:anikki/app/video_player/bloc/video_player_bloc.dart';
 import 'package:anikki/core/core.dart';
+import 'package:anikki/data/data.dart';
 
 /// Repository to handle video player needs
 class VideoPlayerRepository {

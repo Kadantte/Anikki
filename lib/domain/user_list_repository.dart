@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 
 import 'package:anikki/app/anilist_watch_list/bloc/watch_list_bloc.dart';
 import 'package:anikki/core/core.dart';
-import 'package:anikki/core/helpers/anilist/anilist_utils.dart';
 import 'package:anikki/data/data.dart';
 
 /// Repository that handles user anime list on providers (for now only Anilist)

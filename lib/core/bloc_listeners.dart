@@ -12,7 +12,6 @@ import 'package:anikki/app/stream_handler/bloc/stream_handler_bloc.dart';
 import 'package:anikki/app/stream_handler/stream_handler.dart';
 import 'package:anikki/app/torrent/bloc/torrent_bloc.dart';
 import 'package:anikki/core/core.dart';
-import 'package:anikki/core/helpers/notify.dart';
 import 'package:anikki/domain/domain.dart';
 
 class BlocListeners extends StatelessWidget {

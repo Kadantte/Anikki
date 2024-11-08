@@ -19,8 +19,6 @@ import 'package:anikki/app/home/widgets/landscape/favourite_button.dart';
 import 'package:anikki/app/layouts/bloc/layout_bloc.dart';
 import 'package:anikki/app/library/bloc/library_bloc.dart';
 import 'package:anikki/core/core.dart';
-import 'package:anikki/core/helpers/anilist/anilist_utils.dart';
-import 'package:anikki/core/helpers/notify.dart';
 import 'package:anikki/core/widgets/empty_widget.dart';
 import 'package:anikki/core/widgets/entry/entry_tag.dart';
 import 'package:anikki/core/widgets/paginated.dart';
@@ -41,7 +39,7 @@ part 'drawer_link.dart';
 part 'drawer_title.dart';
 
 double _getHorizontalPadding(BuildContext context) {
-  final bloc = BlocProvider.of<LayoutBloc>(context);
+  final bloc = BlocProvider.of<LayoutBloc>(context, listen: true);
 
   return bloc.state is LayoutLandscape ? 64.0 : 8.0;
 }

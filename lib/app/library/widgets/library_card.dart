@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:anikki/core/core.dart';
-import 'package:anikki/core/helpers/anilist/anilist_utils.dart';
 import 'package:anikki/core/widgets/entry_card/entry_card.dart';
 
 class LibraryCard extends StatelessWidget {

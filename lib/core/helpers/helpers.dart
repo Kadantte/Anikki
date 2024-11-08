@@ -1,4 +1,5 @@
 export 'anilist/anilist_client.dart';
+export 'anilist/anilist_utils.dart';
 export 'anilist/current_season.dart';
 export 'auto_refresh_bloc.dart';
 export 'capitalize.dart';
@@ -12,5 +13,6 @@ export 'folder.dart';
 export 'format_duration.dart';
 export 'hex_color.dart';
 export 'logger.dart';
+export 'notify.dart';
 export 'open_in_browser.dart';
 export 'sanitize_name.dart';
