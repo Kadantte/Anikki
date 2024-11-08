@@ -1,3 +1,4 @@
+import 'package:anikki/app/anilist_auth/bloc/anilist_auth_bloc.dart';
 import 'package:anikki/app/anilist_watch_list/bloc/watch_list_bloc.dart';
 import 'package:anikki/app/home/bloc/home_bloc.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,9 @@ class HomeAppBarContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final connected =
+        BlocProvider.of<AnilistAuthBloc>(context, listen: true).isConnected;
+
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
         return SegmentedButton(
@@ -18,7 +22,10 @@ class HomeAppBarContent extends StatelessWidget {
           emptySelectionAllowed: false,
           selectedIcon: const SizedBox(),
           segments: [
-            for (final type in HomeMediaType.values)
+            for (final type in HomeMediaType.values.where((value) =>
+                connected ||
+                [HomeMediaType.trending, HomeMediaType.recommendations]
+                    .contains(value)))
               ButtonSegment(
                 value: type,
                 icon: Padding(

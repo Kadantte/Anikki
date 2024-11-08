@@ -34,45 +34,53 @@ class _HomeCarouselState extends State<_HomeCarousel> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
 
-    return ExpandableCarousel.builder(
-      options: ExpandableCarouselOptions(
-        controller: _controller,
-        aspectRatio: 9 / 16,
-        viewportFraction: 0.75,
-        autoPlayInterval: const Duration(seconds: 15),
-        enableInfiniteScroll: true,
-        enlargeCenterPage: true,
-        autoPlay: true,
-        showIndicator: false,
-        floatingIndicator: false,
-        restorationId: 'expandable_carousel',
-        onPageChanged: (index, reason) {
-          final entry = widget.entries.elementAt(index % widget.entries.length);
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        return ExpandableCarousel.builder(
+          options: ExpandableCarouselOptions(
+            controller: _controller,
+            aspectRatio: 9 / 16,
+            viewportFraction: 0.75,
+            autoPlayInterval: const Duration(seconds: 15),
+            enableInfiniteScroll: true,
+            enlargeCenterPage: true,
+            autoPlay: true,
+            showIndicator: false,
+            floatingIndicator: false,
+            restorationId: 'expandable_carousel',
+            initialPage: state.currentEntry == null
+                ? 0
+                : state.entries.indexOf(state.currentEntry!),
+            onPageChanged: (index, reason) {
+              final entry =
+                  widget.entries.elementAt(index % widget.entries.length);
 
-          BlocProvider.of<HomeBloc>(context).add(
-            HomeCurrentMediaChanged(entry),
-          );
-        },
-      ),
-      itemCount: widget.entries.length,
-      itemBuilder: (context, index, realIdx) {
-        final entry = widget.entries.elementAt(index);
-
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(12.0),
-          child: SizedBox(
-            height: screenSize.height / 2,
-            child: entry.media.posterImage != null
-                ? Hero(
-                    tag: entry.media.posterImage!,
-                    child: CachedNetworkImage(
-                      imageUrl: entry.media.posterImage!,
-                      fit: BoxFit.cover,
-                      alignment: Alignment.center,
-                    ),
-                  )
-                : const SizedBox(),
+              BlocProvider.of<HomeBloc>(context).add(
+                HomeCurrentMediaChanged(entry),
+              );
+            },
           ),
+          itemCount: widget.entries.length,
+          itemBuilder: (context, index, realIdx) {
+            final entry = widget.entries.elementAt(index);
+
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(12.0),
+              child: SizedBox(
+                height: screenSize.height / 2,
+                child: entry.media.posterImage != null
+                    ? Hero(
+                        tag: entry.media.posterImage!,
+                        child: CachedNetworkImage(
+                          imageUrl: entry.media.posterImage!,
+                          fit: BoxFit.cover,
+                          alignment: Alignment.center,
+                        ),
+                      )
+                    : const SizedBox(),
+              ),
+            );
+          },
         );
       },
     );

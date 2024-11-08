@@ -44,6 +44,7 @@ class _HomeViewPortraitState extends State<HomeViewPortrait>
         return Scaffold(
           appBar: AppBar(
             toolbarHeight: 45,
+            centerTitle: true,
             title: const HomeAppBarContent(),
             actions: [
               IconButton(

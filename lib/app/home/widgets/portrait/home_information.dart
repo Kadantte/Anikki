@@ -34,25 +34,28 @@ class _HomeInformation extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 20.0),
-            width: 1,
-            color: context.colorScheme.onSurface.withOpacity(0.3),
-          ),
-          Expanded(
-            child: ListTile(
-              dense: true,
-              title: Text(
-                media!.anilistInfo?.season?.name.capitalize() ?? '',
-                style: context.textTheme.headlineSmall?.copyWith(fontSize: 18),
-                textAlign: TextAlign.center,
-              ),
-              subtitle: Text(
-                media!.anilistInfo?.seasonYear.toString() ?? '',
-                textAlign: TextAlign.center,
+          if (media?.anilistInfo?.season != null)
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
+              width: 1,
+              color: context.colorScheme.onSurface.withOpacity(0.3),
+            ),
+          if (media?.anilistInfo?.season != null)
+            Expanded(
+              child: ListTile(
+                dense: true,
+                title: Text(
+                  media!.anilistInfo?.season?.name.capitalize() ?? '',
+                  style:
+                      context.textTheme.headlineSmall?.copyWith(fontSize: 18),
+                  textAlign: TextAlign.center,
+                ),
+                subtitle: Text(
+                  media?.anilistInfo?.seasonYear?.toString() ?? '',
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

@@ -4,7 +4,6 @@ import 'package:anitomy/anitomy.dart';
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 
-import 'package:anikki/core/helpers/anilist/anilist_utils.dart';
 import 'package:anikki/data/data.dart';
 
 part 'media_episodes.dart';

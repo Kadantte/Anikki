@@ -5,9 +5,7 @@ mixin MediaEpisodes on IMedia {
       anilistInfo?.episodes ??
       anilistInfo?.nextAiringEpisode?.episode ??
       tmdbInfo?.numberOfEpisodes ??
-      AnilistUtils.getEpisodeNumberFromEpisodeTItle(
-        anilistInfo?.streamingEpisodes?.last?.title,
-      );
+      anilistInfo?.streamingEpisodes?.length;
 
   int? get nextAiringEpisode => anilistInfo?.nextAiringEpisode?.episode;
 }
