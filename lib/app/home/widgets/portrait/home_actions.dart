@@ -37,10 +37,6 @@ class _HomeActions extends StatelessWidget {
         IconButton(
           tooltip: 'Show more',
           onPressed: () {
-            BlocProvider.of<LayoutBloc>(context).add(
-              LayoutDrawerMediaChanged(media),
-            );
-
             Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (context) => const DrawerContent(),

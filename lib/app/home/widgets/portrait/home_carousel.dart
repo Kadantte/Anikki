@@ -20,6 +20,10 @@ class _HomeCarouselState extends State<_HomeCarousel> {
     scrollController = ScrollController();
     listController = ListController();
 
+    BlocProvider.of<LayoutBloc>(context).add(
+      LayoutDrawerMediaChanged(widget.entries.first.media),
+    );
+
     super.initState();
   }
 
@@ -57,6 +61,10 @@ class _HomeCarouselState extends State<_HomeCarousel> {
 
               BlocProvider.of<HomeBloc>(context).add(
                 HomeCurrentMediaChanged(entry),
+              );
+
+              BlocProvider.of<LayoutBloc>(context).add(
+                LayoutDrawerMediaChanged(entry.media),
               );
             },
           ),
