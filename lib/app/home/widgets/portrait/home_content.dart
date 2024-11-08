@@ -49,30 +49,41 @@ class HomeContent extends StatelessWidget {
           );
         }
 
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: _HomeCarousel(
-                entries: state.entries,
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: 52.0,
-                  right: 52.0,
-                  bottom: 72.0,
+        return GestureDetector(
+          onVerticalDragEnd: (details) {
+            if (!details.globalPosition.dy.isNegative) {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (context) => Material(child: const DrawerContent()),
                 ),
-                child: _HomeTitleCard(
-                  media: state.currentMedia,
+              );
+            }
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: _HomeCarousel(
+                  entries: state.entries,
                 ),
               ),
-            ),
-          ],
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 52.0,
+                    right: 52.0,
+                    bottom: 72.0,
+                  ),
+                  child: _HomeTitleCard(
+                    media: state.currentMedia,
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       },
     );
