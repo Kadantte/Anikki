@@ -73,7 +73,7 @@ class _FavouriteButtonState extends State<FavouriteButton> {
 
             BlocProvider.of<WatchListBloc>(context).add(
               WatchListToggleFavourite(
-                mediaId: widget.media.anilistInfo!.id,
+                media: widget.media,
               ),
             );
           }

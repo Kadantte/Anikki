@@ -102,14 +102,13 @@ class VideoPlayerRepository {
           if (media == null && file?.media == null) return;
           if (progress < kVideoMinCompletedProgress) return;
 
+          media ??= (await LocalFile.createAndSearchMedia(mkMedia.uri)).media;
+
+          if (media == null) return;
+
           watchListBloc.add(
             WatchListWatched(
-              entry: media == null
-                  ? await LocalFile.createAndSearchMedia(mkMedia.uri)
-                  : LocalFile(
-                      path: mkMedia.uri,
-                      media: media,
-                    ),
+              media: media!,
             ),
           );
         },
@@ -132,10 +131,10 @@ class VideoPlayerRepository {
     if (!settings.inside) {
       final path = file?.path ?? playlist.first.uri;
 
-      if (file != null) {
+      if (file != null && file.media != null) {
         BlocProvider.of<WatchListBloc>(context).add(
           WatchListWatched(
-            entry: file,
+            media: file.media!,
           ),
         );
       }

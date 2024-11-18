@@ -8,54 +8,43 @@ abstract class WatchListEvent extends Equatable {
 }
 
 class WatchListRequested extends WatchListEvent {
-  const WatchListRequested({required this.username});
+  const WatchListRequested({required this.provider});
 
-  final String username;
+  final WatchListProvider provider;
 
   @override
-  List<Object> get props => [username];
+  List<Object> get props => [
+        provider,
+      ];
 }
 
-class WatchListReset extends WatchListEvent {}
-
 class WatchListAuthUpdated extends WatchListEvent {
-  WatchListAuthUpdated({
+  const WatchListAuthUpdated({
     required this.connected,
-    this.username,
-  }) {
-    if (connected) {
-      assert(username != null, 'Cannot be connected without a username.');
-    }
-  }
+    required this.provider,
+  });
 
   final bool connected;
-  final String? username;
+  final WatchListProvider provider;
 
   @override
   List<Object> get props => [
         connected,
-        if (username != null) username!,
+        provider,
       ];
 }
 
 class WatchListWatched extends WatchListEvent {
-  WatchListWatched({
-    this.entry,
-    this.media,
+  const WatchListWatched({
+    required this.media,
     this.episode,
-  }) {
-    if (entry == null) {
-      assert(media != null && episode != null);
-    }
-  }
+  });
 
-  final LocalFile? entry;
-  final Media? media;
+  final Media media;
   final int? episode;
 
   @override
   List<Object?> get props => [
-        entry,
         media,
         episode,
       ];
@@ -63,24 +52,24 @@ class WatchListWatched extends WatchListEvent {
 
 class WatchListRemoveMedia extends WatchListEvent {
   const WatchListRemoveMedia(
-    this.mediaId,
+    this.media,
   );
 
-  final int mediaId;
+  final Media media;
 
   @override
-  List<Object?> get props => [mediaId];
+  List<Object?> get props => [media];
 }
 
 class WatchListToggleFavourite extends WatchListEvent {
   const WatchListToggleFavourite({
-    required this.mediaId,
+    required this.media,
   });
 
-  final int mediaId;
+  final Media media;
 
   @override
   List<Object?> get props => [
-        mediaId,
+        media,
       ];
 }

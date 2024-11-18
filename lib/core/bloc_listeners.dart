@@ -106,7 +106,7 @@ class BlocListeners extends StatelessWidget {
             BlocProvider.of<WatchListBloc>(context).add(
               WatchListAuthUpdated(
                 connected: connected,
-                username: connected ? state.me.name : null,
+                provider: WatchListProvider.anilist,
               ),
             );
 
@@ -114,7 +114,6 @@ class BlocListeners extends StatelessWidget {
               BlocProvider.of<HomeBloc>(context).add(
                 const HomeRefreshed(
                   watchList: null,
-                  connected: false,
                   requestedType: HomeMediaType.trending,
                 ),
               );
@@ -123,11 +122,10 @@ class BlocListeners extends StatelessWidget {
         ),
         BlocListener<WatchListBloc, WatchListState>(
           listener: (context, state) {
-            if (state is WatchListComplete) {
+            if (state is WatchListLoaded) {
               BlocProvider.of<HomeBloc>(context).add(
                 HomeRefreshed(
                   watchList: state.watchList,
-                  connected: state.connected,
                 ),
               );
             }

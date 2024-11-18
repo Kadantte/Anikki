@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 
-import 'package:anikki/app/anilist_watch_list/bloc/watch_list_bloc.dart';
 import 'package:anikki/core/core.dart';
 import 'package:anikki/data/data.dart';
 
@@ -18,15 +17,16 @@ class UserListRepository {
   final Tmdb tmdb;
 
   Enum$MediaListStatus? _getWatchedEntryStatus(
-    WatchListState state,
+    AnilistWatchList watchList,
     Media media,
     int episode,
   ) {
     Enum$MediaListStatus? status;
 
     final isCompleted =
-        AnilistUtils.getCompletedEntry(state.watchList, media) != null;
-    final isPlanning = AnilistUtils.getListEntry(state.planning, media) != null;
+        AnilistUtils.getCompletedEntry(watchList, media) != null;
+    final isPlanning =
+        AnilistUtils.getListEntry(watchList.planning, media) != null;
 
     if (isCompleted && episode == 1) {
       status = Enum$MediaListStatus.REPEATING;
@@ -42,35 +42,54 @@ class UserListRepository {
   Future<void> watchedEntry({
     required int episode,
     required Media media,
-    required WatchListState state,
+    required WatchListProvider provider,
+    required AnilistWatchList watchList,
   }) async {
-    if (media.anilistInfo == null) return;
-    if (media.anilistInfo!.id == 0) return;
+    switch (provider) {
+      case WatchListProvider.anilist:
+        if (media.anilistInfo == null) return;
+        if (media.anilistInfo!.id == 0) return;
 
-    await anilist.updateEntry(
-      episode: episode,
-      mediaId: media.anilistInfo!.id,
-      status: _getWatchedEntryStatus(state, media, episode),
-    );
+        return anilist.updateEntry(
+          episode: episode,
+          mediaId: media.anilistInfo!.id,
+          status: _getWatchedEntryStatus(watchList, media, episode),
+        );
+      case WatchListProvider.mal:
+        throw UnimplementedError();
+      case WatchListProvider.kitsu:
+        throw UnimplementedError();
+    }
   }
 
   Future<void> removeEntry({
-    required int mediaId,
+    required Media media,
+    required WatchListProvider provider,
   }) async {
-    if (mediaId == 0) return;
+    switch (provider) {
+      case WatchListProvider.anilist:
+        final mediaId = media.anilistInfo?.id;
 
-    await anilist.updateEntry(
-      mediaId: mediaId,
-      status: Enum$MediaListStatus.DROPPED,
-    );
+        if (mediaId == null || mediaId == 0) return;
+
+        await anilist.updateEntry(
+          mediaId: mediaId,
+          status: Enum$MediaListStatus.DROPPED,
+        );
+      case WatchListProvider.mal:
+        throw UnimplementedError();
+      case WatchListProvider.kitsu:
+        throw UnimplementedError();
+    }
   }
 
   /// Returns the watch lists of the user at `username`
-  Future<AnilistWatchList> getList(String username) async {
-    return await anilist.getWatchLists(
-      username,
-      useCache: false,
-    );
+  Future<AnilistWatchList> getList(WatchListProvider provider) async {
+    return await switch (provider) {
+      WatchListProvider.anilist => anilist.getWatchLists(),
+      WatchListProvider.mal => throw UnimplementedError(),
+      WatchListProvider.kitsu => throw UnimplementedError(),
+    };
   }
 
   Future<List<MediaListEntry>> getContinueList(
@@ -134,40 +153,52 @@ class UserListRepository {
     ];
   }
 
-  Future<AnilistWatchList> toggleFavourite(
-    AnilistWatchList watchList,
-    int mediaId,
-  ) async {
-    try {
-      await anilist.toggleFavourite(mediaId: mediaId);
+  Future<AnilistWatchList> toggleFavourite({
+    required AnilistWatchList watchList,
+    required Media media,
+    required WatchListProvider provider,
+  }) async {
+    switch (provider) {
+      case WatchListProvider.anilist:
+        try {
+          final mediaId = media.anilistInfo?.id;
 
-      AnilistWatchListEntry updateFavourite(AnilistWatchListEntry entry) {
-        if (entry.media?.id == mediaId) {
-          return entry.copyWith(
-            media: entry.media?.copyWith(
-                isFavourite: entry.media?.isFavourite == null
-                    ? true
-                    : !entry.media!.isFavourite),
+          if (mediaId == null) return watchList;
+
+          await anilist.toggleFavourite(mediaId: mediaId);
+
+          AnilistWatchListEntry updateFavourite(AnilistWatchListEntry entry) {
+            if (entry.media?.id == mediaId) {
+              return entry.copyWith(
+                media: entry.media?.copyWith(
+                    isFavourite: entry.media?.isFavourite == null
+                        ? true
+                        : !entry.media!.isFavourite),
+              );
+            }
+
+            return entry;
+          }
+
+          return watchList.copyWith(
+            completed: watchList.completed.map(updateFavourite).toList(),
+            current: watchList.current.map(updateFavourite).toList(),
+            dropped: watchList.dropped.map(updateFavourite).toList(),
+            paused: watchList.paused.map(updateFavourite).toList(),
+            planning: watchList.planning.map(updateFavourite).toList(),
+            repeating: watchList.repeating.map(updateFavourite).toList(),
+          );
+        } on AnilistToggleFavouriteException {
+          rethrow;
+        } catch (e) {
+          throw AnilistToggleFavouriteException(
+            error: e.toString(),
           );
         }
-
-        return entry;
-      }
-
-      return watchList.copyWith(
-        completed: watchList.completed.map(updateFavourite).toList(),
-        current: watchList.current.map(updateFavourite).toList(),
-        dropped: watchList.dropped.map(updateFavourite).toList(),
-        paused: watchList.paused.map(updateFavourite).toList(),
-        planning: watchList.planning.map(updateFavourite).toList(),
-        repeating: watchList.repeating.map(updateFavourite).toList(),
-      );
-    } on AnilistToggleFavouriteException {
-      rethrow;
-    } catch (e) {
-      throw AnilistToggleFavouriteException(
-        error: e.toString(),
-      );
+      case WatchListProvider.mal:
+        throw UnimplementedError();
+      case WatchListProvider.kitsu:
+        throw UnimplementedError();
     }
   }
 }

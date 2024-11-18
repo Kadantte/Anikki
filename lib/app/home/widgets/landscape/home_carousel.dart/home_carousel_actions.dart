@@ -71,7 +71,7 @@ class _HomeCarouselActionsState extends State<_HomeCarouselActions> {
 
                 BlocProvider.of<WatchListBloc>(context).add(
                   WatchListRemoveMedia(
-                    widget.media.anilistInfo!.id,
+                    widget.media,
                   ),
                 );
               },

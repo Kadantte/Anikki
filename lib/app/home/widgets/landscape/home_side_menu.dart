@@ -80,8 +80,7 @@ class HomeSideMenu extends StatelessWidget {
                           ),
                         ),
                       for (final action in _buildActions(
-                        watchListState.connected &&
-                            watchListState.watchList.isNotEmpty,
+                        watchListState.watchList.isNotEmpty,
                       )) ...[
                         IconButton(
                           tooltip: 'Show ${action.type.title}',
@@ -96,7 +95,6 @@ class HomeSideMenu extends StatelessWidget {
                             BlocProvider.of<HomeBloc>(context).add(
                               HomeRefreshed(
                                 requestedType: action.type,
-                                connected: watchListBloc.state.connected,
                                 watchList: watchListBloc.state.watchList,
                               ),
                             );
@@ -123,10 +121,12 @@ class HomeSideMenu extends StatelessWidget {
                             final watchListBloc =
                                 BlocProvider.of<WatchListBloc>(context);
 
-                            if (watchListBloc.state.username != null) {
+                            if (watchListBloc.state
+                                    .connected[WatchListProvider.anilist] ==
+                                true) {
                               watchListBloc.add(
                                 WatchListRequested(
-                                  username: watchListBloc.state.username!,
+                                  provider: WatchListProvider.anilist,
                                 ),
                               );
                             } else {

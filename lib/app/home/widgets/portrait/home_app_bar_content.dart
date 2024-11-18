@@ -58,7 +58,6 @@ class HomeAppBarContent extends StatelessWidget {
             BlocProvider.of<HomeBloc>(context).add(
               HomeRefreshed(
                 requestedType: requestedType,
-                connected: watchListBloc.state.connected,
                 watchList: watchListBloc.state.watchList,
               ),
             );

@@ -15,9 +15,13 @@ class WatchListBloc extends AutoRefreshBloc<WatchListEvent, WatchListState> {
 
   WatchListBloc(
     this.repository,
-  ) : super(const WatchListInitial(username: null)) {
+  ) : super(
+          const WatchListInitial(
+            watchLists: {},
+            currentProvider: WatchListProvider.anilist,
+          ),
+        ) {
     on<WatchListRequested>(_onRequested);
-    on<WatchListReset>(_onReset);
     on<WatchListWatched>(_onWatched);
     on<WatchListRemoveMedia>(_onRemoveMedia);
     on<WatchListAuthUpdated>(_onAuthUpdated);
@@ -28,8 +32,15 @@ class WatchListBloc extends AutoRefreshBloc<WatchListEvent, WatchListState> {
 
   @override
   void autoRefresh() {
-    if (state.username != null) {
-      add(WatchListRequested(username: state.username!));
+    for (final entry in state.connected.entries) {
+      final provider = entry.key;
+      final connected = entry.value;
+
+      if (!connected) continue;
+
+      add(
+        WatchListRequested(provider: provider),
+      );
     }
   }
 
@@ -38,59 +49,66 @@ class WatchListBloc extends AutoRefreshBloc<WatchListEvent, WatchListState> {
     Emitter<WatchListState> emit,
   ) {
     if (event.connected) {
-      add(WatchListRequested(username: event.username!));
-    } else {
-      add(WatchListReset());
+      add(
+        WatchListRequested(
+          provider: event.provider,
+        ),
+      );
     }
   }
 
-  void _onReset(WatchListReset event, Emitter<WatchListState> emit) {
-    emit(const WatchListInitial(
-      username: null,
-      connected: false,
-    ));
-  }
-
   Future<void> _onRequested(
-      WatchListRequested event, Emitter<WatchListState> emit) async {
-    final username = event.username;
-
+    WatchListRequested event,
+    Emitter<WatchListState> emit,
+  ) async {
     emit(
       WatchListLoading(
-        username: username,
-        watchList: state.watchList,
+        watchLists: state.watchLists,
+        currentProvider: state.currentProvider,
         connected: state.connected,
       ),
     );
 
     try {
-      final watchList = await repository.getList(
-        username,
-      );
+      final watchList = await repository.getList(event.provider);
 
       emit(
-        WatchListComplete(
-          username: username,
-          watchList: watchList,
-          connected: true,
+        WatchListLoaded(
+          watchLists: {
+            ...state.watchLists,
+            event.provider: watchList,
+          },
+          currentProvider: state.connected.values.every((val) => val == false)
+              ? event.provider
+              : state.currentProvider,
+          connected: {
+            ...state.connected,
+            event.provider: true,
+          },
         ),
       );
     } on AnilistGetListException catch (e) {
       emit(
         WatchListError(
-          username: username,
-          watchList: state.watchList,
+          watchLists: state.watchLists,
+          currentProvider: state.currentProvider,
+          connected: {
+            ...state.connected,
+            event.provider: false,
+          },
           message: e.error ?? 'Something went wrong...',
-          connected: state.connected,
         ),
       );
     } catch (e) {
       emit(
         WatchListError(
-          username: username,
+          watchLists: state.watchLists,
+          currentProvider: state.currentProvider,
+          connected: {
+            ...state.connected,
+            event.provider: false,
+          },
           message: e.toString(),
-          watchList: state.watchList,
-          connected: state.connected,
         ),
       );
     }
@@ -100,54 +118,63 @@ class WatchListBloc extends AutoRefreshBloc<WatchListEvent, WatchListState> {
     WatchListWatched event,
     Emitter<WatchListState> emit,
   ) async {
-    if (!state.connected) return;
-
-    final entry = event.entry;
-    final media = event.media ?? entry!.media!;
-    final episode = event.episode ?? entry?.episode ?? 1;
-
-    if (entry?.media?.anilistInfo?.id == null && event.media == null) return;
+    final media = event.media;
+    final episode = event.episode ?? 1;
 
     final currentState = state;
 
-    try {
-      await repository.watchedEntry(
-        episode: episode,
-        media: media,
-        state: state,
-      );
+    for (final provider in WatchListProvider.values) {
+      if (state.connected[provider] != true) continue;
 
-      emit(
-        WatchListNotify(
-          username: state.username,
-          title: 'Anilist list updated!',
-          description: 'Updated ${media.title} with episode $episode.',
-        ),
-      );
-      emit(currentState);
+      final watchList = state.watchLists[provider];
 
-      add(
-        WatchListRequested(
-          username: state.username!,
-        ),
-      );
-    } on AnilistUpdateListException catch (e) {
-      logger.error('Could not update anilsit list', e);
+      if (watchList == null) continue;
 
-      emit(
-        WatchListNotify(
-          username: state.username,
-          title: 'Could not update Anilist list',
-          description: 'Anikki will retry periodically until it succeeds.',
-          isError: true,
-        ),
-      );
-      emit(currentState);
+      try {
+        await repository.watchedEntry(
+          provider: provider,
+          episode: episode,
+          media: media,
+          watchList: watchList,
+        );
 
-      Timer(
-        const Duration(minutes: 5),
-        () => add(event),
-      );
+        emit(
+          WatchListNotify(
+            watchLists: state.watchLists,
+            connected: state.connected,
+            currentProvider: state.currentProvider,
+            title: '${provider.title} list updated!',
+            description: 'Updated ${media.title} with episode $episode.',
+          ),
+        );
+
+        emit(currentState);
+
+        add(
+          WatchListRequested(
+            provider: provider,
+          ),
+        );
+      } catch (e) {
+        logger.error('Could not update ${provider.title} list');
+
+        emit(
+          WatchListNotify(
+            watchLists: state.watchLists,
+            connected: state.connected,
+            currentProvider: state.currentProvider,
+            title: 'Could not update ${provider.title} list',
+            description: 'Anikki will retry periodically until it succeeds.',
+            isError: true,
+          ),
+        );
+        emit(currentState);
+
+        Timer(
+          const Duration(minutes: 5),
+          () => add(event),
+        );
+      }
     }
   }
 
@@ -155,31 +182,39 @@ class WatchListBloc extends AutoRefreshBloc<WatchListEvent, WatchListState> {
     WatchListRemoveMedia event,
     Emitter<WatchListState> emit,
   ) async {
-    if (!state.connected || state is! WatchListComplete) return;
+    if (state is! WatchListLoaded) return;
 
     final currentState = state;
 
-    try {
-      await repository.removeEntry(
-        mediaId: event.mediaId,
-      );
+    for (final provider in WatchListProvider.values) {
+      if (state.connected[provider] != true) continue;
 
-      add(
-        WatchListRequested(username: state.username!),
-      );
-    } on AnilistUpdateListException catch (e) {
-      logger.error(e.cause, e.error);
+      try {
+        await repository.removeEntry(
+          media: event.media,
+          provider: provider,
+        );
 
-      emit(
-        WatchListNotify(
-          username: state.username,
-          title: e.cause,
-          description: 'Please retry later',
-          isError: true,
-        ),
-      );
+        add(
+          WatchListRequested(provider: provider),
+        );
+      } catch (e) {
+        logger.error('Could not remove media from ${provider.title} list', e);
 
-      emit(currentState);
+        emit(
+          WatchListNotify(
+            watchLists: state.watchLists,
+            connected: state.connected,
+            currentProvider: state.currentProvider,
+            title:
+                'Could not remove ${event.media.title} from ${provider.title} list',
+            description: 'Please retry later',
+            isError: true,
+          ),
+        );
+
+        emit(currentState);
+      }
     }
   }
 
@@ -187,35 +222,50 @@ class WatchListBloc extends AutoRefreshBloc<WatchListEvent, WatchListState> {
     WatchListToggleFavourite event,
     Emitter<WatchListState> emit,
   ) async {
-    if (!state.connected || state is! WatchListComplete) return;
+    if (state is! WatchListLoaded) return;
 
     final currentState = state;
 
-    try {
-      final updatedWatchList = await repository.toggleFavourite(
-        state.watchList,
-        event.mediaId,
-      );
+    for (final provider in WatchListProvider.values) {
+      if (state.connected[provider] != true) continue;
 
-      emit(
-        WatchListComplete(
-          username: state.username,
-          connected: state.connected,
-          watchList: updatedWatchList,
-        ),
-      );
-    } on AnilistToggleFavouriteException catch (e) {
-      logger.error(e.cause, e.error);
+      final watchList = state.watchLists[provider];
 
-      emit(
-        WatchListNotify(
-          username: state.username,
-          title: e.cause,
-          description: 'Please retry later',
-          isError: true,
-        ),
-      );
-      emit(currentState);
+      if (watchList == null) continue;
+
+      try {
+        final updatedWatchList = await repository.toggleFavourite(
+          watchList: watchList,
+          media: event.media,
+          provider: provider,
+        );
+
+        emit(
+          WatchListLoaded(
+            connected: state.connected,
+            watchLists: {
+              ...state.watchLists,
+              provider: updatedWatchList,
+            },
+          ),
+        );
+      } catch (e) {
+        logger.error('Could not toggle favourite on ${provider.title} list', e);
+
+        emit(
+          WatchListNotify(
+            watchLists: state.watchLists,
+            connected: state.connected,
+            currentProvider: state.currentProvider,
+            title:
+                'Could not toggle favourite for ${event.media.title} from ${provider.title} list',
+            description: 'Please retry later',
+            isError: true,
+          ),
+        );
+
+        emit(currentState);
+      }
     }
   }
 }

@@ -2,14 +2,21 @@ part of 'watch_list_bloc.dart';
 
 sealed class WatchListState extends Equatable {
   const WatchListState({
-    required this.username,
-    required this.watchList,
-    this.connected = false,
+    required this.watchLists,
+    this.currentProvider,
+    this.connected = const {
+      WatchListProvider.anilist: false,
+      WatchListProvider.mal: false,
+      WatchListProvider.kitsu: false,
+    },
   });
 
-  final String? username;
-  final bool connected;
-  final AnilistWatchList watchList;
+  final Map<WatchListProvider, AnilistWatchList> watchLists;
+  final Map<WatchListProvider, bool> connected;
+  final WatchListProvider? currentProvider;
+
+  AnilistWatchList get watchList =>
+      watchLists[currentProvider] ?? const AnilistWatchList();
 
   List<AnilistWatchListEntry> get current => watchList.current;
   List<AnilistWatchListEntry> get completed => watchList.completed;
@@ -23,7 +30,6 @@ sealed class WatchListState extends Equatable {
 
   @override
   List<Object?> get props => [
-        username,
         connected,
         watchList,
       ];
@@ -31,7 +37,6 @@ sealed class WatchListState extends Equatable {
   @override
   String toString() {
     return [
-      username,
       connected,
       'Current List: ${current.length} entries',
       'Completed List: ${completed.length} entries',
@@ -45,33 +50,33 @@ sealed class WatchListState extends Equatable {
 
 final class WatchListInitial extends WatchListState {
   const WatchListInitial({
-    required super.username,
-    super.watchList = const AnilistWatchList(),
+    required super.watchLists,
+    super.currentProvider,
     super.connected,
   });
 }
 
 final class WatchListLoading extends WatchListState {
   const WatchListLoading({
-    required super.username,
-    super.watchList = const AnilistWatchList(),
+    required super.watchLists,
+    super.currentProvider,
     super.connected,
   });
 }
 
-final class WatchListComplete extends WatchListState {
-  const WatchListComplete({
-    required super.username,
-    required super.watchList,
+final class WatchListLoaded extends WatchListState {
+  const WatchListLoaded({
+    required super.watchLists,
+    super.currentProvider,
     super.connected,
   });
 }
 
 final class WatchListNotify extends WatchListState {
   const WatchListNotify({
-    required super.username,
     required this.title,
-    super.watchList = const AnilistWatchList(),
+    required super.watchLists,
+    super.currentProvider,
     super.connected,
     this.description,
     this.isError = false,
@@ -83,7 +88,6 @@ final class WatchListNotify extends WatchListState {
 
   @override
   List<Object?> get props => [
-        username,
         title,
         description,
         isError,
@@ -94,9 +98,9 @@ final class WatchListNotify extends WatchListState {
 
 final class WatchListError extends WatchListState {
   const WatchListError({
-    required super.username,
     required this.message,
-    super.watchList = const AnilistWatchList(),
+    required super.watchLists,
+    super.currentProvider,
     super.connected,
   });
 
@@ -104,7 +108,6 @@ final class WatchListError extends WatchListState {
 
   @override
   List<Object?> get props => [
-        username,
         message,
         connected,
         watchList,

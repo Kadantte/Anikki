@@ -1,6 +1,7 @@
 part of 'anilist.dart';
 
 mixin AnilistAuth on AnilistClient {
+  @override
   Future<Query$Viewer$Viewer> getMe() async {
     final result = await client.query$Viewer(Options$Query$Viewer());
 

@@ -51,7 +51,9 @@ class WatchListView extends StatelessWidget {
 
                         if (state is AnilistAuthSuccess) {
                           BlocProvider.of<WatchListBloc>(context).add(
-                            WatchListRequested(username: state.me.name),
+                            WatchListRequested(
+                              provider: WatchListProvider.anilist,
+                            ),
                           );
                         }
                       },

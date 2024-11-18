@@ -48,17 +48,17 @@ mixin AnilistList on AnilistClient {
     }
   }
 
-  Future<AnilistWatchList> getWatchLists(
-    String username, {
-    bool useCache = true,
-  }) async {
+  Future<AnilistWatchList> getWatchLists() async {
     try {
+      final user = await getMe();
+      final username = user.name;
+
       var watchList = const AnilistWatchList();
 
       final result = await client.query$GetLists(
         Options$Query$GetLists(
           variables: Variables$Query$GetLists(username: username),
-          fetchPolicy: useCache ? null : FetchPolicy.noCache,
+          fetchPolicy: FetchPolicy.noCache,
         ),
       );
 
