@@ -126,6 +126,7 @@ class BlocListeners extends StatelessWidget {
               BlocProvider.of<HomeBloc>(context).add(
                 HomeRefreshed(
                   watchList: state.watchList,
+                  watchListProvider: state.currentProvider,
                 ),
               );
             }

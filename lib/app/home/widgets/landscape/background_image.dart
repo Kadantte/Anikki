@@ -3,15 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:anikki/app/home/bloc/home_bloc.dart';
-import 'package:anikki/core/core.dart';
 
 class HomeBackgroundImage extends StatelessWidget {
   const HomeBackgroundImage({
     super.key,
-    required this.media,
   });
-
-  final Media media;
 
   @override
   Widget build(BuildContext context) {

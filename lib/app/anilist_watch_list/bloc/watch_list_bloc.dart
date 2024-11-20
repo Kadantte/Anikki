@@ -243,6 +243,7 @@ class WatchListBloc extends AutoRefreshBloc<WatchListEvent, WatchListState> {
         emit(
           WatchListLoaded(
             connected: state.connected,
+            currentProvider: state.currentProvider,
             watchLists: {
               ...state.watchLists,
               provider: updatedWatchList,

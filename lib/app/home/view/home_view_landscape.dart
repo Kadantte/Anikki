@@ -56,28 +56,25 @@ class HomeViewLandscape extends StatelessWidget {
 
         return Stack(
           children: [
-            if (state.currentEntry != null) ...[
-              Positioned.fill(
-                child: HomeBackgroundImage(media: state.currentMedia!),
+            Positioned.fill(
+              child: const HomeBackgroundImage(),
+            ),
+            Positioned(
+              top: 0,
+              left: 0,
+              child: HomeTitle(
+                maxSize: maxTitleSize,
               ),
-              Positioned(
-                top: 0,
-                left: 0,
-                child: HomeTitle(
-                  entry: state.currentEntry!,
-                  maxSize: maxTitleSize,
+            )
+                .animate()
+                .fadeIn(
+                  duration: 500.ms,
+                )
+                .slideX(
+                  duration: 500.ms,
+                  end: 0,
+                  begin: -0.5,
                 ),
-              )
-                  .animate()
-                  .fadeIn(
-                    duration: 500.ms,
-                  )
-                  .slideX(
-                    duration: 500.ms,
-                    end: 0,
-                    begin: -0.5,
-                  ),
-            ],
             Positioned(
               right: 0.0,
               bottom: carouselSize.height + 24.0,
@@ -92,9 +89,9 @@ class HomeViewLandscape extends StatelessWidget {
                 width: carouselSize.width,
                 height: carouselSize.height,
                 child: HomeCarousel(
+                  entries: state.entries,
                   height: carouselSize.height,
                   width: carouselSize.width,
-                  entries: state.entries,
                 ),
               )
                   .animate()

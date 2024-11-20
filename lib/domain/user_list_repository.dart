@@ -95,7 +95,7 @@ class UserListRepository {
   Future<List<MediaListEntry>> getContinueList(
     WatchList watchList,
   ) async {
-    final anilistEntries = {
+    final entries = {
       ...watchList.current,
       ...watchList.repeating,
     }.where(
@@ -113,7 +113,7 @@ class UserListRepository {
     );
 
     return [
-      for (final entry in anilistEntries)
+      for (final entry in entries)
         MediaListEntry(
           updatedAt: entry.updatedAt,
           progress: entry.progress,
@@ -167,8 +167,8 @@ class UserListRepository {
 
           await anilist.toggleFavourite(mediaId: mediaId);
 
-          MediaListEntry updateFavourite(entry) {
-            if (entry.media?.id != mediaId) return entry;
+          MediaListEntry updateFavourite(MediaListEntry entry) {
+            if (entry.media.anilistInfo?.id != mediaId) return entry;
 
             return entry.copyWith(
               media: entry.media.copyWith(

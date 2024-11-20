@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
@@ -46,6 +48,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           entries: state.entries,
           currentMedia: state.currentMedia,
           currentBackgroundUrl: state.currentBackgroundUrl,
+          watchListProvider: event.watchListProvider ?? state.watchListProvider,
           type: requestedType,
         ),
       );
@@ -54,7 +57,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             HomeMediaType.following,
             HomeMediaType.toStart,
           ].contains(requestedType) &&
-          event.watchList?.isEmpty == true) {
+          (event.watchList == null || event.watchList?.isEmpty == true)) {
         requestedType = HomeMediaType.trending;
       }
 
@@ -82,6 +85,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           currentMedia: state.currentMedia ?? entries.first.media,
           currentBackgroundUrl:
               state.currentBackgroundUrl ?? entries.first.media.backgroundImage,
+          watchListProvider: event.watchListProvider ?? state.watchListProvider,
           type: requestedType,
         ),
       );
@@ -91,6 +95,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           entries: state.entries,
           currentMedia: state.currentMedia,
           currentBackgroundUrl: state.currentBackgroundUrl,
+          watchListProvider: event.watchListProvider ?? state.watchListProvider,
           type: state.type,
           message: e.error ?? e.cause,
         ),
@@ -101,6 +106,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           entries: entries ?? state.entries,
           currentBackgroundUrl: state.currentBackgroundUrl,
           currentMedia: state.currentMedia,
+          watchListProvider: event.watchListProvider ?? state.watchListProvider,
           type: state.type,
           message: e.error ?? e.cause,
         ),
@@ -111,6 +117,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           entries: entries ?? state.entries,
           currentBackgroundUrl: state.currentBackgroundUrl,
           currentMedia: state.currentMedia,
+          watchListProvider: event.watchListProvider ?? state.watchListProvider,
           type: state.type,
           message: e.toString(),
         ),

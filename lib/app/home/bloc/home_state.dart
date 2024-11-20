@@ -11,22 +11,33 @@ enum HomeMediaType {
   const HomeMediaType(this.title);
 }
 
-final class HomeState extends Equatable {
+sealed class HomeState extends Equatable {
   const HomeState({
     this.currentMedia,
     this.entries = const [],
     this.currentBackgroundUrl,
     this.type = HomeMediaType.following,
+    this.watchListProvider,
   });
 
   final Media? currentMedia;
   final String? currentBackgroundUrl;
   final List<MediaListEntry> entries;
   final HomeMediaType type;
+  final WatchListProvider? watchListProvider;
 
   MediaListEntry? get currentEntry => entries.firstWhereOrNull(
-        (e) => e.media == currentMedia,
+        (e) => switch (watchListProvider) {
+          WatchListProvider.anilist => currentMedia?.anilistInfo?.id != null &&
+              e.media.anilistInfo?.id == currentMedia?.anilistInfo?.id,
+          WatchListProvider.mal => throw UnimplementedError(),
+          WatchListProvider.kitsu => throw UnimplementedError(),
+          null => false,
+        },
       );
+
+  int get currentEntryIndex =>
+      currentEntry == null ? 0 : entries.indexOf(currentEntry!);
 
   @override
   List<Object?> get props => [
@@ -51,14 +62,8 @@ final class HomeState extends Equatable {
     String? currentBackgroundUrl,
     List<MediaListEntry>? entries,
     HomeMediaType? type,
-  }) {
-    return HomeState(
-      currentMedia: currentMedia ?? this.currentMedia,
-      currentBackgroundUrl: currentBackgroundUrl ?? this.currentBackgroundUrl,
-      entries: entries ?? this.entries,
-      type: type ?? this.type,
-    );
-  }
+    WatchListProvider? watchListProvider,
+  });
 }
 
 final class HomeInitial extends HomeState {
@@ -67,7 +72,27 @@ final class HomeInitial extends HomeState {
     super.currentBackgroundUrl,
     super.currentMedia,
     super.type = HomeMediaType.following,
+    super.watchListProvider,
   });
+
+  @override
+  HomeInitial copyWith({
+    Media? currentMedia,
+    String? currentBackgroundUrl,
+    List<MediaListEntry>? entries,
+    HomeMediaType? type,
+    WatchListProvider? watchListProvider,
+  }) {
+    {
+      return HomeInitial(
+        currentMedia: currentMedia ?? this.currentMedia,
+        currentBackgroundUrl: currentBackgroundUrl ?? this.currentBackgroundUrl,
+        entries: entries ?? this.entries,
+        type: type ?? this.type,
+        watchListProvider: watchListProvider ?? this.watchListProvider,
+      );
+    }
+  }
 }
 
 final class HomeLoading extends HomeState {
@@ -76,7 +101,25 @@ final class HomeLoading extends HomeState {
     super.currentBackgroundUrl,
     super.currentMedia,
     super.type,
+    super.watchListProvider,
   });
+
+  @override
+  HomeLoading copyWith({
+    Media? currentMedia,
+    String? currentBackgroundUrl,
+    List<MediaListEntry>? entries,
+    HomeMediaType? type,
+    WatchListProvider? watchListProvider,
+  }) {
+    return HomeLoading(
+      currentMedia: currentMedia ?? this.currentMedia,
+      currentBackgroundUrl: currentBackgroundUrl ?? this.currentBackgroundUrl,
+      entries: entries ?? this.entries,
+      type: type ?? this.type,
+      watchListProvider: watchListProvider ?? this.watchListProvider,
+    );
+  }
 }
 
 final class HomeLoaded extends HomeState {
@@ -85,7 +128,25 @@ final class HomeLoaded extends HomeState {
     super.currentBackgroundUrl,
     super.currentMedia,
     super.type,
+    super.watchListProvider,
   });
+
+  @override
+  HomeLoaded copyWith({
+    Media? currentMedia,
+    String? currentBackgroundUrl,
+    List<MediaListEntry>? entries,
+    HomeMediaType? type,
+    WatchListProvider? watchListProvider,
+  }) {
+    return HomeLoaded(
+      currentMedia: currentMedia ?? this.currentMedia,
+      currentBackgroundUrl: currentBackgroundUrl ?? this.currentBackgroundUrl,
+      entries: entries ?? this.entries,
+      type: type ?? this.type,
+      watchListProvider: watchListProvider ?? this.watchListProvider,
+    );
+  }
 }
 
 final class HomeError extends HomeState {
@@ -94,6 +155,7 @@ final class HomeError extends HomeState {
     super.currentMedia,
     super.type,
     super.currentBackgroundUrl,
+    super.watchListProvider,
     required this.message,
   });
 
@@ -106,4 +168,23 @@ final class HomeError extends HomeState {
         type,
         currentBackgroundUrl,
       ];
+
+  @override
+  HomeError copyWith({
+    Media? currentMedia,
+    String? currentBackgroundUrl,
+    List<MediaListEntry>? entries,
+    HomeMediaType? type,
+    WatchListProvider? watchListProvider,
+    String? message,
+  }) {
+    return HomeError(
+      currentMedia: currentMedia ?? this.currentMedia,
+      currentBackgroundUrl: currentBackgroundUrl ?? this.currentBackgroundUrl,
+      entries: entries ?? this.entries,
+      type: type ?? this.type,
+      watchListProvider: watchListProvider ?? this.watchListProvider,
+      message: message ?? this.message,
+    );
+  }
 }

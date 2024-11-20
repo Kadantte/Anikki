@@ -33,14 +33,17 @@ final class HomeRefreshed extends HomeEvent {
   const HomeRefreshed({
     this.requestedType,
     this.watchList,
+    this.watchListProvider,
   });
 
   final WatchList? watchList;
   final HomeMediaType? requestedType;
+  final WatchListProvider? watchListProvider;
 
   @override
   List<Object?> get props => [
         watchList,
         requestedType,
+        watchListProvider,
       ];
 }
