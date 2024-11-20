@@ -2,7 +2,7 @@ part of 'watch_list_bloc.dart';
 
 sealed class WatchListState extends Equatable {
   const WatchListState({
-    required this.watchLists,
+    this.watchLists = const {},
     this.currentProvider,
     this.connected = const {
       WatchListProvider.anilist: false,
@@ -56,7 +56,7 @@ sealed class WatchListState extends Equatable {
 
 final class WatchListInitial extends WatchListState {
   const WatchListInitial({
-    required super.watchLists,
+    super.watchLists,
     super.currentProvider,
     super.connected,
   });
@@ -77,7 +77,7 @@ final class WatchListInitial extends WatchListState {
 
 final class WatchListLoading extends WatchListState {
   const WatchListLoading({
-    required super.watchLists,
+    super.watchLists,
     super.currentProvider,
     super.connected,
   });
@@ -98,7 +98,7 @@ final class WatchListLoading extends WatchListState {
 
 final class WatchListLoaded extends WatchListState {
   const WatchListLoaded({
-    required super.watchLists,
+    super.watchLists,
     super.currentProvider,
     super.connected,
   });
@@ -120,7 +120,7 @@ final class WatchListLoaded extends WatchListState {
 final class WatchListNotify extends WatchListState {
   const WatchListNotify({
     required this.title,
-    required super.watchLists,
+    super.watchLists,
     super.currentProvider,
     super.connected,
     this.description,
@@ -164,7 +164,7 @@ final class WatchListNotify extends WatchListState {
 final class WatchListError extends WatchListState {
   const WatchListError({
     required this.message,
-    required super.watchLists,
+    super.watchLists,
     super.currentProvider,
     super.connected,
   });

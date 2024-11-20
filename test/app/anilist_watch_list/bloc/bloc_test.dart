@@ -1,11 +1,12 @@
-import 'package:anikki/data/data.dart';
-import 'package:anikki/domain/domain.dart';
+import 'package:bloc_test/bloc_test.dart';
 import 'package:collection/collection.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
-import 'package:bloc_test/bloc_test.dart';
 
 import 'package:anikki/app/anilist_watch_list/bloc/watch_list_bloc.dart';
+import 'package:anikki/core/core.dart';
+import 'package:anikki/data/data.dart';
+import 'package:anikki/domain/domain.dart';
 
 import '../../../fixtures/anilist.dart';
 
@@ -22,12 +23,12 @@ void main() {
         build: () => bloc,
         act: (bloc) => bloc.add(
           const WatchListRequested(
-            username: username,
+            provider: WatchListProvider.anilist,
           ),
         ),
         expect: () => [
-          const WatchListLoading(username: username),
-          isA<WatchListComplete>()
+          isA<WatchListLoading>(),
+          isA<WatchListLoaded>()
               .having(
                 (p0) => p0.current.length,
                 'with the right amount of current entries',
@@ -92,7 +93,7 @@ void main() {
         setUp: () {
           repository = UserListRepositoryMock();
 
-          when(() => repository.getList(username))
+          when(() => repository.getList(WatchListProvider.anilist))
               .thenAnswer((_) async => watchListClassMock);
 
           bloc = WatchListBloc(repository);
@@ -104,27 +105,21 @@ void main() {
         build: () => bloc,
         act: (bloc) => bloc.add(
           const WatchListRequested(
-            username: username,
+            provider: WatchListProvider.anilist,
           ),
         ),
         expect: () => [
-          const WatchListLoading(username: username),
-          isA<WatchListError>()
-              .having(
-                (p0) => p0.username,
-                'has right range',
-                username,
-              )
-              .having(
-                (p0) => p0.message,
-                'with an error message',
-                isNotNull,
-              ),
+          isA<WatchListLoading>(),
+          isA<WatchListError>().having(
+            (p0) => p0.message,
+            'with an error message',
+            isNotNull,
+          ),
         ],
         setUp: () {
           repository = UserListRepositoryMock();
 
-          when(() => repository.getList(username))
+          when(() => repository.getList(WatchListProvider.anilist))
               .thenThrow(AnilistGetListException(error: 'error'));
 
           bloc = WatchListBloc(repository);
@@ -132,31 +127,16 @@ void main() {
       );
     });
 
-    group('on [WatchListReset]', () {
-      blocTest(
-        'emits [WatchListInitial] when [WatchListReset] is added',
-        build: () => bloc,
-        act: (bloc) => bloc.add(
-          WatchListReset(),
-        ),
-        expect: () => [
-          const WatchListInitial(
-            username: null,
-            connected: false,
-          ),
-        ],
-        setUp: () {
-          repository = UserListRepositoryMock();
-          bloc = WatchListBloc(repository);
-        },
-      );
-    });
-
     group('on [WatchListWatched]', () {
-      WatchListState makeSeedState(bool connected) => WatchListComplete(
-            username: username,
-            watchList: const AnilistWatchList(),
-            connected: connected,
+      WatchListState makeSeedState(bool connected) => WatchListLoaded(
+            watchLists: {
+              WatchListProvider.anilist:
+                  WatchList(provider: WatchListProvider.anilist),
+            },
+            currentProvider: WatchListProvider.anilist,
+            connected: {
+              WatchListProvider.anilist: connected,
+            },
           );
 
       blocTest<WatchListBloc, WatchListState>(
@@ -165,27 +145,26 @@ void main() {
         seed: () => makeSeedState(true),
         act: (bloc) => bloc.add(
           WatchListWatched(
-            entry: localFileMock,
+            media: anilistMediaMock,
           ),
         ),
         expect: () => [
           isA<WatchListNotify>(),
-          isA<WatchListComplete>(),
-          isA<WatchListLoading>(),
-          isA<WatchListComplete>()
+          isA<WatchListLoaded>(),
         ],
         setUp: () {
           repository = UserListRepositoryMock();
 
           when(
             () => repository.watchedEntry(
+              provider: WatchListProvider.anilist,
               episode: localFileMock.episode!,
               media: localFileMock.media!,
-              state: makeSeedState(true),
+              watchList: WatchList(provider: WatchListProvider.anilist),
             ),
           ).thenAnswer((_) async {});
 
-          when(() => repository.getList(username))
+          when(() => repository.getList(WatchListProvider.anilist))
               .thenAnswer((_) async => watchListClassMock);
 
           bloc = WatchListBloc(repository);
@@ -198,7 +177,7 @@ void main() {
         seed: () => makeSeedState(true),
         act: (bloc) => bloc.add(
           WatchListWatched(
-            entry: localFileMock,
+            media: anilistMediaMock,
           ),
         ),
         expect: () => [
@@ -207,16 +186,17 @@ void main() {
             'with an error notification',
             isTrue,
           ),
-          isA<WatchListComplete>(),
+          isA<WatchListLoaded>(),
         ],
         setUp: () {
           repository = UserListRepositoryMock();
 
           when(
             () => repository.watchedEntry(
+              provider: WatchListProvider.anilist,
               episode: localFileMock.episode!,
               media: localFileMock.media!,
-              state: makeSeedState(true),
+              watchList: WatchList(provider: WatchListProvider.anilist),
             ),
           ).thenThrow(AnilistUpdateListException(error: 'error'));
 
@@ -230,7 +210,7 @@ void main() {
         seed: () => makeSeedState(false),
         act: (bloc) => bloc.add(
           WatchListWatched(
-            entry: localFileMock,
+            media: anilistMediaMock,
           ),
         ),
         expect: () => [],
@@ -244,21 +224,16 @@ void main() {
       blocTest<WatchListBloc, WatchListState>(
         'emits [WatchListInitial] when [WatchListAuthUpdated] is added but app just disconnected',
         build: () => bloc,
-        seed: () => const WatchListComplete(
-          username: username,
-          watchList: AnilistWatchList(),
-          connected: false,
-        ),
+        seed: () => const WatchListLoaded(),
         act: (bloc) => bloc.add(
           WatchListAuthUpdated(
+            provider: WatchListProvider.anilist,
             connected: false,
-            username: null,
           ),
         ),
         expect: () => [
-          const WatchListInitial(
-            username: null,
-            connected: false,
+          const WatchListLoaded(
+            currentProvider: WatchListProvider.anilist,
           ),
         ],
         setUp: () {
@@ -270,20 +245,16 @@ void main() {
       blocTest<WatchListBloc, WatchListState>(
         'emits [WatchListLoading, WatchListComplete] when [WatchListAuthUpdated] is added but app just connected',
         build: () => bloc,
-        seed: () => const WatchListComplete(
-          username: username,
-          watchList: AnilistWatchList(),
-          connected: false,
-        ),
+        seed: () => const WatchListLoaded(),
         act: (bloc) => bloc.add(
           WatchListAuthUpdated(
+            provider: WatchListProvider.anilist,
             connected: true,
-            username: username,
           ),
         ),
         expect: () => [
-          const WatchListLoading(username: username),
-          isA<WatchListComplete>()
+          isA<WatchListLoading>(),
+          isA<WatchListLoaded>()
               .having(
                 (p0) => p0.current.length,
                 'with the right amount of current entries',
@@ -348,7 +319,7 @@ void main() {
         setUp: () {
           repository = UserListRepositoryMock();
 
-          when(() => repository.getList(username))
+          when(() => repository.getList(WatchListProvider.anilist))
               .thenAnswer((_) async => watchListClassMock);
 
           bloc = WatchListBloc(repository);

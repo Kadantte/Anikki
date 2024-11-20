@@ -1,8 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'package:anikki/app/anilist_watch_list/bloc/watch_list_bloc.dart';
-import 'package:anikki/data/anilist/anilist.dart';
+import 'package:anikki/core/core.dart';
 import 'package:anikki/domain/domain.dart';
 
 import '../fixtures/anilist.dart';
@@ -45,10 +44,8 @@ void main() {
           await repository.watchedEntry(
             episode: 1,
             media: anilistMediaMock,
-            state: const WatchListComplete(
-              username: username,
-              watchList: AnilistWatchList(),
-            ),
+            provider: WatchListProvider.anilist,
+            watchList: const WatchList(provider: WatchListProvider.anilist),
           );
         });
 
@@ -56,10 +53,8 @@ void main() {
           await repository.watchedEntry(
             episode: 2,
             media: anilistMediaMock,
-            state: const WatchListComplete(
-              username: username,
-              watchList: AnilistWatchList(),
-            ),
+            provider: WatchListProvider.anilist,
+            watchList: const WatchList(provider: WatchListProvider.anilist),
           );
         });
       });
@@ -89,10 +84,8 @@ void main() {
             await repository.watchedEntry(
               episode: 1,
               media: anilistMediaMock,
-              state: const WatchListComplete(
-                username: username,
-                watchList: AnilistWatchList(),
-              ),
+              provider: WatchListProvider.anilist,
+              watchList: const WatchList(provider: WatchListProvider.anilist),
             );
             fail('Expected exception');
           } on Exception catch (e) {
@@ -108,8 +101,10 @@ void main() {
           tmdb = MockTmdb();
           anilist = MockAnilist();
           when(
-            () => anilist.getWatchLists(username, useCache: false),
-          ).thenAnswer((_) async => watchListClassMock);
+            () => anilist.getWatchLists(),
+          ).thenAnswer(
+            (_) async => anilistWatchListClassMock,
+          );
 
           repository = UserListRepository(
             anilist: anilist,
@@ -118,7 +113,7 @@ void main() {
         });
 
         test('succeeds', () async {
-          final result = await repository.getList(username);
+          final result = await repository.getList(WatchListProvider.anilist);
 
           expect(result, watchListClassMock);
         });
@@ -131,7 +126,7 @@ void main() {
           tmdb = MockTmdb();
           anilist = MockAnilist();
           when(
-            () => anilist.getWatchLists(username, useCache: false),
+            () => anilist.getWatchLists(),
           ).thenThrow(exception);
 
           repository = UserListRepository(
@@ -142,7 +137,7 @@ void main() {
 
         test('fails with the same exception', () async {
           try {
-            await repository.getList(username);
+            await repository.getList(WatchListProvider.anilist);
             fail('Expected exception');
           } on Exception catch (e) {
             expect(e, exception);

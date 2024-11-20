@@ -16,8 +16,7 @@ class WatchListBloc extends AutoRefreshBloc<WatchListEvent, WatchListState> {
   WatchListBloc(
     this.repository,
   ) : super(
-          const WatchListInitial(
-            watchLists: {},
+          WatchListInitial(
             currentProvider: WatchListProvider.anilist,
           ),
         ) {
@@ -67,7 +66,7 @@ class WatchListBloc extends AutoRefreshBloc<WatchListEvent, WatchListState> {
         ),
       );
     } else {
-      final watchLists = state.watchLists;
+      final watchLists = {...state.watchLists};
 
       watchLists.removeWhere(
         (provider, watchList) => provider == event.provider,

@@ -152,6 +152,14 @@ void main() {
 
     group('[getWatchLists] method', () {
       test('gets lists if no error occurs', () async {
+        final resultGetMe = generateMockQuery<Query$Viewer>(mockGraphQLClient);
+        when(() => resultGetMe.hasException).thenReturn(false);
+        when(() => resultGetMe.parsedData).thenReturn(
+          Query$Viewer(
+            Viewer: Query$Viewer$Viewer(id: 1, name: 'Kylart'),
+          ),
+        );
+
         final result = generateMockQuery<Query$GetLists>(mockGraphQLClient);
         when(() => result.hasException).thenReturn(false);
         when(() => result.parsedData).thenReturn(Query$GetLists(
@@ -175,7 +183,7 @@ void main() {
         ])));
 
         final anilist = Anilist(client: mockGraphQLClient);
-        final lists = await anilist.getWatchLists('Hello');
+        final lists = await anilist.getWatchLists();
 
         expect(
           lists.completed,
@@ -238,7 +246,7 @@ void main() {
         final anilist = Anilist(client: mockGraphQLClient);
 
         try {
-          await anilist.getWatchLists('Kylart');
+          await anilist.getWatchLists();
 
           fail('Error was not thrown');
         } catch (e) {

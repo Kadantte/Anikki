@@ -263,12 +263,24 @@ final pausedEntriesMock = watchListMock.MediaListCollection?.lists
         .toList() ??
     [];
 
-final watchListClassMock = AnilistWatchList(
+final anilistWatchListClassMock = AnilistWatchList(
   completed: completedEntriesMock,
   current: currentEntriesMock,
   dropped: droppedEntriesMock,
   planning: plannedEntriesMock,
   paused: pausedEntriesMock,
+  repeating: const [],
+);
+
+final watchListClassMock = WatchList(
+  provider: WatchListProvider.anilist,
+  completed:
+      completedEntriesMock.map(MediaListEntry.fromAnilistListEntry).toList(),
+  current: currentEntriesMock.map(MediaListEntry.fromAnilistListEntry).toList(),
+  dropped: droppedEntriesMock.map(MediaListEntry.fromAnilistListEntry).toList(),
+  planning:
+      plannedEntriesMock.map(MediaListEntry.fromAnilistListEntry).toList(),
+  paused: pausedEntriesMock.map(MediaListEntry.fromAnilistListEntry).toList(),
   repeating: const [],
 );
 
