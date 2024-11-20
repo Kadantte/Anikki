@@ -11,21 +11,20 @@ sealed class WatchListState extends Equatable {
     },
   });
 
-  final Map<WatchListProvider, AnilistWatchList> watchLists;
+  final Map<WatchListProvider, WatchList> watchLists;
   final Map<WatchListProvider, bool> connected;
   final WatchListProvider? currentProvider;
 
-  AnilistWatchList get watchList =>
-      watchLists[currentProvider] ?? const AnilistWatchList();
+  WatchList? get watchList => watchLists[currentProvider];
 
-  List<AnilistWatchListEntry> get current => watchList.current;
-  List<AnilistWatchListEntry> get completed => watchList.completed;
-  List<AnilistWatchListEntry> get dropped => watchList.dropped;
-  List<AnilistWatchListEntry> get paused => watchList.paused;
-  List<AnilistWatchListEntry> get planning => watchList.planning;
-  List<AnilistWatchListEntry> get repeating => watchList.repeating;
+  List<MediaListEntry> get current => watchList?.current ?? const [];
+  List<MediaListEntry> get completed => watchList?.completed ?? const [];
+  List<MediaListEntry> get dropped => watchList?.dropped ?? const [];
+  List<MediaListEntry> get paused => watchList?.paused ?? const [];
+  List<MediaListEntry> get planning => watchList?.planning ?? const [];
+  List<MediaListEntry> get repeating => watchList?.repeating ?? const [];
 
-  bool get isEmpty => watchList == const AnilistWatchList();
+  bool get isEmpty => watchList?.isEmpty == true;
   bool get isNotEmpty => !isEmpty;
 
   @override

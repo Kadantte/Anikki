@@ -14,12 +14,12 @@ class DrawerEpisodeCompleted extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<WatchListBloc, WatchListState>(
       builder: (context, state) {
-        final completedEntry = AnilistUtils.getCompletedEntry(
-          state.watchList,
+        final completedEntry = WatchListUtils.getCompletedEntry(
+          state.watchLists,
           media,
         );
-        final currentEntry = AnilistUtils.getCurrentEntry(
-          state.watchList,
+        final currentEntry = WatchListUtils.getCurrentEntry(
+          state.watchLists,
           media,
         );
 

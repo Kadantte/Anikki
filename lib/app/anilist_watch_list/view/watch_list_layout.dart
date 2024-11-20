@@ -12,7 +12,7 @@ import 'package:anikki/app/anilist_watch_list/widgets/watch_list_card.dart';
 class WatchListLayout extends StatelessWidget {
   const WatchListLayout({super.key, required this.entries});
 
-  final List<Query$GetLists$MediaListCollection$lists$entries> entries;
+  final List<MediaListEntry> entries;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class WatchListLayout extends StatelessWidget {
         : CustomListView(
             entries: entries,
             builder: (context, entry) => EntryTile(
-              media: Media(anilistInfo: entry.media!),
+              media: entry.media,
               subtitle: entry.status == Enum$MediaListStatus.CURRENT &&
                       entry.progress != null
                   ? Text('Currently at episode ${entry.progress!.toString()}')

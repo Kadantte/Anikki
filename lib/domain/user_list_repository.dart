@@ -17,16 +17,14 @@ class UserListRepository {
   final Tmdb tmdb;
 
   Enum$MediaListStatus? _getWatchedEntryStatus(
-    AnilistWatchList watchList,
+    WatchList watchList,
     Media media,
     int episode,
   ) {
     Enum$MediaListStatus? status;
 
-    final isCompleted =
-        AnilistUtils.getCompletedEntry(watchList, media) != null;
-    final isPlanning =
-        AnilistUtils.getListEntry(watchList.planning, media) != null;
+    final isCompleted = watchList.getCompletedEntry(media) != null;
+    final isPlanning = watchList.getPlanningEntry(media) != null;
 
     if (isCompleted && episode == 1) {
       status = Enum$MediaListStatus.REPEATING;
@@ -43,7 +41,7 @@ class UserListRepository {
     required int episode,
     required Media media,
     required WatchListProvider provider,
-    required AnilistWatchList watchList,
+    required WatchList watchList,
   }) async {
     switch (provider) {
       case WatchListProvider.anilist:
@@ -84,16 +82,18 @@ class UserListRepository {
   }
 
   /// Returns the watch lists of the user at `username`
-  Future<AnilistWatchList> getList(WatchListProvider provider) async {
-    return await switch (provider) {
-      WatchListProvider.anilist => anilist.getWatchLists(),
+  Future<WatchList> getList(WatchListProvider provider) async {
+    return switch (provider) {
+      WatchListProvider.anilist => WatchList.fromAnilistWatchList(
+          await anilist.getWatchLists(),
+        ),
       WatchListProvider.mal => throw UnimplementedError(),
       WatchListProvider.kitsu => throw UnimplementedError(),
     };
   }
 
   Future<List<MediaListEntry>> getContinueList(
-    AnilistWatchList watchList,
+    WatchList watchList,
   ) async {
     final anilistEntries = {
       ...watchList.current,
@@ -101,8 +101,8 @@ class UserListRepository {
     }.where(
       (element) {
         final progress = element.progress ?? 0;
-        final nextEpisode = element.media?.nextAiringEpisode?.episode;
-        final nbEpisodes = element.media?.episodes ?? double.infinity;
+        final nextEpisode = element.media.nextAiringEpisode;
+        final nbEpisodes = element.media.numberOfEpisodes ?? double.infinity;
 
         return nextEpisode != null
             ? progress < nextEpisode - 1
@@ -118,23 +118,23 @@ class UserListRepository {
           updatedAt: entry.updatedAt,
           progress: entry.progress,
           media: await tmdb.hydrateMediaWithTmdb(
-            Media(anilistInfo: entry.media),
+            entry.media,
           ),
         ),
     ];
   }
 
   Future<List<MediaListEntry>> getStartList(
-    AnilistWatchList watchList,
+    WatchList watchList,
   ) async {
     final season = currentSeason();
     final year = DateTime.now().year;
     final planningList = watchList.planning;
 
     final seasonEntries = planningList.where((element) {
-      return element.media?.season == season &&
-          element.media?.seasonYear == year &&
-          element.media?.nextAiringEpisode?.episode != 1 &&
+      return element.media.season == season &&
+          element.media.seasonYear == year &&
+          element.media.nextAiringEpisode != 1 &&
           element.progress == 0;
     });
 
@@ -147,14 +147,14 @@ class UserListRepository {
           updatedAt: entry.updatedAt,
           progress: entry.progress,
           media: await tmdb.hydrateMediaWithTmdb(
-            Media(anilistInfo: entry.media),
+            entry.media,
           ),
         ),
     ];
   }
 
-  Future<AnilistWatchList> toggleFavourite({
-    required AnilistWatchList watchList,
+  Future<WatchList> toggleFavourite({
+    required WatchList watchList,
     required Media media,
     required WatchListProvider provider,
   }) async {
@@ -167,17 +167,18 @@ class UserListRepository {
 
           await anilist.toggleFavourite(mediaId: mediaId);
 
-          AnilistWatchListEntry updateFavourite(AnilistWatchListEntry entry) {
-            if (entry.media?.id == mediaId) {
-              return entry.copyWith(
-                media: entry.media?.copyWith(
-                    isFavourite: entry.media?.isFavourite == null
-                        ? true
-                        : !entry.media!.isFavourite),
-              );
-            }
+          MediaListEntry updateFavourite(entry) {
+            if (entry.media?.id != mediaId) return entry;
 
-            return entry;
+            return entry.copyWith(
+              media: entry.media.copyWith(
+                anilistInfo: entry.media.anilistInfo?.copyWith(
+                  isFavourite: entry.media.anilistInfo?.isFavourite == null
+                      ? true
+                      : !(entry.media.anilistInfo?.isFavourite ?? false),
+                ),
+              ),
+            );
           }
 
           return watchList.copyWith(
@@ -188,8 +189,6 @@ class UserListRepository {
             planning: watchList.planning.map(updateFavourite).toList(),
             repeating: watchList.repeating.map(updateFavourite).toList(),
           );
-        } on AnilistToggleFavouriteException {
-          rethrow;
         } catch (e) {
           throw AnilistToggleFavouriteException(
             error: e.toString(),

@@ -10,12 +10,12 @@ class WatchListCard extends StatelessWidget {
     required this.entry,
   });
 
-  final Query$GetLists$MediaListCollection$lists$entries entry;
+  final MediaListEntry entry;
 
   @override
   Widget build(BuildContext context) {
     return EntryCard(
-      media: Media(anilistInfo: entry.media),
+      media: entry.media,
       text: [
         Enum$MediaListStatus.CURRENT,
         Enum$MediaListStatus.DROPPED,

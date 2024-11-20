@@ -80,7 +80,7 @@ class HomeSideMenu extends StatelessWidget {
                           ),
                         ),
                       for (final action in _buildActions(
-                        watchListState.watchList.isNotEmpty,
+                        watchListState.isNotEmpty,
                       )) ...[
                         IconButton(
                           tooltip: 'Show ${action.type.title}',

@@ -37,6 +37,10 @@ final class Media extends IMedia with MediaImages, MediaEpisodes {
   String? get originalTitle =>
       anilistInfo?.title?.native ?? tmdbInfo?.originalName;
 
+  Enum$MediaSeason? get season => anilistInfo?.season;
+
+  int? get seasonYear => anilistInfo?.seasonYear;
+
   @override
   List<Object?> get props => [anilistInfo, tmdbInfo];
 

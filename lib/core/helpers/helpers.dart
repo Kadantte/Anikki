@@ -16,3 +16,4 @@ export 'logger.dart';
 export 'notify.dart';
 export 'open_in_browser.dart';
 export 'sanitize_name.dart';
+export 'watch_list_utils.dart';

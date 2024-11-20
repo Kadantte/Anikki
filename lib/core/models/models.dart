@@ -19,6 +19,7 @@ export 'torrent_type.dart';
 export 'transmission_settings.dart';
 export 'user_list_enum.dart';
 export 'video_player_settings.dart';
+export 'watch_list.dart';
 export 'watch_list_provider.dart';
 
 typedef AnilistListEntry = Query$GetLists$MediaListCollection$lists$entries;

@@ -187,8 +187,8 @@ class VideoPlayerRepository {
         : entry?.entries.reversed.map(convertToMkMedia).toList();
 
     final watchListEntry = media != null
-        ? AnilistUtils.getCurrentEntry(
-            watchListState.watchList,
+        ? WatchListUtils.getCurrentEntry(
+            watchListState.watchLists,
             Media(anilistInfo: media),
           )
         : null;

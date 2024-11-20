@@ -57,15 +57,16 @@ class _WatchListCompleteViewState extends State<_WatchListCompleteView>
               (status) {
                 final watchList = widget.state.watchList;
                 final entries = switch (status) {
-                  Enum$MediaListStatus.CURRENT => watchList.current,
-                  Enum$MediaListStatus.PLANNING => watchList.planning,
-                  Enum$MediaListStatus.COMPLETED => watchList.completed,
-                  Enum$MediaListStatus.DROPPED => watchList.dropped,
-                  Enum$MediaListStatus.PAUSED => watchList.paused,
-                  Enum$MediaListStatus.REPEATING => watchList.repeating,
-                  Enum$MediaListStatus.$unknown =>
-                    List<AnilistWatchListEntry>.empty(),
-                };
+                      Enum$MediaListStatus.CURRENT => watchList?.current,
+                      Enum$MediaListStatus.PLANNING => watchList?.planning,
+                      Enum$MediaListStatus.COMPLETED => watchList?.completed,
+                      Enum$MediaListStatus.DROPPED => watchList?.dropped,
+                      Enum$MediaListStatus.PAUSED => watchList?.paused,
+                      Enum$MediaListStatus.REPEATING => watchList?.repeating,
+                      Enum$MediaListStatus.$unknown =>
+                        List<MediaListEntry>.empty(),
+                    } ??
+                    const [];
 
                 return WatchListLayout(
                   entries: entries,

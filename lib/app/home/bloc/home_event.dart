@@ -35,7 +35,7 @@ final class HomeRefreshed extends HomeEvent {
     this.watchList,
   });
 
-  final AnilistWatchList? watchList;
+  final WatchList? watchList;
   final HomeMediaType? requestedType;
 
   @override

@@ -166,15 +166,15 @@ class DrawerContent extends StatelessWidget {
               );
             }
 
-            final watchListEntry = AnilistUtils.getWatchListEntry(
-              watchListState.watchList,
+            final watchListEntry = WatchListUtils.getWatchListEntry(
+              watchListState.watchLists,
               state.drawerMedia!,
             );
             final isInWatchList = watchListEntry != null;
 
             final libraryEntry = state.drawerLibraryEntry;
             final drawerMedia = state.drawerMedia?.copyWith(
-              anilistInfo: watchListEntry?.media,
+              anilistInfo: watchListEntry?.media.anilistInfo,
             );
 
             if ((drawerMedia == null || drawerMedia.anilistInfo?.id == 0) &&
