@@ -18,6 +18,17 @@ class WatchListRequested extends WatchListEvent {
       ];
 }
 
+class WatchListCurrentProviderUpdated extends WatchListEvent {
+  const WatchListCurrentProviderUpdated({required this.provider});
+
+  final WatchListProvider provider;
+
+  @override
+  List<Object> get props => [
+        provider,
+      ];
+}
+
 class WatchListAuthUpdated extends WatchListEvent {
   const WatchListAuthUpdated({
     required this.connected,

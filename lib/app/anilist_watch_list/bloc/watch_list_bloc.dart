@@ -26,6 +26,7 @@ class WatchListBloc extends AutoRefreshBloc<WatchListEvent, WatchListState> {
     on<WatchListRemoveMedia>(_onRemoveMedia);
     on<WatchListAuthUpdated>(_onAuthUpdated);
     on<WatchListToggleFavourite>(_onToggleFavourite);
+    on<WatchListCurrentProviderUpdated>(_onCurrentProviderUpdated);
 
     setUpAutoRefresh();
   }
@@ -44,6 +45,17 @@ class WatchListBloc extends AutoRefreshBloc<WatchListEvent, WatchListState> {
     }
   }
 
+  void _onCurrentProviderUpdated(
+    WatchListCurrentProviderUpdated event,
+    Emitter<WatchListState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        currentProvider: event.provider,
+      ),
+    );
+  }
+
   void _onAuthUpdated(
     WatchListAuthUpdated event,
     Emitter<WatchListState> emit,
@@ -52,6 +64,23 @@ class WatchListBloc extends AutoRefreshBloc<WatchListEvent, WatchListState> {
       add(
         WatchListRequested(
           provider: event.provider,
+        ),
+      );
+    } else {
+      final watchLists = state.watchLists;
+
+      watchLists.removeWhere(
+        (provider, watchList) => provider == event.provider,
+      );
+
+      emit(
+        state.copyWith(
+          currentProvider: event.provider,
+          watchLists: watchLists,
+          connected: {
+            ...state.connected,
+            event.provider: false,
+          },
         ),
       );
     }

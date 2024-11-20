@@ -24,15 +24,15 @@ class WatchListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final connected = BlocProvider.of<AnilistAuthBloc>(context, listen: true)
-        .state is AnilistAuthSuccess;
-
     return BlocBuilder<LayoutBloc, LayoutState>(
       builder: (context, state) {
         final portrait = state is LayoutPortrait;
 
         return BlocBuilder<WatchListBloc, WatchListState>(
           builder: (context, state) {
+            final provider = state.currentProvider;
+            final connected = state.connected[provider] ?? false;
+
             final initial = state is WatchListInitial;
             final errored = state is WatchListError;
             final loading = state is WatchListLoading;
@@ -40,7 +40,7 @@ class WatchListView extends StatelessWidget {
             final actions = [
               if (loading)
                 const SectionTitleLoadingAction()
-              else
+              else if (connected)
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: IconButton(
@@ -71,34 +71,66 @@ class WatchListView extends StatelessWidget {
                     ),
                   ),
                 ),
+              ToggleButtons(
+                borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+                isSelected: WatchListProvider.values
+                    .map((value) => value == provider)
+                    .toList(),
+                onPressed: (index) {
+                  BlocProvider.of<WatchListBloc>(context).add(
+                    WatchListCurrentProviderUpdated(
+                      provider: WatchListProvider.values.elementAt(index),
+                    ),
+                  );
+                },
+                children: [
+                  for (final watchListProvider in WatchListProvider.values)
+                    Tooltip(
+                      message: watchListProvider.title,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 8.0,
+                          horizontal: 12.0,
+                        ),
+                        child: Icon(
+                          watchListProvider.icon,
+                          color: watchListProvider.color,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ];
+
+            final authView = Expanded(
+              child: Center(
+                child: switch (provider) {
+                  null => throw UnimplementedError(),
+                  WatchListProvider.anilist => const AnilistAuthView(),
+                  WatchListProvider.mal =>
+                    Text('Connect with ${provider.title}'),
+                  WatchListProvider.kitsu =>
+                    Text('Connect with ${provider.title}'),
+                },
+              ),
+            );
 
             return Column(
               children: [
-                if (portrait)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: actions,
-                  )
-                else ...[
-                  Row(
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
                     children: [
-                      SectionTitle(
-                        text: 'Watch Lists',
-                        actions: actions,
-                      ),
+                      if (!portrait)
+                        SectionTitle(
+                          text: 'Watch Lists',
+                        ),
+                      const Spacer(),
+                      ...actions,
                     ],
                   ),
-                  const Divider(
-                    height: 1,
-                  ),
-                ],
-                if (initial)
-                  const Expanded(
-                    child: Center(
-                      child: AnilistAuthView(),
-                    ),
-                  ),
+                ),
+                const Divider(),
                 if (!loading && errored && state.isEmpty)
                   Expanded(
                     child: CustomErrorWidget(
@@ -106,13 +138,16 @@ class WatchListView extends StatelessWidget {
                       description: state.message,
                     ),
                   ),
-                if (!errored && loading && state.isEmpty)
+                if (!errored && loading && state.isEmpty ||
+                    (loading && !connected))
                   const Expanded(
                     child: Center(
                       child: LoadingWidget(),
                     ),
                   ),
-                if (state.isNotEmpty)
+                if (!connected || initial)
+                  authView
+                else if (state.isNotEmpty)
                   Expanded(
                     child: _WatchListCompleteView(state),
                   ),

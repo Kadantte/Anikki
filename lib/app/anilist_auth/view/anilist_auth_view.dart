@@ -1,3 +1,4 @@
+import 'package:anikki/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:simple_icons/simple_icons.dart';
@@ -20,6 +21,18 @@ class AnilistAuthView extends StatefulWidget {
 class _AnilistAuthViewState extends State<AnilistAuthView> {
   @override
   Widget build(BuildContext context) {
+    final providerTitle = WatchListProvider.anilist.title;
+
+    final connectButton = OutlinedButton.icon(
+      style: ButtonStyle(
+        padding: WidgetStatePropertyAll(EdgeInsets.all(16.0)),
+        textStyle: WidgetStatePropertyAll(context.textTheme.bodyLarge),
+      ),
+      onPressed: () => loginToAnilist(context),
+      label: Text('Connect with $providerTitle'),
+      icon: const Icon(SimpleIcons.anilist),
+    );
+
     return BlocBuilder<AnilistAuthBloc, AnilistAuthState>(
       builder: (context, state) => switch (state) {
         AnilistAuthLoggedOut() => Column(
@@ -28,15 +41,11 @@ class _AnilistAuthViewState extends State<AnilistAuthView> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'You are not logged into Anilist.',
+                  'You are not logged into $providerTitle.',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
-              OutlinedButton.icon(
-                onPressed: () => loginToAnilist(context),
-                label: const Text('Log In'),
-                icon: const Icon(SimpleIcons.anilist),
-              ),
+              connectButton,
             ],
           ),
         AnilistAuthError() => Column(
@@ -45,15 +54,11 @@ class _AnilistAuthViewState extends State<AnilistAuthView> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Could not log you into Anilist',
+                  'Could not log you into $providerTitle',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
-              OutlinedButton.icon(
-                onPressed: () => loginToAnilist(context),
-                label: const Text('Retry'),
-                icon: const Icon(SimpleIcons.anilist),
-              ),
+              connectButton,
             ],
           ),
         _ => const SizedBox(),

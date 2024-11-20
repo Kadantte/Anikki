@@ -5,7 +5,7 @@ enum WatchListProvider {
   anilist(
     title: 'AniList',
     icon: SimpleIcons.anilist,
-    color: Color(0x0FF2A9FF),
+    color: Color(0xFF02A9FF),
   ),
   mal(
     title: 'MyAnimeList',

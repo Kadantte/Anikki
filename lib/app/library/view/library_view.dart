@@ -66,28 +66,20 @@ class LibraryView extends StatelessWidget {
         return Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            if (portrait)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
                 children: [
+                  if (!portrait)
+                    SectionTitle(
+                      text: 'Library',
+                    ),
+                  const Spacer(),
                   actionButton,
                 ],
-              )
-            else ...[
-              Row(
-                children: [
-                  SectionTitle(
-                    text: 'Library',
-                    actions: [
-                      actionButton,
-                    ],
-                  ),
-                ],
               ),
-              const Divider(
-                height: 1,
-              ),
-            ],
+            ),
+            const Divider(),
             Expanded(
               child: BlocBuilder<LibraryBloc, LibraryState>(
                 builder: (context, state) => switch (state) {

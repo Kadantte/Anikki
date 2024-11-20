@@ -127,6 +127,9 @@ class BlocListeners extends StatelessWidget {
                 HomeRefreshed(
                   watchList: state.watchList,
                   watchListProvider: state.currentProvider,
+                  requestedType: state.watchList?.isNotEmpty == true
+                      ? HomeMediaType.following
+                      : null,
                 ),
               );
             }

@@ -31,6 +31,7 @@ sealed class WatchListState extends Equatable {
   List<Object?> get props => [
         connected,
         watchList,
+        currentProvider,
       ];
 
   @override
@@ -45,6 +46,12 @@ sealed class WatchListState extends Equatable {
       'Repeating List: ${repeating.length} entries',
     ].join(', ');
   }
+
+  WatchListState copyWith({
+    Map<WatchListProvider, WatchList>? watchLists,
+    Map<WatchListProvider, bool>? connected,
+    WatchListProvider? currentProvider,
+  });
 }
 
 final class WatchListInitial extends WatchListState {
@@ -53,6 +60,19 @@ final class WatchListInitial extends WatchListState {
     super.currentProvider,
     super.connected,
   });
+
+  @override
+  WatchListState copyWith({
+    Map<WatchListProvider, WatchList>? watchLists,
+    Map<WatchListProvider, bool>? connected,
+    WatchListProvider? currentProvider,
+  }) {
+    return WatchListInitial(
+      watchLists: watchLists ?? this.watchLists,
+      currentProvider: currentProvider ?? this.currentProvider,
+      connected: connected ?? this.connected,
+    );
+  }
 }
 
 final class WatchListLoading extends WatchListState {
@@ -61,6 +81,19 @@ final class WatchListLoading extends WatchListState {
     super.currentProvider,
     super.connected,
   });
+
+  @override
+  WatchListInitial copyWith({
+    Map<WatchListProvider, WatchList>? watchLists,
+    Map<WatchListProvider, bool>? connected,
+    WatchListProvider? currentProvider,
+  }) {
+    return WatchListInitial(
+      watchLists: watchLists ?? this.watchLists,
+      currentProvider: currentProvider ?? this.currentProvider,
+      connected: connected ?? this.connected,
+    );
+  }
 }
 
 final class WatchListLoaded extends WatchListState {
@@ -69,6 +102,19 @@ final class WatchListLoaded extends WatchListState {
     super.currentProvider,
     super.connected,
   });
+
+  @override
+  WatchListLoaded copyWith({
+    Map<WatchListProvider, WatchList>? watchLists,
+    Map<WatchListProvider, bool>? connected,
+    WatchListProvider? currentProvider,
+  }) {
+    return WatchListLoaded(
+      watchLists: watchLists ?? this.watchLists,
+      currentProvider: currentProvider ?? this.currentProvider,
+      connected: connected ?? this.connected,
+    );
+  }
 }
 
 final class WatchListNotify extends WatchListState {
@@ -86,8 +132,28 @@ final class WatchListNotify extends WatchListState {
   final bool isError;
 
   @override
+  WatchListNotify copyWith({
+    Map<WatchListProvider, WatchList>? watchLists,
+    Map<WatchListProvider, bool>? connected,
+    WatchListProvider? currentProvider,
+    String? title,
+    String? description,
+    bool? isError,
+  }) {
+    return WatchListNotify(
+      watchLists: watchLists ?? this.watchLists,
+      currentProvider: currentProvider ?? this.currentProvider,
+      connected: connected ?? this.connected,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      isError: isError ?? this.isError,
+    );
+  }
+
+  @override
   List<Object?> get props => [
         title,
+        currentProvider,
         description,
         isError,
         connected,
@@ -106,9 +172,25 @@ final class WatchListError extends WatchListState {
   final String message;
 
   @override
+  WatchListError copyWith({
+    Map<WatchListProvider, WatchList>? watchLists,
+    Map<WatchListProvider, bool>? connected,
+    WatchListProvider? currentProvider,
+    String? message,
+  }) {
+    return WatchListError(
+      watchLists: watchLists ?? this.watchLists,
+      currentProvider: currentProvider ?? this.currentProvider,
+      connected: connected ?? this.connected,
+      message: message ?? this.message,
+    );
+  }
+
+  @override
   List<Object?> get props => [
         message,
         connected,
+        currentProvider,
         watchList,
       ];
 }
