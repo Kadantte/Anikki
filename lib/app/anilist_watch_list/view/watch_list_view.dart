@@ -44,31 +44,31 @@ class WatchListView extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: IconButton(
-                      onPressed: () async {
-                        final state =
-                            BlocProvider.of<AnilistAuthBloc>(context).state;
+                    onPressed: () async {
+                      final state =
+                          BlocProvider.of<AnilistAuthBloc>(context).state;
 
-                        if (state is AnilistAuthSuccess) {
-                          BlocProvider.of<WatchListBloc>(context).add(
-                            WatchListRequested(
-                              provider: WatchListProvider.anilist,
-                            ),
-                          );
-                        }
-                      },
-                      icon: const AnikkiIcon(
-                          icon: HugeIcons.strokeRoundedRefresh)),
+                      if (state is AnilistAuthSuccess) {
+                        BlocProvider.of<WatchListBloc>(context).add(
+                          WatchListRequested(
+                            provider: WatchListProvider.anilist,
+                          ),
+                        );
+                      }
+                    },
+                    icon: const AnikkiIcon(
+                      icon: HugeIcons.strokeRoundedRefresh,
+                    ),
+                  ),
                 ),
               if (connected)
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Tooltip(
-                    message: 'Logout of Anilist',
-                    child: IconButton(
-                      onPressed: () => logoutFromAnilist(context),
-                      icon: const AnikkiIcon(
-                          icon: HugeIcons.strokeRoundedLogout02),
-                    ),
+                  child: IconButton(
+                    tooltip: 'Logout of ${provider?.title}',
+                    onPressed: () => logoutFromAnilist(context),
+                    icon:
+                        const AnikkiIcon(icon: HugeIcons.strokeRoundedLogout02),
                   ),
                 ),
               ToggleButtons(
@@ -86,6 +86,7 @@ class WatchListView extends StatelessWidget {
                 children: [
                   for (final watchListProvider in WatchListProvider.values)
                     Tooltip(
+                      verticalOffset: 32.0,
                       message: watchListProvider.title,
                       child: Padding(
                         padding: EdgeInsets.symmetric(
@@ -107,10 +108,16 @@ class WatchListView extends StatelessWidget {
                 child: switch (provider) {
                   null => throw UnimplementedError(),
                   WatchListProvider.anilist => const AnilistAuthView(),
-                  WatchListProvider.mal =>
-                    Text('Connect with ${provider.title}'),
-                  WatchListProvider.kitsu =>
-                    Text('Connect with ${provider.title}'),
+                  WatchListProvider.mal => CustomErrorWidget(
+                      title: 'Cannot connect with ${provider.title}',
+                      description:
+                          'This feature is not implemented yet, it is coming soon!',
+                    ),
+                  WatchListProvider.kitsu => CustomErrorWidget(
+                      title: 'Cannot connect with ${provider.title}',
+                      description:
+                          'This feature is not implemented yet, it is coming soon!',
+                    ),
                 },
               ),
             );
@@ -138,7 +145,7 @@ class WatchListView extends StatelessWidget {
                       description: state.message,
                     ),
                   ),
-                if (!errored && loading && state.isEmpty ||
+                if (!errored && loading && state.isEmpty && !connected ||
                     (loading && !connected))
                   const Expanded(
                     child: Center(
