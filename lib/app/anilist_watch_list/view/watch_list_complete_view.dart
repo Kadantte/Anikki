@@ -68,8 +68,15 @@ class _WatchListCompleteViewState extends State<_WatchListCompleteView>
                     } ??
                     const [];
 
-                return WatchListLayout(
+                return CustomGridView(
                   entries: entries,
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: userListGridDelegate.maxCrossAxisExtent,
+                    childAspectRatio: userListGridDelegate.childAspectRatio,
+                  ),
+                  builder: (entry, index) => WatchListCard(
+                    entry: entry,
+                  ),
                 );
               },
             ).toList(),

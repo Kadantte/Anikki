@@ -18,7 +18,6 @@ enum UserListLayouts {
 class Settings extends Equatable {
   const Settings({
     this.isFirstLaunch = true,
-    this.userListLayouts = UserListLayouts.grid,
     this.theme = ThemeMode.system,
     this.torrentType = TorrentType.none,
     this.librarySettings = const LibrarySettings(),
@@ -30,7 +29,6 @@ class Settings extends Equatable {
 
   final bool isFirstLaunch;
 
-  final UserListLayouts userListLayouts;
   final ThemeMode theme;
 
   final TorrentType torrentType;
@@ -54,7 +52,6 @@ class Settings extends Equatable {
   }) {
     return Settings(
       isFirstLaunch: isFirstLaunch ?? this.isFirstLaunch,
-      userListLayouts: userListLayouts ?? this.userListLayouts,
       theme: theme ?? this.theme,
       torrentType: torrentType ?? this.torrentType,
       librarySettings: librarySettings ?? this.librarySettings,
@@ -72,7 +69,6 @@ class Settings extends Equatable {
   List<Object> get props {
     return [
       isFirstLaunch,
-      userListLayouts,
       theme,
       torrentType,
       librarySettings,
@@ -86,7 +82,6 @@ class Settings extends Equatable {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'isFirstLaunch': isFirstLaunch,
-      'userListLayouts': userListLayouts.name,
       'theme': theme.name,
       'torrentType': torrentType.name,
       'librarySettings': librarySettings.toMap(),
@@ -99,9 +94,6 @@ class Settings extends Equatable {
 
   factory Settings.fromMap(Map<String, dynamic> map) {
     return Settings(
-      userListLayouts: UserListLayouts.values
-          .where((e) => e.name == map['userListLayouts'])
-          .first,
       theme: ThemeMode.values.where((e) => e.name == map['theme']).first,
       torrentType:
           TorrentType.values.where((e) => e.name == map['torrentType']).first,

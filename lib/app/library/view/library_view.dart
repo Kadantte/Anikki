@@ -6,15 +6,15 @@ import 'package:hugeicons/hugeicons.dart';
 
 import 'package:anikki/app/layouts/bloc/layout_bloc.dart';
 import 'package:anikki/app/library/bloc/library_bloc.dart';
-import 'package:anikki/app/library/widgets/library_layout.dart';
+import 'package:anikki/app/library/widgets/library_card.dart';
 import 'package:anikki/app/settings/bloc/settings_bloc.dart';
 import 'package:anikki/core/core.dart';
 import 'package:anikki/core/widgets/anikki_action_button.dart';
 import 'package:anikki/core/widgets/empty_widget.dart';
 import 'package:anikki/core/widgets/error_widget.dart';
+import 'package:anikki/core/widgets/grid_view/custom_grid_view.dart';
 import 'package:anikki/core/widgets/loading_widget.dart';
 import 'package:anikki/core/widgets/section/section_title.dart';
-import 'package:anikki/core/widgets/user_list_layout_toggle.dart';
 
 class LibraryView extends StatelessWidget {
   const LibraryView({
@@ -70,7 +70,6 @@ class LibraryView extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  const UserListLayoutToggle(),
                   actionButton,
                 ],
               )
@@ -80,7 +79,6 @@ class LibraryView extends StatelessWidget {
                   SectionTitle(
                     text: 'Library',
                     actions: [
-                      const UserListLayoutToggle(),
                       actionButton,
                     ],
                   ),
@@ -108,8 +106,18 @@ class LibraryView extends StatelessWidget {
                         subtitle: 'Could not find any video',
                       ),
                     ),
-                  LibraryLoaded() => LibraryLayout(
-                      entries: state.entries,
+                  LibraryLoaded() => Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 8.0,
+                        horizontal: 16.0,
+                      ),
+                      child: CustomGridView(
+                        entries: state.entries,
+                        gridDelegate: userListGridDelegate,
+                        builder: (entry, index) => LibraryCard(
+                          entry: entry,
+                        ),
+                      ),
                     ),
                 },
               ),

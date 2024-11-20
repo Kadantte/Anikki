@@ -1,15 +1,13 @@
-import 'package:anikki/app/library/library.dart';
-import 'package:anikki/app/library/widgets/library_layout.dart';
-import 'package:anikki/app/library/widgets/library_card.dart';
-import 'package:anikki/core/helpers/desktop_hooks.dart';
-import 'package:anikki/app/layouts/widgets/portrait/anikki_navigation_bar.dart';
-import 'package:anikki/core/widgets/anikki_action_button.dart';
-import 'package:anikki/core/widgets/user_list_layout_toggle.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
+import 'package:anikki/app/layouts/widgets/portrait/anikki_navigation_bar.dart';
+import 'package:anikki/app/library/library.dart';
+import 'package:anikki/app/library/widgets/library_card.dart';
+import 'package:anikki/core/helpers/desktop_hooks.dart';
+import 'package:anikki/core/widgets/anikki_action_button.dart';
+import 'package:anikki/core/widgets/grid_view/custom_grid_view.dart';
 import 'package:anikki/main.dart' as app;
 
 void main() {
@@ -74,52 +72,10 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      final layout = find.byType(LibraryLayout);
+      final layout = find.byType(CustomGridView);
       expect(layout, findsOneWidget);
 
       /// Layout should be grid at first
-      expect(
-        find.descendant(
-          of: layout,
-          matching: find.byType(LibraryCard),
-        ),
-        findsWidgets,
-      );
-
-      /// Finding the layout toggle button
-      final toggle = find.byType(UserListLayoutToggle);
-      expect(toggle, findsOneWidget);
-
-      /// Finding the list toggle button
-      final listButton =
-          find.descendant(of: toggle, matching: find.byIcon(Icons.list));
-      expect(listButton, findsOneWidget);
-
-      /// Finding the grid toggle button
-      final gridButton = find.descendant(
-        of: toggle,
-        matching: find.byIcon(Icons.grid_view),
-      );
-      expect(gridButton, findsOneWidget);
-
-      /// Switching to List layout
-      await tester.tap(listButton);
-      await tester.pumpAndSettle();
-
-      /// LibraryLayout should show only EntryTiles
-      expect(
-        find.descendant(
-          of: layout,
-          matching: find.byType(ListTile),
-        ),
-        findsWidgets,
-      );
-
-      /// Switching to Grid layout
-      await tester.tap(gridButton);
-      await tester.pumpAndSettle();
-
-      /// We should have LibraryCards again
       expect(
         find.descendant(
           of: layout,

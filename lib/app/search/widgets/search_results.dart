@@ -1,11 +1,12 @@
-import 'package:anikki/core/core.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:anikki/app/downloader/widgets/torrents_list.dart';
-import 'package:anikki/app/library/widgets/library_layout.dart';
+import 'package:anikki/app/library/widgets/library_card.dart';
 import 'package:anikki/app/search/bloc/search_bloc.dart';
+import 'package:anikki/core/core.dart';
 import 'package:anikki/core/widgets/entry/entry_tile.dart';
+import 'package:anikki/core/widgets/grid_view/custom_grid_view.dart';
 
 class SearchResults extends StatefulWidget {
   const SearchResults({
@@ -101,8 +102,12 @@ class _SearchResultsState extends State<SearchResults>
                 ),
               if (widget.state.libraryEntries != null &&
                   widget.state.libraryEntries!.isNotEmpty)
-                LibraryLayout(
+                CustomGridView(
                   entries: widget.state.libraryEntries!,
+                  gridDelegate: userListGridDelegate,
+                  builder: (entry, index) => LibraryCard(
+                    entry: entry,
+                  ),
                 ),
               if (widget.state.staffs != null &&
                   widget.state.staffs!.isNotEmpty)
