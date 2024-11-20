@@ -74,7 +74,7 @@ class HomeSideMenu extends StatelessWidget {
                         Tooltip(
                           message: state.message,
                           child: Icon(
-                            HugeIcons.strokeRoundedDanger,
+                            HugeIcons.strokeRoundedAlert02,
                             size: 26,
                             color: context.colorScheme.error,
                           ),

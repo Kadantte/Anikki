@@ -32,7 +32,7 @@ class HomeTitle extends StatelessWidget {
       builder: (context, state) {
         final entry = state.currentEntry;
 
-        if (entry == null) return const Text('hello');
+        if (entry == null) return const SizedBox();
 
         final minWidth = switch (entry.media.images?.backdrops?.length) {
           1 => 246.0,

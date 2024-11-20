@@ -1,8 +1,15 @@
-import 'package:anikki/core/widgets/layout_card.dart';
 import 'package:flutter/material.dart';
 
-class ConnectedDialog extends StatelessWidget {
-  const ConnectedDialog({super.key});
+import 'package:anikki/core/core.dart';
+import 'package:anikki/core/widgets/layout_card.dart';
+
+class ProviderConnectedDialog extends StatelessWidget {
+  const ProviderConnectedDialog({
+    super.key,
+    required this.provider,
+  });
+
+  final WatchListProvider provider;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +28,7 @@ class ConnectedDialog extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Connected to Anilist!',
+                    'Connected to ${provider.title}!',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),

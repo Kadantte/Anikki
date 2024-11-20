@@ -9,7 +9,7 @@ import 'package:hive/hive.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:anikki/app/anilist_auth/bloc/anilist_auth_bloc.dart';
-import 'package:anikki/app/anilist_auth/widgets/connected_dialog.dart';
+import 'package:anikki/core/widgets/connected_dialog.dart';
 import 'package:anikki/domain/domain.dart';
 
 final _oauthUrl = Uri(
@@ -55,7 +55,9 @@ Future<void> loginToAnilist(BuildContext context) async {
     return;
   }
 
-  box.watch(key: UserRepository.tokenKey).listen((event) {
+  box
+      .watch(key: UserRepository.tokenKey[WatchListProvider.anilist])
+      .listen((event) {
     if (event.value == null || event.deleted) return;
 
     authBloc.add(AnilistAuthLoginRequested());
@@ -63,7 +65,9 @@ Future<void> loginToAnilist(BuildContext context) async {
     if (context.mounted) {
       showDialog(
         context: context,
-        builder: (context) => const ConnectedDialog(),
+        builder: (context) => const ProviderConnectedDialog(
+          provider: WatchListProvider.anilist,
+        ),
       );
     }
   });

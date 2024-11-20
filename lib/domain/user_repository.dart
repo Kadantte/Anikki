@@ -1,3 +1,4 @@
+import 'package:anikki/core/core.dart';
 import 'package:anikki/data/data.dart';
 
 typedef AnilistUser = Query$Viewer$Viewer;
@@ -9,13 +10,17 @@ class UserRepository {
   final Anilist anilist;
 
   /// The key used to store the auth token given from the provider
-  static const tokenKey = 'user_preferences_anilistAccessToken';
+  static const tokenKey = {
+    WatchListProvider.anilist: 'user_preferences_anilistAccessToken',
+    WatchListProvider.mal: 'user_preferences_malAccessToken',
+    WatchListProvider.kitsu: 'user_preferences_kitsuAccessToken',
+  };
 
   /// The box name to use to store informations
-  static const boxName = 'anilist_auth';
+  static const boxName = 'auth';
 
   /// Returns the current user if any
-  Future<AnilistUser> getCurrentUser() async {
+  Future<AnilistUser> getAnilistCurrentUser() async {
     return await anilist.getMe();
   }
 }

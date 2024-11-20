@@ -32,7 +32,7 @@ sealed class HomeState extends Equatable {
               e.media.anilistInfo?.id == currentMedia?.anilistInfo?.id,
           WatchListProvider.mal => throw UnimplementedError(),
           WatchListProvider.kitsu => throw UnimplementedError(),
-          null => false,
+          null => e.media == currentMedia,
         },
       );
 

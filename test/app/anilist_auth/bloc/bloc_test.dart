@@ -13,7 +13,6 @@ import '../../../helpers/init_hive.dart';
 class UserRepositoryMock extends Mock implements UserRepository {}
 
 void main() {
-
   initHive();
 
   group('unit test: AnilistAuth Bloc', () {
@@ -32,7 +31,7 @@ void main() {
       setUp: () {
         repository = UserRepositoryMock();
 
-        when(() => repository.getCurrentUser())
+        when(() => repository.getAnilistCurrentUser())
             .thenAnswer((invocation) async => userMock);
 
         bloc = AnilistAuthBloc(repository);
@@ -51,7 +50,7 @@ void main() {
       setUp: () {
         repository = UserRepositoryMock();
 
-        when(() => repository.getCurrentUser())
+        when(() => repository.getAnilistCurrentUser())
             .thenThrow(AnilistNotConnectedException());
 
         bloc = AnilistAuthBloc(repository);

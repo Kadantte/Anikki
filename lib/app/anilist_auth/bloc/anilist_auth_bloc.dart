@@ -1,3 +1,4 @@
+import 'package:anikki/core/core.dart';
 import 'package:anikki/data/data.dart';
 import 'package:anikki/domain/domain.dart';
 import 'package:bloc/bloc.dart';
@@ -20,7 +21,7 @@ class AnilistAuthBloc extends Bloc<AnilistAuthEvent, AnilistAuthState> {
   Future<void> _login(
       AnilistAuthLoginRequested event, Emitter<AnilistAuthState> emit) async {
     try {
-      final me = await repository.getCurrentUser();
+      final me = await repository.getAnilistCurrentUser();
 
       emit(AnilistAuthSuccess(me));
     } on AnilistNotConnectedException catch (e) {
@@ -31,9 +32,11 @@ class AnilistAuthBloc extends Bloc<AnilistAuthEvent, AnilistAuthState> {
   }
 
   Future<void> _logout(
-      AnilistAuthLogoutRequested event, Emitter<AnilistAuthState> emit) async {
+    AnilistAuthLogoutRequested event,
+    Emitter<AnilistAuthState> emit,
+  ) async {
     final box = await Hive.openBox(UserRepository.boxName);
-    box.delete(UserRepository.tokenKey);
+    box.delete(UserRepository.tokenKey[WatchListProvider.anilist]);
 
     emit(AnilistAuthLoggedOut());
   }

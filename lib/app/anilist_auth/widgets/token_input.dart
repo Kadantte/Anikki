@@ -1,8 +1,10 @@
-import 'package:anikki/domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hugeicons/hugeicons.dart';
+
+import 'package:anikki/core/core.dart';
+import 'package:anikki/domain/domain.dart';
 
 class TokenInput extends StatelessWidget {
   const TokenInput({super.key});
@@ -31,7 +33,10 @@ class TokenInput extends StatelessWidget {
               }
 
               final box = await Hive.openBox(UserRepository.boxName);
-              await box.put(UserRepository.tokenKey, token.text);
+              await box.put(
+                UserRepository.tokenKey[WatchListProvider.anilist],
+                token.text,
+              );
 
               if (context.mounted) {
                 Navigator.of(context).pop();

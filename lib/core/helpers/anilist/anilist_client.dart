@@ -1,6 +1,7 @@
 import 'package:graphql/client.dart';
 import 'package:hive/hive.dart';
 
+import 'package:anikki/core/models/watch_list_provider.dart';
 import 'package:anikki/domain/domain.dart';
 
 GraphQLClient getAnilistClient() {
@@ -11,7 +12,9 @@ GraphQLClient getAnilistClient() {
   final authLink = AuthLink(
     getToken: () async {
       final box = await Hive.openBox(UserRepository.boxName);
-      final token = box.get(UserRepository.tokenKey);
+      final String? token = box.get(
+        UserRepository.tokenKey[WatchListProvider.anilist],
+      );
 
       return token == null ? null : 'Bearer $token';
     },

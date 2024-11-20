@@ -20,7 +20,7 @@ void main() {
         });
 
         test('returns the given user', () async {
-          final result = await repository.getCurrentUser();
+          final result = await repository.getAnilistCurrentUser();
 
           expect(result, userMock);
         });
@@ -38,7 +38,7 @@ void main() {
 
         test('throws the same error', () async {
           try {
-            await repository.getCurrentUser();
+            await repository.getAnilistCurrentUser();
             fail('Expected exception');
           } on Exception catch (e) {
             expect(e, exception);
