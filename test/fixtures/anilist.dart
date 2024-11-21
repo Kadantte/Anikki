@@ -52,10 +52,10 @@ MockQueryResult<T> generateMockMutation<T>(MockGraphQLClient graphQLClient) {
 
 const username = 'Kylart';
 
-final userMock = Query$Viewer$Viewer(name: username, id: 0);
+final anilistUserMock = Query$Viewer$Viewer(name: username, id: 0);
 
 final viewerMock = Query$Viewer(
-  Viewer: userMock,
+  Viewer: anilistUserMock,
 );
 
 final media = Fragment$media(

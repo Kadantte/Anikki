@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:anikki/app/anilist_auth/bloc/anilist_auth_bloc.dart';
-import 'package:anikki/app/anilist_watch_list/bloc/watch_list_bloc.dart';
+import 'package:anikki/app/provider_auth/bloc/provider_auth_bloc.dart';
+import 'package:anikki/app/watch_list/bloc/watch_list_bloc.dart';
 import 'package:anikki/app/downloader/bloc/downloader_bloc.dart';
 import 'package:anikki/app/home/bloc/home_bloc.dart';
 import 'package:anikki/app/layouts/bloc/layout_bloc.dart';
@@ -49,8 +49,10 @@ class AnikkiBlocProvider extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) =>
-              AnilistAuthBloc(userRepository)..add(AnilistAuthLoginRequested()),
+          create: (context) => ProviderAuthBloc(userRepository)
+            ..add(ProviderAuthLoginRequested(WatchListProvider.anilist))
+            ..add(ProviderAuthLoginRequested(WatchListProvider.mal))
+            ..add(ProviderAuthLoginRequested(WatchListProvider.kitsu)),
         ),
         BlocProvider(
           create: (context) => LayoutBloc(),

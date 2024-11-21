@@ -1,15 +1,16 @@
-import 'package:anikki/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:protocol_handler/protocol_handler.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'package:anikki/anikki.dart';
+import 'package:anikki/core/core.dart';
 import 'package:anikki/domain/domain.dart';
 
-mixin AnilistAuthMixin on State<Anikki>, ProtocolListener {
+mixin ProviderAuthMixin on State<Anikki>, ProtocolListener {
   final availableHosts = [
     'anilist-auth',
+    'mal-auth',
   ];
 
   @override
@@ -39,8 +40,14 @@ mixin AnilistAuthMixin on State<Anikki>, ProtocolListener {
 
     final token = uri.queryParameters['access_token'];
 
+    final provider = switch (uri.host) {
+      'anilist-auth' => WatchListProvider.anilist,
+      'mal-auth' => WatchListProvider.mal,
+      _ => throw UnimplementedError(),
+    };
+
     final box = await Hive.openBox(UserRepository.boxName);
-    await box.put(UserRepository.tokenKey[WatchListProvider.anilist], token);
+    await box.put(UserRepository.tokenKey[provider], token);
 
     if (isDesktop()) {
       windowManager.focus();

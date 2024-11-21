@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hugeicons/hugeicons.dart';
 
-import 'package:anikki/app/anilist_auth/anilist_auth.dart';
-import 'package:anikki/app/anilist_auth/bloc/anilist_auth_bloc.dart';
-import 'package:anikki/app/anilist_auth/shared/helpers/logout.dart';
-import 'package:anikki/app/anilist_watch_list/bloc/watch_list_bloc.dart';
-import 'package:anikki/app/anilist_watch_list/widgets/watch_list_card.dart';
 import 'package:anikki/app/layouts/bloc/layout_bloc.dart';
+import 'package:anikki/app/provider_auth/anilist_auth.dart';
+import 'package:anikki/app/provider_auth/shared/helpers/logout.dart';
+import 'package:anikki/app/watch_list/bloc/watch_list_bloc.dart';
+import 'package:anikki/app/watch_list/widgets/watch_list_card.dart';
 import 'package:anikki/core/core.dart';
 import 'package:anikki/core/widgets/anikki_icon.dart';
 import 'package:anikki/core/widgets/error_widget.dart';
@@ -33,6 +32,8 @@ class WatchListView extends StatelessWidget {
             final provider = state.currentProvider;
             final connected = state.connected[provider] ?? false;
 
+            if (provider == null) return const SizedBox();
+
             final initial = state is WatchListInitial;
             final errored = state is WatchListError;
             final loading = state is WatchListLoading;
@@ -45,16 +46,11 @@ class WatchListView extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: IconButton(
                     onPressed: () async {
-                      final state =
-                          BlocProvider.of<AnilistAuthBloc>(context).state;
-
-                      if (state is AnilistAuthSuccess) {
-                        BlocProvider.of<WatchListBloc>(context).add(
-                          WatchListRequested(
-                            provider: WatchListProvider.anilist,
-                          ),
-                        );
-                      }
+                      BlocProvider.of<WatchListBloc>(context).add(
+                        WatchListRequested(
+                          provider: WatchListProvider.anilist,
+                        ),
+                      );
                     },
                     icon: const AnikkiIcon(
                       icon: HugeIcons.strokeRoundedRefresh,
@@ -65,7 +61,7 @@ class WatchListView extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: IconButton(
-                    tooltip: 'Logout of ${provider?.title}',
+                    tooltip: 'Logout of ${provider.title}',
                     onPressed: () => logoutFromAnilist(context),
                     icon:
                         const AnikkiIcon(icon: HugeIcons.strokeRoundedLogout02),
@@ -73,9 +69,13 @@ class WatchListView extends StatelessWidget {
                 ),
               ToggleButtons(
                 borderRadius: const BorderRadius.all(Radius.circular(12.0)),
-                isSelected: WatchListProvider.values
-                    .map((value) => value == provider)
-                    .toList(),
+                isSelected:
+                    state.connected.values.every((value) => value == false) &&
+                            state.currentProvider == null
+                        ? [true, false, false]
+                        : WatchListProvider.values
+                            .map((value) => value == provider)
+                            .toList(),
                 onPressed: (index) {
                   BlocProvider.of<WatchListBloc>(context).add(
                     WatchListCurrentProviderUpdated(
@@ -103,24 +103,40 @@ class WatchListView extends StatelessWidget {
               ),
             ];
 
-            final authView = Expanded(
-              child: Center(
-                child: switch (provider) {
-                  null => throw UnimplementedError(),
-                  WatchListProvider.anilist => const AnilistAuthView(),
-                  WatchListProvider.mal => CustomErrorWidget(
-                      title: 'Cannot connect with ${provider.title}',
-                      description:
-                          'This feature is not implemented yet, it is coming soon!',
-                    ),
-                  WatchListProvider.kitsu => CustomErrorWidget(
-                      title: 'Cannot connect with ${provider.title}',
-                      description:
-                          'This feature is not implemented yet, it is coming soon!',
-                    ),
-                },
+            Widget body = Center(
+              child: AnilistAuthView(
+                provider: provider,
               ),
             );
+
+            if (loading && state.isEmpty) {
+              body = Center(
+                child: LoadingWidget(),
+              );
+            } else {
+              if (state.isEmpty && errored) {
+                body = Center(
+                  child: CustomErrorWidget(
+                    title: 'Could not load Watch list',
+                    description: state.message,
+                  ),
+                );
+              } else if (initial) {
+                body = Center(
+                  child: AnilistAuthView(
+                    provider: provider,
+                  ),
+                );
+              } else if (!connected) {
+                body = Center(
+                  child: AnilistAuthView(
+                    provider: provider,
+                  ),
+                );
+              } else if (state.isNotEmpty) {
+                body = _WatchListCompleteView(state);
+              }
+            }
 
             return Column(
               children: [
@@ -138,26 +154,9 @@ class WatchListView extends StatelessWidget {
                   ),
                 ),
                 const Divider(),
-                if (!loading && errored && state.isEmpty)
-                  Expanded(
-                    child: CustomErrorWidget(
-                      title: 'Could not load Watch list',
-                      description: state.message,
-                    ),
-                  ),
-                if (!errored && loading && state.isEmpty && !connected ||
-                    (loading && !connected))
-                  const Expanded(
-                    child: Center(
-                      child: LoadingWidget(),
-                    ),
-                  ),
-                if (!connected || initial)
-                  authView
-                else if (state.isNotEmpty)
-                  Expanded(
-                    child: _WatchListCompleteView(state),
-                  ),
+                Expanded(
+                  child: body,
+                ),
               ],
             );
           },

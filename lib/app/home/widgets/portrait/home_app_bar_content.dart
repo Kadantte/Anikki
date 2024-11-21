@@ -1,9 +1,9 @@
-import 'package:anikki/app/anilist_auth/bloc/anilist_auth_bloc.dart';
-import 'package:anikki/app/anilist_watch_list/bloc/watch_list_bloc.dart';
-import 'package:anikki/app/home/bloc/home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hugeicons/hugeicons.dart';
+
+import 'package:anikki/app/home/bloc/home_bloc.dart';
+import 'package:anikki/app/watch_list/bloc/watch_list_bloc.dart';
 
 class HomeAppBarContent extends StatelessWidget {
   const HomeAppBarContent({
@@ -12,8 +12,11 @@ class HomeAppBarContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final connected =
-        BlocProvider.of<AnilistAuthBloc>(context, listen: true).isConnected;
+    final connected = BlocProvider.of<WatchListBloc>(context, listen: true)
+        .state
+        .connected
+        .values
+        .any((value) => value);
 
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
@@ -22,10 +25,12 @@ class HomeAppBarContent extends StatelessWidget {
           emptySelectionAllowed: false,
           selectedIcon: const SizedBox(),
           segments: [
-            for (final type in HomeMediaType.values.where((value) =>
-                connected ||
-                [HomeMediaType.trending, HomeMediaType.recommendations]
-                    .contains(value)))
+            for (final type in HomeMediaType.values.where(
+              (value) =>
+                  connected ||
+                  [HomeMediaType.trending, HomeMediaType.recommendations]
+                      .contains(value),
+            ))
               ButtonSegment(
                 value: type,
                 icon: Padding(

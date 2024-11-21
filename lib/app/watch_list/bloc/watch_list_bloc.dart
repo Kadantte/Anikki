@@ -17,7 +17,7 @@ class WatchListBloc extends AutoRefreshBloc<WatchListEvent, WatchListState> {
     this.repository,
   ) : super(
           WatchListInitial(
-            currentProvider: WatchListProvider.anilist,
+            currentProvider: WatchListProvider.values.first,
           ),
         ) {
     on<WatchListRequested>(_onRequested);
@@ -74,7 +74,6 @@ class WatchListBloc extends AutoRefreshBloc<WatchListEvent, WatchListState> {
 
       emit(
         state.copyWith(
-          currentProvider: event.provider,
           watchLists: watchLists,
           connected: {
             ...state.connected,
@@ -104,7 +103,7 @@ class WatchListBloc extends AutoRefreshBloc<WatchListEvent, WatchListState> {
         WatchListLoaded(
           watchLists: {
             ...state.watchLists,
-            event.provider: watchList,
+            if (watchList != null) event.provider: watchList,
           },
           currentProvider: state.connected.values.every((val) => val == false)
               ? event.provider

@@ -1,9 +1,10 @@
+import 'package:bloc_test/bloc_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
-import 'package:bloc_test/bloc_test.dart';
 
-import 'package:anikki/app/anilist_auth/bloc/anilist_auth_bloc.dart';
+import 'package:anikki/app/provider_auth/bloc/provider_auth_bloc.dart';
+import 'package:anikki/core/core.dart';
 import 'package:anikki/data/data.dart';
 import 'package:anikki/domain/user_repository.dart';
 
@@ -16,25 +17,25 @@ void main() {
   initHive();
 
   group('unit test: AnilistAuth Bloc', () {
-    late AnilistAuthBloc bloc;
+    late ProviderAuthBloc bloc;
     late UserRepository repository;
 
     blocTest(
       'emits [AnilistAuthSuccess] when [AnilistAuthLoginRequested] is added and succeeds',
       build: () => bloc,
       act: (bloc) => bloc.add(
-        AnilistAuthLoginRequested(),
+        ProviderAuthLoginRequested(WatchListProvider.anilist),
       ),
       expect: () => [
-        AnilistAuthSuccess(userMock),
+        ProviderAuthState(anilistUser: anilistUserMock),
       ],
       setUp: () {
         repository = UserRepositoryMock();
 
         when(() => repository.getAnilistCurrentUser())
-            .thenAnswer((invocation) async => userMock);
+            .thenAnswer((invocation) async => anilistUserMock);
 
-        bloc = AnilistAuthBloc(repository);
+        bloc = ProviderAuthBloc(repository);
       },
     );
 
@@ -42,10 +43,14 @@ void main() {
       'emits [AnilistAuthError] when [AnilistAuthLoginRequested] is added but fails',
       build: () => bloc,
       act: (bloc) => bloc.add(
-        AnilistAuthLoginRequested(),
+        ProviderAuthLoginRequested(
+          WatchListProvider.anilist,
+        ),
       ),
       expect: () => [
-        AnilistAuthError(AnilistNotConnectedException().cause),
+        ProviderAuthError(
+          message: AnilistNotConnectedException().cause,
+        ),
       ],
       setUp: () {
         repository = UserRepositoryMock();
@@ -53,7 +58,7 @@ void main() {
         when(() => repository.getAnilistCurrentUser())
             .thenThrow(AnilistNotConnectedException());
 
-        bloc = AnilistAuthBloc(repository);
+        bloc = ProviderAuthBloc(repository);
       },
     );
 
@@ -61,14 +66,14 @@ void main() {
       'emits [AnilistAuthLoggedOut] when [AnilistAuthLogoutRequested] is added',
       build: () => bloc,
       act: (bloc) => bloc.add(
-        AnilistAuthLogoutRequested(),
+        ProviderAuthLogoutRequested(WatchListProvider.anilist),
       ),
       expect: () => [
-        AnilistAuthLoggedOut(),
+        isA<ProviderAuthState>(),
       ],
       setUp: () async {
         repository = UserRepositoryMock();
-        bloc = AnilistAuthBloc(repository);
+        bloc = ProviderAuthBloc(repository);
 
         final box = await Hive.openBox(UserRepository.boxName);
         box.put(UserRepository.tokenKey, 'blabla');

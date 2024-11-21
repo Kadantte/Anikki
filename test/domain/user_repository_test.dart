@@ -14,7 +14,7 @@ void main() {
       group('when API succeeds', () {
         setUp(() {
           anilist = MockAnilist();
-          when(() => anilist.getMe()).thenAnswer((_) async => userMock);
+          when(() => anilist.getMe()).thenAnswer((_) async => anilistUserMock);
 
           repository = UserRepository(anilist);
         });
@@ -22,7 +22,7 @@ void main() {
         test('returns the given user', () async {
           final result = await repository.getAnilistCurrentUser();
 
-          expect(result, userMock);
+          expect(result, anilistUserMock);
         });
       });
 

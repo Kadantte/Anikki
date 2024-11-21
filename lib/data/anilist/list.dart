@@ -89,7 +89,7 @@ mixin AnilistList on AnilistClient {
     } catch (e) {
       logger.warning('getWatchList error', e);
       throw AnilistGetListException(
-        error: 'Something went wrong while retrieing watch lsit information',
+        error: 'Something went wrong while retrieving watch lsit information',
       );
     }
   }

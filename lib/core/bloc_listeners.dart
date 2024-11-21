@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:anikki/app/anilist_auth/bloc/anilist_auth_bloc.dart';
-import 'package:anikki/app/anilist_watch_list/bloc/watch_list_bloc.dart';
+import 'package:anikki/app/provider_auth/bloc/provider_auth_bloc.dart';
+import 'package:anikki/app/watch_list/bloc/watch_list_bloc.dart';
 import 'package:anikki/app/downloader/bloc/downloader_bloc.dart';
 import 'package:anikki/app/downloader/helpers/show_downloader.dart';
 import 'package:anikki/app/home/bloc/home_bloc.dart';
@@ -58,9 +58,11 @@ class BlocListeners extends StatelessWidget {
           listener: (context, state) {
             if (state is! ConnectivityOnline) return;
 
-            BlocProvider.of<AnilistAuthBloc>(context).add(
-              AnilistAuthLoginRequested(),
-            );
+            for (final provider in WatchListProvider.values) {
+              BlocProvider.of<ProviderAuthBloc>(context).add(
+                ProviderAuthLoginRequested(provider),
+              );
+            }
           },
         ),
         BlocListener<DownloaderBloc, DownloaderState>(
@@ -99,18 +101,24 @@ class BlocListeners extends StatelessWidget {
             );
           },
         ),
-        BlocListener<AnilistAuthBloc, AnilistAuthState>(
+        BlocListener<ProviderAuthBloc, ProviderAuthState>(
           listener: (context, state) {
-            final connected = state is AnilistAuthSuccess;
+            for (final provider in WatchListProvider.values) {
+              final connected = switch (provider) {
+                WatchListProvider.anilist => state.anilistUser != null,
+                WatchListProvider.mal => false,
+                WatchListProvider.kitsu => false,
+              };
 
-            BlocProvider.of<WatchListBloc>(context).add(
-              WatchListAuthUpdated(
-                connected: connected,
-                provider: WatchListProvider.anilist,
-              ),
-            );
+              BlocProvider.of<WatchListBloc>(context).add(
+                WatchListAuthUpdated(
+                  connected: connected,
+                  provider: provider,
+                ),
+              );
+            }
 
-            if (!connected) {
+            if (state.anilistUser == null) {
               BlocProvider.of<HomeBloc>(context).add(
                 const HomeRefreshed(
                   watchList: null,
@@ -121,6 +129,8 @@ class BlocListeners extends StatelessWidget {
           },
         ),
         BlocListener<WatchListBloc, WatchListState>(
+          listenWhen: (previous, current) =>
+              previous.watchLists != current.watchLists,
           listener: (context, state) {
             if (state is WatchListLoaded) {
               BlocProvider.of<HomeBloc>(context).add(
@@ -133,7 +143,11 @@ class BlocListeners extends StatelessWidget {
                 ),
               );
             }
-
+          },
+        ),
+        BlocListener<WatchListBloc, WatchListState>(
+          listenWhen: (previous, current) => current is WatchListNotify,
+          listener: (context, state) {
             if (state is! WatchListNotify) return;
 
             context.notify(

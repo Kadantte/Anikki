@@ -24,7 +24,7 @@ sealed class WatchListState extends Equatable {
   List<MediaListEntry> get planning => watchList?.planning ?? const [];
   List<MediaListEntry> get repeating => watchList?.repeating ?? const [];
 
-  bool get isEmpty => watchList?.isEmpty == true;
+  bool get isEmpty => watchList == null || watchList?.isEmpty == true;
   bool get isNotEmpty => !isEmpty;
 
   @override

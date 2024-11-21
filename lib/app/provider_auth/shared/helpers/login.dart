@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:anikki/app/anilist_auth/widgets/token_input.dart';
+import 'package:anikki/app/provider_auth/widgets/token_input.dart';
 import 'package:anikki/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +8,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive/hive.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:anikki/app/anilist_auth/bloc/anilist_auth_bloc.dart';
+import 'package:anikki/app/provider_auth/bloc/provider_auth_bloc.dart';
 import 'package:anikki/core/widgets/connected_dialog.dart';
 import 'package:anikki/domain/domain.dart';
 
@@ -32,8 +32,19 @@ final _oauthUrlLinux = Uri(
   },
 );
 
-Future<void> loginToAnilist(BuildContext context) async {
-  final authBloc = BlocProvider.of<AnilistAuthBloc>(context);
+Future<void> loginToProvider(
+  WatchListProvider provider,
+  BuildContext context,
+) async {
+  return switch (provider) {
+    WatchListProvider.anilist => _loginToAnilist(context),
+    WatchListProvider.mal => throw UnimplementedError(),
+    WatchListProvider.kitsu => throw UnimplementedError(),
+  };
+}
+
+Future<void> _loginToAnilist(BuildContext context) async {
+  final authBloc = BlocProvider.of<ProviderAuthBloc>(context);
   final box = await Hive.openBox(UserRepository.boxName);
 
   if (Platform.isLinux) {
@@ -49,7 +60,7 @@ Future<void> loginToAnilist(BuildContext context) async {
         builder: (context) => const TokenInput(),
       );
 
-      authBloc.add(AnilistAuthLoginRequested());
+      authBloc.add(ProviderAuthLoginRequested(WatchListProvider.anilist));
     }
 
     return;
@@ -60,7 +71,7 @@ Future<void> loginToAnilist(BuildContext context) async {
       .listen((event) {
     if (event.value == null || event.deleted) return;
 
-    authBloc.add(AnilistAuthLoginRequested());
+    authBloc.add(ProviderAuthLoginRequested(WatchListProvider.anilist));
 
     if (context.mounted) {
       showDialog(

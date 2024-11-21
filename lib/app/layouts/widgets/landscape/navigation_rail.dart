@@ -2,13 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:simple_icons/simple_icons.dart';
 
-import 'package:anikki/app/anilist_auth/bloc/anilist_auth_bloc.dart';
-import 'package:anikki/app/anilist_auth/shared/helpers/login.dart';
-import 'package:anikki/app/anilist_auth/shared/helpers/logout.dart';
 import 'package:anikki/app/layouts/shared/helpers/helpers.dart';
 import 'package:anikki/core/core.dart';
 
@@ -101,33 +97,6 @@ class _AnikkiNavigationRailState extends State<AnikkiNavigationRail> {
         ),
       ];
 
-  List<Widget> makeAccountItems(BuildContext context) => [
-        BlocBuilder<AnilistAuthBloc, AnilistAuthState>(
-          builder: (context, state) => state is AnilistAuthSuccess
-              ? _NavigationRailItem(
-                  expanded: expanded,
-                  icon: HugeIcons.strokeRoundedLogout02,
-                  text: 'Logout',
-                  onClick: () => logoutFromAnilist(context),
-                )
-              : const SizedBox(),
-        ),
-        BlocBuilder<AnilistAuthBloc, AnilistAuthState>(
-          builder: (context, state) => state is AnilistAuthSuccess
-              ? _NavigationRailItem(
-                  expanded: expanded,
-                  imageUrl: state.me.avatar?.large ?? state.me.avatar?.medium,
-                  text: state.me.name,
-                )
-              : _NavigationRailItem(
-                  expanded: expanded,
-                  icon: SimpleIcons.anilist,
-                  text: 'Login with Anilist',
-                  onClick: () => loginToAnilist(context),
-                ),
-        ),
-      ];
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -165,23 +134,15 @@ class _AnikkiNavigationRailState extends State<AnikkiNavigationRail> {
                   ),
                   child: IntrinsicHeight(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          children: [
-                            titleItem,
-                            gap,
-                            ...pages,
-                            gap,
-                            ...actionItems,
-                            gap,
-                            ...externalLinkItems,
-                            gap,
-                          ],
-                        ),
-                        Column(
-                          children: makeAccountItems(context),
-                        ),
+                        titleItem,
+                        gap,
+                        ...pages,
+                        gap,
+                        ...actionItems,
+                        gap,
+                        ...externalLinkItems,
+                        gap,
                       ],
                     ),
                   ),

@@ -14,10 +14,10 @@ class DrawerTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isConnected = BlocProvider.of<AnilistAuthBloc>(
+    final isConnected = BlocProvider.of<WatchListBloc>(
       context,
       listen: true,
-    ).isConnected;
+    ).state.connected.values.any((value) => value);
 
     return BlocBuilder<LayoutBloc, LayoutState>(
       builder: (context, state) {

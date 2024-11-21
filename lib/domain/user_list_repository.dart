@@ -81,8 +81,8 @@ class UserListRepository {
     }
   }
 
-  /// Returns the watch lists of the user at `username`
-  Future<WatchList> getList(WatchListProvider provider) async {
+  /// Returns the watch lists of the currently authenticated user on `provider`
+  Future<WatchList?> getList(WatchListProvider provider) async {
     return switch (provider) {
       WatchListProvider.anilist => WatchList.fromAnilistWatchList(
           await anilist.getWatchLists(),

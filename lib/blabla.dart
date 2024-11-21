@@ -81,13 +81,13 @@ final credentialsFile = File('~/Desktop/credentials.json');
 // }
 
 void main() async {
-  var grant = oauth2.AuthorizationCodeGrant(
+  oauth2.AuthorizationCodeGrant(
     identifier,
     authorizationEndpoint,
     tokenEndpoint,
     // secret: secret,
   );
 
-  var authorizationUrl = grant.getAuthorizationUrl(redirectUrl);
-  print(authorizationUrl);
+  // var authorizationUrl = grant.getAuthorizationUrl(redirectUrl);
+  // print(authorizationUrl);
 }

@@ -17,7 +17,7 @@ class UserRepository {
   };
 
   /// The box name to use to store informations
-  static const boxName = 'auth';
+  static const boxName = 'provider_auth';
 
   /// Returns the current user if any
   Future<AnilistUser> getAnilistCurrentUser() async {

@@ -4,7 +4,7 @@ import 'package:protocol_handler/protocol_handler.dart';
 
 import 'package:anikki/config/config.dart';
 import 'package:anikki/core/core.dart';
-import 'package:anikki/app/anilist_auth/shared/mixins/anilist_auth_mixin.dart';
+import 'package:anikki/app/provider_auth/shared/mixins/provider_auth_mixin.dart';
 import 'package:anikki/app/settings/bloc/settings_bloc.dart';
 import 'package:anikki/app/layouts/view/layout_page.dart';
 
@@ -18,7 +18,7 @@ class Anikki extends StatefulWidget {
 }
 
 class _AnikkiState extends State<Anikki>
-    with ProtocolListener, AnilistAuthMixin {
+    with ProtocolListener, ProviderAuthMixin {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
