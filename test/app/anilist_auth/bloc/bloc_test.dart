@@ -48,8 +48,8 @@ void main() {
         ),
       ),
       expect: () => [
-        ProviderAuthError(
-          message: AnilistNotConnectedException().cause,
+        ProviderAuthState(
+          anilistUser: null,
         ),
       ],
       setUp: () {

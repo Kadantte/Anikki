@@ -18,17 +18,7 @@ class Synonyms extends StatelessWidget {
         /// Anitomy parsed name
         state.entry?.entries.first.title,
 
-        /// Full english name
-        state.media?.title?.english,
-
-        /// Native name (probably in Japanese)
-        state.media?.title?.native,
-
-        /// Romaji name
-        state.media?.title?.romaji,
-
-        /// All the other synonyms
-        ...(state.media?.synonyms?.whereType<String>().toList() ?? []),
+        ...(state.entry?.media?.synonyms ?? []),
       }.whereType<String>().toList();
 
   final DownloaderSuccess state;

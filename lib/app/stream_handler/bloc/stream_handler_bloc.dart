@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:anikki/core/core.dart';
-import 'package:anikki/data/data.dart';
 import 'package:anikki/domain/domain.dart';
 
 part 'stream_handler_event.dart';
@@ -14,7 +13,7 @@ class StreamHandlerBloc extends Bloc<StreamHandlerEvent, StreamHandlerState> {
   StreamHandlerBloc(this.repository)
       : super(
           StreamHandlerInitial(
-            media: AnilistUtils.getEmptyMedia(),
+            media: Media(),
           ),
         ) {
     on<StreamHandlerShowRequested>(_onShowRequested);
@@ -62,7 +61,7 @@ class StreamHandlerBloc extends Bloc<StreamHandlerEvent, StreamHandlerState> {
     );
 
     try {
-      final term = Media(anilistInfo: event.media).title;
+      final term = event.media.title;
 
       if (term == null) throw 'No name could be found.';
 

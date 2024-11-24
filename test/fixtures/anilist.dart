@@ -58,25 +58,23 @@ final viewerMock = Query$Viewer(
   Viewer: anilistUserMock,
 );
 
-final media = Fragment$media(
-  id: 20,
-  episodes: 12,
-  isFavourite: false,
-  title: Fragment$media$title(
-    userPreferred: 'Sakura Trick',
+final media = Media(
+  anilistInfo: Fragment$media(
+    id: 20,
+    episodes: 12,
+    isFavourite: false,
+    title: Fragment$media$title(
+      userPreferred: 'Sakura Trick',
+    ),
   ),
 );
 
 final localFileMock = LocalFile(
   path:
       'test\\resources\\movies\\[SubsPlease] Kaminaki Sekai no Kamisama Katsudou - 03 (1080p) [0328F445].mkv',
-  media: Media(
-    anilistInfo: media,
-  ),
+  media: media,
   episode: 3,
 );
-
-final anilistMediaMock = Media(anilistInfo: media);
 
 final airingScheduleMock = Query$AiringSchedule(
   Page: Query$AiringSchedule$Page(

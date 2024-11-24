@@ -76,7 +76,8 @@ class WatchList extends Equatable {
         WatchListProvider.anilist => media.anilistInfo?.id != null &&
             media.anilistInfo?.id != 0 &&
             element.media.anilistInfo?.id == media.anilistInfo?.id,
-        WatchListProvider.mal => throw UnimplementedError(),
+        WatchListProvider.mal => media.anilistInfo?.id != null &&
+            element.media.malInfo?.id == media.malInfo?.id,
         WatchListProvider.kitsu => throw UnimplementedError(),
       },
     );

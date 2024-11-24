@@ -82,7 +82,7 @@ class HomeTimelineFeedCard extends StatelessWidget {
                         onPressed: () {
                           VideoPlayerRepository.playAnyway(
                             context: context,
-                            media: entry.media.anilistInfo,
+                            media: entry.media,
                           );
                         },
                         icon: const Icon(

@@ -9,7 +9,7 @@ class _HomeActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (media == null || media?.anilistInfo == null) return const SizedBox();
+    if (media == null) return const SizedBox();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -17,7 +17,7 @@ class _HomeActions extends StatelessWidget {
         FilledButton.tonalIcon(
           onPressed: () => VideoPlayerRepository.playAnyway(
             context: context,
-            media: media?.anilistInfo,
+            media: media,
           ),
           icon: Icon(HugeIcons.strokeRoundedPlay),
           label: Text('Watch'),
@@ -28,7 +28,7 @@ class _HomeActions extends StatelessWidget {
           onPressed: () {
             BlocProvider.of<DownloaderBloc>(context).add(
               DownloaderRequested(
-                media: media?.anilistInfo,
+                media: media,
               ),
             );
           },

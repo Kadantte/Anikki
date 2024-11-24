@@ -224,7 +224,7 @@ void main() async {
             (_) => [
               libraryEntries.first,
               LibraryEntry(
-                media: anilistMediaMock,
+                media: media,
                 entries: [
                   mockFile,
                   libraryEntries[1].entries.first,
@@ -326,7 +326,7 @@ void main() async {
                 libraryEntries, libraryEntries.first.entries.first),
           ).thenAnswer((_) => [
                 LibraryEntry(
-                  media: anilistMediaMock,
+                  media: media,
                   entries: [libraryEntries.first.entries.last],
                 ),
                 ...libraryEntries.sublist(1),

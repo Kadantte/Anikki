@@ -73,10 +73,10 @@ List<DrawerAction> _buildLinks(Media? media) => [
           label: 'See on AniList',
           icon: SimpleIcons.anilist,
         ),
-      if (media?.anilistInfo?.idMal != null)
+      if (media?.malId != null)
         DrawerAction(
           onPressed: (context) => openInBrowser(
-            'https://myanimelist.net/anime/${media!.anilistInfo?.idMal}',
+            'https://myanimelist.net/anime/${media!.malId}',
           ),
           label: 'See on MyAnimeList',
           icon: SimpleIcons.myanimelist,
@@ -129,7 +129,7 @@ List<DrawerAction> _buildActions({
       DrawerAction(
         onPressed: (context) => BlocProvider.of<DownloaderBloc>(context).add(
           DownloaderRequested(
-            media: media?.anilistInfo,
+            media: media,
             entry: libraryEntry,
           ),
         ),
@@ -140,7 +140,7 @@ List<DrawerAction> _buildActions({
         type: DrawerActionType.full,
         onPressed: (context) => VideoPlayerRepository.playAnyway(
           context: context,
-          media: media?.anilistInfo,
+          media: media,
         ),
         label: 'Watch',
         icon: HugeIcons.strokeRoundedPlay,

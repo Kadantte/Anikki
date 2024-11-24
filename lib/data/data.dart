@@ -3,3 +3,4 @@ export 'consumet/consumet.dart';
 export 'files.dart';
 export 'nyaa/nyaa.dart';
 export 'tmdb/tmdb.dart';
+export 'mal/mal.dart';

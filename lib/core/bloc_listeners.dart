@@ -106,7 +106,7 @@ class BlocListeners extends StatelessWidget {
             for (final provider in WatchListProvider.values) {
               final connected = switch (provider) {
                 WatchListProvider.anilist => state.anilistUser != null,
-                WatchListProvider.mal => false,
+                WatchListProvider.mal => state.malUser != null,
                 WatchListProvider.kitsu => false,
               };
 

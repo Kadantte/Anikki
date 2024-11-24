@@ -4,19 +4,25 @@ import 'package:mocktail/mocktail.dart';
 import 'package:anikki/domain/domain.dart';
 
 import '../fixtures/anilist.dart';
+import '../fixtures/mal.dart';
 
 void main() {
   group('unit test: UserRepository', () {
     late MockAnilist anilist;
+    late MockMal mal;
     late UserRepository repository;
 
     group('getCurrentUser method', () {
       group('when API succeeds', () {
         setUp(() {
           anilist = MockAnilist();
+          mal = MockMal();
           when(() => anilist.getMe()).thenAnswer((_) async => anilistUserMock);
 
-          repository = UserRepository(anilist);
+          repository = UserRepository(
+            anilist: anilist,
+            mal: mal,
+          );
         });
 
         test('returns the given user', () async {
@@ -31,9 +37,13 @@ void main() {
 
         setUp(() {
           anilist = MockAnilist();
+          mal = MockMal();
           when(() => anilist.getMe()).thenThrow(exception);
 
-          repository = UserRepository(anilist);
+          repository = UserRepository(
+            anilist: anilist,
+            mal: mal,
+          );
         });
 
         test('throws the same error', () async {

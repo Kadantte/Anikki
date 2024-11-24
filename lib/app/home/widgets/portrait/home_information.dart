@@ -34,25 +34,27 @@ class _HomeInformation extends StatelessWidget {
               ),
             ),
           ),
-          if (media?.anilistInfo?.season != null)
+          if (media?.season != null)
             Container(
               padding: const EdgeInsets.symmetric(vertical: 20.0),
               width: 1,
               color: context.colorScheme.onSurface.withOpacity(0.3),
             ),
-          if (media?.anilistInfo?.season != null)
+          if (media?.season != null)
             Expanded(
               child: ListTile(
                 dense: true,
-                title: Text(
-                  media!.anilistInfo?.season?.name.capitalize() ?? '',
+                title: AutoSizeText(
+                  media!.season?.name.capitalize() ?? '',
                   style:
                       context.textTheme.headlineSmall?.copyWith(fontSize: 18),
                   textAlign: TextAlign.center,
+                  maxLines: 1,
                 ),
-                subtitle: Text(
-                  media?.anilistInfo?.seasonYear?.toString() ?? '',
+                subtitle: AutoSizeText(
+                  media?.seasonYear?.toString() ?? '',
                   textAlign: TextAlign.center,
+                  maxLines: 1,
                 ),
               ),
             ),

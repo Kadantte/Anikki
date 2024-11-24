@@ -9,7 +9,7 @@ class _HomeSubtitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final genres = media?.anilistInfo?.genres?.whereType<String>().toList();
+    final genres = media?.genres;
 
     if (genres == null || genres.isEmpty) return const SizedBox();
 

@@ -21,27 +21,16 @@ class ProviderAuthBloc extends Bloc<ProviderAuthEvent, ProviderAuthState> {
     ProviderAuthLoginRequested event,
     Emitter<ProviderAuthState> emit,
   ) async {
-    try {
-      emit(
-        ProviderAuthState(
-          anilistUser: await repository.getAnilistCurrentUser(),
-        ),
-      );
-    } on AnilistNotConnectedException catch (e) {
-      emit(
-        ProviderAuthError(
-          message: e.cause,
-          anilistUser: state.anilistUser,
-        ),
-      );
-    } catch (e) {
-      emit(
-        ProviderAuthError(
-          message: e.toString(),
-          anilistUser: state.anilistUser,
-        ),
-      );
-    }
+    emit(
+      ProviderAuthState(
+        anilistUser: event.provider == WatchListProvider.anilist
+            ? await repository.getAnilistCurrentUser()
+            : state.anilistUser,
+        malUser: event.provider == WatchListProvider.mal
+            ? await repository.getMalCurrentUser()
+            : state.malUser,
+      ),
+    );
   }
 
   Future<void> _logout(
@@ -56,6 +45,7 @@ class ProviderAuthBloc extends Bloc<ProviderAuthEvent, ProviderAuthState> {
         anilistUser: event.provider == WatchListProvider.anilist
             ? null
             : state.anilistUser,
+        malUser: event.provider == WatchListProvider.mal ? null : state.malUser,
       ),
     );
   }

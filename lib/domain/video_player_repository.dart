@@ -163,7 +163,7 @@ class VideoPlayerRepository {
 
   static void playAnyway({
     required BuildContext context,
-    Fragment$media? media,
+    Media? media,
     LibraryEntry? entry,
     int? episode,
   }) {
@@ -189,7 +189,7 @@ class VideoPlayerRepository {
     final watchListEntry = media != null
         ? WatchListUtils.getCurrentEntry(
             watchListState.watchLists,
-            Media(anilistInfo: media),
+            media,
           )
         : null;
 
@@ -210,7 +210,7 @@ class VideoPlayerRepository {
         file: file,
         context: context,
         playlist: playlist ?? [convertToMkMedia(file)],
-        media: Media(anilistInfo: media),
+        media: media,
       );
       return;
     }
@@ -220,8 +220,10 @@ class VideoPlayerRepository {
     BlocProvider.of<StreamHandlerBloc>(context).add(
       StreamHandlerShowRequested(
         media: media ??
-            AnilistUtils.getEmptyMedia(
-              title: entry?.entries.first.title,
+            Media(
+              anilistInfo: AnilistUtils.getEmptyMedia(
+                title: entry?.entries.first.title,
+              ),
             ),
         minEpisode: progress != null ? progress + 1 : null,
         entry: entry,

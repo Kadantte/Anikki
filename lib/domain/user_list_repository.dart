@@ -8,10 +8,14 @@ class UserListRepository {
   const UserListRepository({
     required this.anilist,
     required this.tmdb,
+    required this.mal,
   });
 
   /// The [Anilist] object to use to interact with Anilist.
   final Anilist anilist;
+
+  /// The [Mal] object to use to interact with MyAnimeList.
+  final Mal mal;
 
   /// The [TMDB] object to use to interact with TMDB.
   final Tmdb tmdb;
@@ -87,7 +91,7 @@ class UserListRepository {
       WatchListProvider.anilist => WatchList.fromAnilistWatchList(
           await anilist.getWatchLists(),
         ),
-      WatchListProvider.mal => throw UnimplementedError(),
+      WatchListProvider.mal => await mal.getWatchList(),
       WatchListProvider.kitsu => throw UnimplementedError(),
     };
   }

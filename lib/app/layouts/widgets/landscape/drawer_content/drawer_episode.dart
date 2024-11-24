@@ -46,7 +46,7 @@ class DrawerEpisode extends StatelessWidget {
 
         VideoPlayerRepository.playAnyway(
           context: context,
-          media: media?.anilistInfo,
+          media: media,
           episode: episodeNumber,
         );
       },
@@ -102,7 +102,7 @@ class DrawerEpisode extends StatelessWidget {
               IconButton(
                 onPressed: () => BlocProvider.of<DownloaderBloc>(context).add(
                   DownloaderRequested(
-                    media: media?.anilistInfo,
+                    media: media,
                     episode: episodeNumber,
                   ),
                 ),

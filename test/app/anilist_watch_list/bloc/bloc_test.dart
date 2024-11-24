@@ -145,7 +145,7 @@ void main() {
         seed: () => makeSeedState(true),
         act: (bloc) => bloc.add(
           WatchListWatched(
-            media: anilistMediaMock,
+            media: media,
           ),
         ),
         expect: () => [
@@ -177,7 +177,7 @@ void main() {
         seed: () => makeSeedState(true),
         act: (bloc) => bloc.add(
           WatchListWatched(
-            media: anilistMediaMock,
+            media: media,
           ),
         ),
         expect: () => [
@@ -210,7 +210,7 @@ void main() {
         seed: () => makeSeedState(false),
         act: (bloc) => bloc.add(
           WatchListWatched(
-            media: anilistMediaMock,
+            media: media,
           ),
         ),
         expect: () => [],

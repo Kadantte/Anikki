@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:anikki/app/settings/bloc/settings_bloc.dart';
 import 'package:anikki/app/stream_handler/bloc/stream_handler_bloc.dart';
-import 'package:anikki/core/core.dart';
 import 'package:anikki/core/widgets/error_widget.dart';
 import 'package:anikki/core/widgets/layout_card.dart';
 import 'package:anikki/core/widgets/loading_widget.dart';
@@ -60,7 +59,7 @@ class _OnlineStreamHandlerState extends State<OnlineStreamHandler> {
         VideoPlayerRepository.startOnlinePlay(
           context: context,
           playlist: state.sources.map((e) => e.media).toList(),
-          media: Media(anilistInfo: state.media),
+          media: state.media,
         );
       },
       builder: (context, state) => LayoutCard(

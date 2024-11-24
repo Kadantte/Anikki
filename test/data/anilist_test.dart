@@ -59,7 +59,7 @@ void main() {
           Query$Search(
             anime: Query$Search$anime(
               results: [
-                media,
+                media.anilistInfo,
               ],
             ),
             characters: Query$Search$characters(
@@ -168,7 +168,7 @@ void main() {
             entries: [
               Query$GetLists$MediaListCollection$lists$entries(
                 status: Enum$MediaListStatus.COMPLETED,
-                media: media,
+                media: media.anilistInfo,
               ),
             ],
           ),
@@ -176,7 +176,7 @@ void main() {
             entries: [
               Query$GetLists$MediaListCollection$lists$entries(
                 status: Enum$MediaListStatus.CURRENT,
-                media: media,
+                media: media.anilistInfo,
               ),
             ],
           ),

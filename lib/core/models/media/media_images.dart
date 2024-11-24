@@ -6,7 +6,9 @@ mixin MediaImages on IMedia {
   String? get coverImage =>
       anilistInfo?.coverImage?.extraLarge ??
       anilistInfo?.coverImage?.large ??
-      anilistInfo?.coverImage?.medium;
+      malInfo?.mainPicture?.large ??
+      anilistInfo?.coverImage?.medium ??
+      malInfo?.mainPicture?.medium;
   String? get bannerImage => anilistInfo?.bannerImage;
   String? get backgroundImage {
     final images = tmdbInfo?.images?.backdrops;

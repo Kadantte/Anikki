@@ -49,7 +49,7 @@ void main() {
 
             when(
               () => repository.makeTerm(
-                media: anilistMediaMock,
+                media: media,
                 entry: null,
                 episode: null,
                 title: null,
@@ -85,7 +85,7 @@ void main() {
 
             when(
               () => repository.makeTerm(
-                media: anilistMediaMock,
+                media: media,
                 entry: null,
                 episode: null,
                 title: null,
@@ -115,7 +115,7 @@ void main() {
 
             when(
               () => repository.makeTerm(
-                media: anilistMediaMock,
+                media: media,
                 entry: null,
                 episode: null,
                 title: null,
@@ -173,7 +173,7 @@ void main() {
 
           when(
             () => repository.makeTerm(
-              media: anilistMediaMock,
+              media: media,
               entry: null,
               episode: null,
               title: null,
@@ -215,7 +215,7 @@ void main() {
 
           when(
             () => repository.makeTerm(
-              media: anilistMediaMock,
+              media: media,
               entry: null,
               episode: null,
               title: null,
@@ -266,7 +266,7 @@ void main() {
 
           when(
             () => repository.makeTerm(
-              media: anilistMediaMock,
+              media: media,
               entry: null,
               episode: 1,
               title: null,
@@ -304,7 +304,7 @@ void main() {
 
           when(
             () => repository.makeTerm(
-              media: anilistMediaMock,
+              media: media,
               entry: null,
               episode: null,
               title: null,
@@ -352,7 +352,7 @@ void main() {
 
           when(
             () => repository.makeTerm(
-              media: anilistMediaMock,
+              media: media,
               entry: null,
               episode: null,
               title: null,

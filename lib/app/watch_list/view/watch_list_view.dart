@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 import 'package:anikki/app/layouts/bloc/layout_bloc.dart';
-import 'package:anikki/app/provider_auth/anilist_auth.dart';
+import 'package:anikki/app/provider_auth/provider_auth.dart';
 import 'package:anikki/app/provider_auth/shared/helpers/logout.dart';
 import 'package:anikki/app/watch_list/bloc/watch_list_bloc.dart';
 import 'package:anikki/app/watch_list/widgets/watch_list_card.dart';
@@ -41,14 +41,15 @@ class WatchListView extends StatelessWidget {
             final actions = [
               if (loading)
                 const SectionTitleLoadingAction()
-              else if (connected)
+              else if (connected || errored)
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: IconButton(
                     onPressed: () async {
                       BlocProvider.of<WatchListBloc>(context).add(
                         WatchListRequested(
-                          provider: WatchListProvider.anilist,
+                          provider: state.currentProvider ??
+                              WatchListProvider.values.first,
                         ),
                       );
                     },
@@ -104,7 +105,7 @@ class WatchListView extends StatelessWidget {
             ];
 
             Widget body = Center(
-              child: AnilistAuthView(
+              child: ProviderAuthView(
                 provider: provider,
               ),
             );
@@ -121,15 +122,9 @@ class WatchListView extends StatelessWidget {
                     description: state.message,
                   ),
                 );
-              } else if (initial) {
+              } else if (!connected || initial) {
                 body = Center(
-                  child: AnilistAuthView(
-                    provider: provider,
-                  ),
-                );
-              } else if (!connected) {
-                body = Center(
-                  child: AnilistAuthView(
+                  child: ProviderAuthView(
                     provider: provider,
                   ),
                 );

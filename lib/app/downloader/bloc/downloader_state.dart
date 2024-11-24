@@ -72,8 +72,8 @@ final class DownloaderSuccess extends DownloaderState {
   /// Filtered `torrents`.
   final List<NyaaTorrent> filteredTorrents;
 
-  /// [Fragment$media] used for this state. Used for data.
-  final Fragment$media? media;
+  /// [Media] used for this state. Used for data.
+  final Media? media;
 
   /// [LibraryEntry] used for this state. Used for data.
   final LibraryEntry? entry;
@@ -117,7 +117,7 @@ final class DownloaderSuccess extends DownloaderState {
     List<NyaaTorrent>? torrents,
     List<NyaaTorrent>? filteredTorrents,
     DownloaderFilter? filter,
-    Fragment$media? media,
+    Media? media,
     LibraryEntry? entry,
     int? episode,
     bool? isStreaming,

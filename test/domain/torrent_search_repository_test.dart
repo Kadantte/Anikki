@@ -52,7 +52,6 @@ void main() {
     });
 
     group('makeTerm method', () {
-      final media = anilistMediaMock;
       const episode = 1;
       const title = 'Danmachi';
       final entry = libraryEntries.first;

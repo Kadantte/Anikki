@@ -39,7 +39,7 @@ class HomeTitleActions extends StatelessWidget {
           type: HomeActionType.iconAndText,
           onPressed: (context) => VideoPlayerRepository.playAnyway(
             context: context,
-            media: media.anilistInfo,
+            media: media,
           ),
           icon: HugeIcons.strokeRoundedPlay,
           text: 'Watch',
@@ -48,7 +48,7 @@ class HomeTitleActions extends StatelessWidget {
           type: HomeActionType.iconAndText,
           onPressed: (context) => BlocProvider.of<DownloaderBloc>(context).add(
             DownloaderRequested(
-              media: media.anilistInfo,
+              media: media,
             ),
           ),
           icon: HugeIcons.strokeRoundedDownload04,

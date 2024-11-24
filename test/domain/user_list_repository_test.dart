@@ -5,11 +5,13 @@ import 'package:anikki/core/core.dart';
 import 'package:anikki/domain/domain.dart';
 
 import '../fixtures/anilist.dart';
+import '../fixtures/mal.dart';
 import '../fixtures/tmdb.dart';
 
 void main() {
   group('unit test: UserListRepository', () {
     late MockAnilist anilist;
+    late MockMal mal;
     late MockTmdb tmdb;
     late UserListRepository repository;
 
@@ -18,6 +20,7 @@ void main() {
         setUp(() {
           tmdb = MockTmdb();
           anilist = MockAnilist();
+          mal = MockMal();
           when(
             () => anilist.updateEntry(
               episode: 1,
@@ -36,6 +39,7 @@ void main() {
 
           repository = UserListRepository(
             anilist: anilist,
+            mal: mal,
             tmdb: tmdb,
           );
         });
@@ -43,7 +47,7 @@ void main() {
         test('succeeds when episode is 1', () async {
           await repository.watchedEntry(
             episode: 1,
-            media: anilistMediaMock,
+            media: media,
             provider: WatchListProvider.anilist,
             watchList: const WatchList(provider: WatchListProvider.anilist),
           );
@@ -52,7 +56,7 @@ void main() {
         test('succeeds when episode is not 1', () async {
           await repository.watchedEntry(
             episode: 2,
-            media: anilistMediaMock,
+            media: media,
             provider: WatchListProvider.anilist,
             watchList: const WatchList(provider: WatchListProvider.anilist),
           );
@@ -64,6 +68,7 @@ void main() {
 
         setUp(() {
           tmdb = MockTmdb();
+          mal = MockMal();
           anilist = MockAnilist();
           when(
             () => anilist.updateEntry(
@@ -75,6 +80,7 @@ void main() {
 
           repository = UserListRepository(
             anilist: anilist,
+            mal: mal,
             tmdb: tmdb,
           );
         });
@@ -83,7 +89,7 @@ void main() {
           try {
             await repository.watchedEntry(
               episode: 1,
-              media: anilistMediaMock,
+              media: media,
               provider: WatchListProvider.anilist,
               watchList: const WatchList(provider: WatchListProvider.anilist),
             );
@@ -99,6 +105,7 @@ void main() {
       group('when API succeeds', () {
         setUp(() {
           tmdb = MockTmdb();
+          mal = MockMal();
           anilist = MockAnilist();
           when(
             () => anilist.getWatchLists(),
@@ -108,6 +115,7 @@ void main() {
 
           repository = UserListRepository(
             anilist: anilist,
+            mal: mal,
             tmdb: tmdb,
           );
         });
@@ -124,6 +132,7 @@ void main() {
 
         setUp(() {
           tmdb = MockTmdb();
+          mal = MockMal();
           anilist = MockAnilist();
           when(
             () => anilist.getWatchLists(),
@@ -131,6 +140,7 @@ void main() {
 
           repository = UserListRepository(
             anilist: anilist,
+            mal: mal,
             tmdb: tmdb,
           );
         });

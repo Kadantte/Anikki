@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:anikki/app/provider_auth/shared/helpers/login.dart';
 import 'package:anikki/core/core.dart';
 
-class AnilistAuthView extends StatelessWidget {
-  const AnilistAuthView({
+class ProviderAuthView extends StatelessWidget {
+  const ProviderAuthView({
     super.key,
     required this.provider,
   });

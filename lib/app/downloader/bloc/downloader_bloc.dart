@@ -24,7 +24,7 @@ class DownloaderBloc extends Bloc<DownloaderEvent, DownloaderState> {
   FutureOr<void> _onDownloaderRequest(
       DownloaderRequested event, Emitter<DownloaderState> emit) async {
     final String term = repository.makeTerm(
-      media: Media(anilistInfo: event.media),
+      media: event.media,
       entry: event.entry,
       episode: event.episode,
       title: event.title,

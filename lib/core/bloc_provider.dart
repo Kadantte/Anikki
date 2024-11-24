@@ -1,3 +1,4 @@
+import 'package:anikki/core/helpers/mal/mal_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,6 +25,7 @@ class AnikkiBlocProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final anilist = Anilist(client: getAnilistClient());
+    final mal = Mal(MalClient());
     final nyaa = Nyaa();
     final files = Files();
 
@@ -36,9 +38,13 @@ class AnikkiBlocProvider extends StatelessWidget {
     final torrentSearchRepository = TorrentSearchRepository(nyaa);
     final userListRepository = UserListRepository(
       anilist: anilist,
+      mal: mal,
       tmdb: tmdb,
     );
-    final userRepository = UserRepository(anilist);
+    final userRepository = UserRepository(
+      anilist: anilist,
+      mal: mal,
+    );
     const videoPlayerRepository = VideoPlayerRepository();
     final feedRepository = FeedRepository(
       anilist: anilist,
@@ -49,10 +55,7 @@ class AnikkiBlocProvider extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => ProviderAuthBloc(userRepository)
-            ..add(ProviderAuthLoginRequested(WatchListProvider.anilist))
-            ..add(ProviderAuthLoginRequested(WatchListProvider.mal))
-            ..add(ProviderAuthLoginRequested(WatchListProvider.kitsu)),
+          create: (context) => ProviderAuthBloc(userRepository),
         ),
         BlocProvider(
           create: (context) => LayoutBloc(),

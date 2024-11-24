@@ -15,7 +15,7 @@ const toAddPath =
 
 final libraryEntries = [
   LibraryEntry(
-    media: anilistMediaMock,
+    media: media,
     entries: [
       LocalFile(
         path:
@@ -28,7 +28,7 @@ final libraryEntries = [
     ],
   ),
   LibraryEntry(
-    media: anilistMediaMock,
+    media: media,
     entries: [
       LocalFile(
         path:
@@ -37,7 +37,7 @@ final libraryEntries = [
     ],
   ),
   LibraryEntry(
-    media: anilistMediaMock,
+    media: media,
     entries: [
       LocalFile(
         path:
@@ -46,7 +46,7 @@ final libraryEntries = [
     ],
   ),
   LibraryEntry(
-    media: anilistMediaMock,
+    media: media,
     entries: [
       LocalFile(
         path:
@@ -57,5 +57,4 @@ final libraryEntries = [
 ];
 
 final LocalFile mockFile = LocalFile(path: toAddPath);
-final LibraryEntry mockEntry =
-    LibraryEntry(media: anilistMediaMock, entries: [mockFile]);
+final LibraryEntry mockEntry = LibraryEntry(media: media, entries: [mockFile]);

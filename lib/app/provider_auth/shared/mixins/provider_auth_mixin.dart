@@ -38,12 +38,16 @@ mixin ProviderAuthMixin on State<Anikki>, ProtocolListener {
 
     if (!availableHosts.contains(uri.host)) return;
 
-    final token = uri.queryParameters['access_token'];
-
     final provider = switch (uri.host) {
       'anilist-auth' => WatchListProvider.anilist,
       'mal-auth' => WatchListProvider.mal,
       _ => throw UnimplementedError(),
+    };
+
+    final token = switch (provider) {
+      WatchListProvider.anilist => uri.queryParameters['access_token'],
+      WatchListProvider.mal => 'code=${uri.queryParameters['code']}',
+      WatchListProvider.kitsu => throw UnimplementedError(),
     };
 
     final box = await Hive.openBox(UserRepository.boxName);

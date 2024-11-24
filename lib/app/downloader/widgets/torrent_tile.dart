@@ -69,7 +69,7 @@ class TorrentTile extends StatelessWidget {
                     surfaceTintColor: Colors.transparent,
                     child: StreamPlaceholder(
                       torrent: torrent,
-                      media: media != null ? Media(anilistInfo: media) : null,
+                      media: media,
                     ),
                   );
                 },
