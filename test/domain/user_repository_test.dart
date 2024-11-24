@@ -46,13 +46,9 @@ void main() {
           );
         });
 
-        test('throws the same error', () async {
-          try {
-            await repository.getAnilistCurrentUser();
-            fail('Expected exception');
-          } on Exception catch (e) {
-            expect(e, exception);
-          }
+        test('returns null', () async {
+          final user = await repository.getAnilistCurrentUser();
+          expect(user, isNull);
         });
       });
     });

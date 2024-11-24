@@ -17,7 +17,7 @@ void main() {
 
     setUp(() async {
       box = await Hive.openBox(UserRepository.boxName);
-      box.put(UserRepository.tokenKey, token);
+      box.put(UserRepository.tokenKey[WatchListProvider.anilist], token);
     });
 
     test('Returns a client with the right token', () {

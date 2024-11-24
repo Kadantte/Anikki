@@ -297,7 +297,7 @@ final staffMock = Query$Search$staff$results(
 );
 
 final searchResultMock = {
-  AnilistSearchPart.animes: List<Fragment$media>.from([media]),
+  AnilistSearchPart.animes: List<Fragment$media>.from([media.anilistInfo]),
   AnilistSearchPart.characters:
       List<Query$Search$characters$results>.from([characterMock]),
   AnilistSearchPart.staffs: List<Query$Search$staff$results>.from([staffMock]),

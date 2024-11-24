@@ -222,9 +222,18 @@ void main() {
     });
     group('on [WatchListAuthUpdated]', () {
       blocTest<WatchListBloc, WatchListState>(
-        'emits [WatchListInitial] when [WatchListAuthUpdated] is added but app just disconnected',
+        'emits [WatchListLoaded] without related data when [WatchListAuthUpdated] is added but app just disconnected',
         build: () => bloc,
-        seed: () => const WatchListLoaded(),
+        seed: () => const WatchListLoaded(
+          watchLists: {
+            WatchListProvider.anilist: WatchList(
+              provider: WatchListProvider.anilist,
+            ),
+          },
+          connected: {
+            WatchListProvider.anilist: true,
+          },
+        ),
         act: (bloc) => bloc.add(
           WatchListAuthUpdated(
             provider: WatchListProvider.anilist,
@@ -233,7 +242,10 @@ void main() {
         ),
         expect: () => [
           const WatchListLoaded(
-            currentProvider: WatchListProvider.anilist,
+            watchLists: {},
+            connected: {
+              WatchListProvider.anilist: false,
+            },
           ),
         ],
         setUp: () {

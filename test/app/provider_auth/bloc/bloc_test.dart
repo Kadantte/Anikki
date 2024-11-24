@@ -5,7 +5,6 @@ import 'package:test/test.dart';
 
 import 'package:anikki/app/provider_auth/bloc/provider_auth_bloc.dart';
 import 'package:anikki/core/core.dart';
-import 'package:anikki/data/data.dart';
 import 'package:anikki/domain/user_repository.dart';
 
 import '../../../fixtures/anilist.dart';
@@ -16,12 +15,12 @@ class UserRepositoryMock extends Mock implements UserRepository {}
 void main() {
   initHive();
 
-  group('unit test: AnilistAuth Bloc', () {
+  group('unit test: ProviderAuth Bloc', () {
     late ProviderAuthBloc bloc;
     late UserRepository repository;
 
     blocTest(
-      'emits [AnilistAuthSuccess] when [AnilistAuthLoginRequested] is added and succeeds',
+      'emits [ProviderAuthSuccess] when [ProviderAuthLoginRequested] is added and succeeds',
       build: () => bloc,
       act: (bloc) => bloc.add(
         ProviderAuthLoginRequested(WatchListProvider.anilist),
@@ -40,7 +39,7 @@ void main() {
     );
 
     blocTest(
-      'emits [AnilistAuthError] when [AnilistAuthLoginRequested] is added but fails',
+      'emits [ProviderAuthState] without user when [ProviderAuthLoginRequested] is added but fails',
       build: () => bloc,
       act: (bloc) => bloc.add(
         ProviderAuthLoginRequested(
@@ -56,31 +55,36 @@ void main() {
         repository = UserRepositoryMock();
 
         when(() => repository.getAnilistCurrentUser())
-            .thenThrow(AnilistNotConnectedException());
+            .thenAnswer((_) async => null);
 
         bloc = ProviderAuthBloc(repository);
       },
     );
 
     blocTest(
-      'emits [AnilistAuthLoggedOut] when [AnilistAuthLogoutRequested] is added',
+      'emits [ProviderAuthState] and removes all related data when [ProviderAuthLogoutRequested] is added',
       build: () => bloc,
       act: (bloc) => bloc.add(
         ProviderAuthLogoutRequested(WatchListProvider.anilist),
       ),
       expect: () => [
-        isA<ProviderAuthState>(),
+        ProviderAuthState(
+          anilistUser: null,
+        ),
       ],
       setUp: () async {
         repository = UserRepositoryMock();
         bloc = ProviderAuthBloc(repository);
 
         final box = await Hive.openBox(UserRepository.boxName);
-        box.put(UserRepository.tokenKey, 'blabla');
+        box.put(UserRepository.tokenKey[WatchListProvider.anilist], 'blabla');
       },
       verify: (bloc) async {
         final box = await Hive.openBox(UserRepository.boxName);
-        expect(box.get(UserRepository.tokenKey), isNull);
+        expect(
+          box.get(UserRepository.tokenKey[WatchListProvider.anilist]),
+          isNull,
+        );
       },
     );
   });
