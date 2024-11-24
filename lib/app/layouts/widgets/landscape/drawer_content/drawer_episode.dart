@@ -14,6 +14,10 @@ class DrawerEpisode extends StatelessWidget {
 
   bool get isNextAiringEpisode => episodeNumber == media?.nextAiringEpisode;
 
+  int get seasonNumber => media?.title == null
+      ? 1
+      : Anitomy(inputString: media!.title!).season ?? 1;
+
   @override
   Widget build(BuildContext context) {
     if (localFile == null && (media == null || media?.anilistInfo?.id == 0)) {
@@ -24,10 +28,27 @@ class DrawerEpisode extends StatelessWidget {
       fontWeight: FontWeight.bold,
     );
 
-    final info = media?.anilistInfo?.streamingEpisodes?.firstWhereOrNull(
+    final tmdbSeason = media?.tmdbInfo?.tmdbSeasons?.firstWhereOrNull(
+      (season) => season.seasonNumber == seasonNumber,
+    );
+
+    final tmdbInfo = tmdbSeason?.episodes?.firstWhereOrNull(
+      (episode) => episode.episodeNumber == episodeNumber,
+    );
+
+    final anilistInfo = media?.anilistInfo?.streamingEpisodes?.firstWhereOrNull(
       (element) =>
           element?.title?.split(' - ').firstOrNull == 'Episode $episodeNumber',
     );
+
+    final episodeTitle =
+        anilistInfo?.title?.split(' - ').sublist(1).join(' - ') ??
+            tmdbInfo?.name;
+
+    final thumbnail = anilistInfo?.thumbnail ??
+        (tmdbInfo?.stillPath == null
+            ? null
+            : getTmdbImageUrl(tmdbInfo!.stillPath!));
 
     return InkWell(
       borderRadius: const BorderRadius.all(Radius.circular(12.0)),
@@ -68,12 +89,12 @@ class DrawerEpisode extends StatelessWidget {
               child: BlocBuilder<LayoutBloc, LayoutState>(
                 builder: (context, state) {
                   return CircleAvatar(
-                    radius: state is LayoutPortrait ? 32 : 40,
-                    backgroundImage: (info?.thumbnail == null
+                    radius: 32,
+                    backgroundImage: (thumbnail == null
                         ? const AssetImage(
                             'assets/images/cover_placeholder.jpg')
                         : CachedNetworkImageProvider(
-                            info!.thumbnail!,
+                            thumbnail,
                           )) as ImageProvider,
                   );
                 },
@@ -81,12 +102,27 @@ class DrawerEpisode extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: info?.title != null
-                    ? AutoSizeText(
-                        info!.title!,
-                        maxLines: 3,
-                        style: episodeTextStyle,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12.0,
+                  vertical: 12.0,
+                ),
+                child: episodeTitle != null
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AutoSizeText(
+                            episodeTitle,
+                            maxLines: 3,
+                            style: episodeTextStyle,
+                          ),
+                          Text(
+                            'Episode $episodeNumber',
+                            style: context.textTheme.bodySmall?.copyWith(
+                              fontSize: 8.0,
+                            ),
+                          )
+                        ],
                       )
                     : Text(
                         'Episode $episodeNumber',

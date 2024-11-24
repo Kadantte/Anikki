@@ -6,7 +6,10 @@ mixin MediaEpisodes on IMedia {
       anilistInfo?.nextAiringEpisode?.episode ??
       malInfo?.numEpisodes ??
       tmdbInfo?.numberOfEpisodes ??
-      anilistInfo?.streamingEpisodes?.length;
+      tmdbInfo?.tmdbSeasons?.fold<int>(
+        0,
+        (acc, season) => acc + (season.episodes?.length ?? 0),
+      );
 
   int? get nextAiringEpisode => anilistInfo?.nextAiringEpisode?.episode;
 }

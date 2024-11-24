@@ -56,12 +56,25 @@ class Tmdb {
 
     if (firstResultId == null) return null;
 
+    final seasonsToQuery = 15;
+
     final rawTmdbInfo = await _tmdb.v3.tv.getDetails(
       firstResultId,
-      appendToResponse: 'images,season',
+      appendToResponse: [
+        'images',
+        for (final index in List.generate(seasonsToQuery, (index) => index))
+          'season/$index',
+      ].join(','),
       includeImageLanguage: 'en,ja,null',
     ) as Map<String, dynamic>;
-    final tmdbInfo = TmdbTvDetails.fromMap(rawTmdbInfo);
+    final tmdbSeasons = [
+      for (final index in List.generate(seasonsToQuery, (index) => index))
+        rawTmdbInfo['season/$index']
+    ].whereType<Map>().toList();
+    final tmdbInfo = TmdbTvDetails.fromMap({
+      ...rawTmdbInfo,
+      'tmdbSeasons': tmdbSeasons,
+    });
 
     box.put(cacheKey, tmdbInfo.toMap());
 

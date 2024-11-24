@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
@@ -48,9 +47,9 @@ class TmdbTvDetails extends Equatable {
   final double? voteAverage;
   final int? voteCount;
   final TmdbTvImages? images;
+  final List<TmdbSeason>? tmdbSeasons;
 
   const TmdbTvDetails({
-    this.images,
     this.adult,
     this.backdropPath,
     this.createdBy,
@@ -83,6 +82,8 @@ class TmdbTvDetails extends Equatable {
     this.type,
     this.voteAverage,
     this.voteCount,
+    this.images,
+    this.tmdbSeasons,
   });
 
   factory TmdbTvDetails.fromMap(Map<String, dynamic> data) => TmdbTvDetails(
@@ -92,15 +93,15 @@ class TmdbTvDetails extends Equatable {
         adult: data['adult'] as bool?,
         backdropPath: data['backdrop_path'] as String?,
         createdBy: data['created_by'] as List<dynamic>?,
-        episodeRunTime: data['episode_run_time'].cast<int>() as List<int>?,
+        episodeRunTime: data['episode_run_time']?.cast<int>() as List<int>?,
         firstAirDate: data['first_air_date'] as String?,
         genres: (data['genres'] as List<dynamic>?)
             ?.map((e) => Genre.fromMap(e as Map<String, dynamic>))
             .toList(),
         homepage: data['homepage'] as String?,
-        id: data['id'].toInt() as int?,
+        id: data['id']?.toInt() as int?,
         inProduction: data['in_production'] as bool?,
-        languages: data['languages'].cast<String>() as List<String>?,
+        languages: data['languages']?.cast<String>() as List<String>?,
         lastAirDate: data['last_air_date'] as String?,
         lastEpisodeToAir: data['last_episode_to_air'] == null
             ? null
@@ -114,9 +115,9 @@ class TmdbTvDetails extends Equatable {
         networks: (data['networks'] as List<dynamic>?)
             ?.map((e) => Network.fromMap(e as Map<String, dynamic>))
             .toList(),
-        numberOfEpisodes: data['number_of_episodes'].toInt() as int?,
-        numberOfSeasons: data['number_of_seasons'].toInt() as int?,
-        originCountry: data['origin_country'].cast<String>() as List<String>?,
+        numberOfEpisodes: data['number_of_episodes']?.toInt() as int?,
+        numberOfSeasons: data['number_of_seasons']?.toInt() as int?,
+        originCountry: data['origin_country']?.cast<String>() as List<String>?,
         originalLanguage: data['original_language'] as String?,
         originalName: data['original_name'] as String?,
         overview: data['overview'] as String?,
@@ -138,46 +139,56 @@ class TmdbTvDetails extends Equatable {
         tagline: data['tagline'] as String?,
         type: data['type'] as String?,
         voteAverage: (data['vote_average'] as num?)?.toDouble(),
-        voteCount: data['vote_count'].toInt() as int?,
+        voteCount: data['vote_count']?.toInt() as int?,
+        tmdbSeasons: data['tmdbSeasons'] != null
+            ? List<TmdbSeason>.from(
+                (data['tmdbSeasons'] as List).map<TmdbSeason?>(
+                  (x) => TmdbSeason.fromMap(x as Map<String, dynamic>),
+                ),
+              )
+            : null,
       );
 
-  Map<String, dynamic> toMap() => {
-        'images': images?.toMap(),
-        'adult': adult,
-        'backdrop_path': backdropPath,
-        'created_by': createdBy,
-        'episode_run_time': episodeRunTime,
-        'first_air_date': firstAirDate,
-        'genres': genres?.map((e) => e.toMap()).toList(),
-        'homepage': homepage,
-        'id': id,
-        'in_production': inProduction,
-        'languages': languages,
-        'last_air_date': lastAirDate,
-        'last_episode_to_air': lastEpisodeToAir?.toMap(),
-        'name': name,
-        'next_episode_to_air': nextEpisodeToAir?.toMap(),
-        'networks': networks?.map((e) => e.toMap()).toList(),
-        'number_of_episodes': numberOfEpisodes,
-        'number_of_seasons': numberOfSeasons,
-        'origin_country': originCountry,
-        'original_language': originalLanguage,
-        'original_name': originalName,
-        'overview': overview,
-        'popularity': popularity,
-        'poster_path': posterPath,
-        'production_companies':
-            productionCompanies?.map((e) => e.toMap()).toList(),
-        'production_countries':
-            productionCountries?.map((e) => e.toMap()).toList(),
-        'seasons': seasons?.map((e) => e.toMap()).toList(),
-        'spoken_languages': spokenLanguages?.map((e) => e.toMap()).toList(),
-        'status': status,
-        'tagline': tagline,
-        'type': type,
-        'vote_average': voteAverage,
-        'vote_count': voteCount,
-      };
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'adult': adult,
+      'backdropPath': backdropPath,
+      'createdBy': createdBy,
+      'episodeRunTime': episodeRunTime,
+      'firstAirDate': firstAirDate,
+      'genres': genres?.map((x) => x.toMap()).toList(),
+      'homepage': homepage,
+      'id': id,
+      'inProduction': inProduction,
+      'languages': languages,
+      'lastAirDate': lastAirDate,
+      'lastEpisodeToAir': lastEpisodeToAir?.toMap(),
+      'name': name,
+      'nextEpisodeToAir': nextEpisodeToAir?.toMap(),
+      'networks': networks?.map((x) => x.toMap()).toList(),
+      'numberOfEpisodes': numberOfEpisodes,
+      'numberOfSeasons': numberOfSeasons,
+      'originCountry': originCountry,
+      'originalLanguage': originalLanguage,
+      'originalName': originalName,
+      'overview': overview,
+      'popularity': popularity,
+      'posterPath': posterPath,
+      'productionCompanies':
+          productionCompanies?.map((x) => x.toMap()).toList(),
+      'productionCountries':
+          productionCountries?.map((x) => x.toMap()).toList(),
+      'seasons': seasons?.map((x) => x.toMap()).toList(),
+      'spokenLanguages': spokenLanguages?.map((x) => x.toMap()).toList(),
+      'status': status,
+      'tagline': tagline,
+      'type': type,
+      'voteAverage': voteAverage,
+      'voteCount': voteCount,
+      'images': images?.toMap(),
+      'tmdbSeasons': tmdbSeasons?.map((x) => x.toMap()).toList(),
+    };
+  }
 
   /// `dart:convert`
   ///
@@ -192,12 +203,11 @@ class TmdbTvDetails extends Equatable {
   String toJson() => json.encode(toMap());
 
   @override
-  bool get stringify => false;
+  bool get stringify => true;
 
   @override
   List<Object?> get props {
     return [
-      images,
       adult,
       backdropPath,
       createdBy,
@@ -230,6 +240,8 @@ class TmdbTvDetails extends Equatable {
       type,
       voteAverage,
       voteCount,
+      images,
+      tmdbSeasons,
     ];
   }
 
@@ -267,6 +279,7 @@ class TmdbTvDetails extends Equatable {
     double? voteAverage,
     int? voteCount,
     TmdbTvImages? images,
+    List<TmdbSeason>? tmdbSeasons,
   }) {
     return TmdbTvDetails(
       adult: adult ?? this.adult,
@@ -302,6 +315,7 @@ class TmdbTvDetails extends Equatable {
       voteAverage: voteAverage ?? this.voteAverage,
       voteCount: voteCount ?? this.voteCount,
       images: images ?? this.images,
+      tmdbSeasons: tmdbSeasons ?? this.tmdbSeasons,
     );
   }
 }
