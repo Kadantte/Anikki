@@ -7,6 +7,8 @@ import 'package:http/http.dart';
 import 'package:anikki/core/core.dart';
 import 'package:anikki/domain/user_repository.dart';
 
+/// Handles Authentication and request to MAL Api
+/// Authentication documentation: https://myanimelist.net/apiconfig/references/authorization
 class MalClient extends BaseClient {
   MalClient();
 

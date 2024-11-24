@@ -27,7 +27,7 @@ void main() {
               mediaId: media.id,
               status: null,
             ),
-          ).thenAnswer((_) async {});
+          ).thenAnswer((_) async => true);
 
           when(
             () => anilist.updateEntry(
@@ -35,7 +35,7 @@ void main() {
               mediaId: media.id,
               status: null,
             ),
-          ).thenAnswer((_) async {});
+          ).thenAnswer((_) async => true);
 
           repository = UserListRepository(
             anilist: anilist,

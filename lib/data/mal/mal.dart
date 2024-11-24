@@ -14,6 +14,8 @@ class Mal {
 
   String get baseUrl => MalClient.baseUrl;
 
+  /// Retrieve current user information
+  /// Documentaiton: https://myanimelist.net/apiconfig/references/api/v2#operation/users_user_id_get
   Future<MalUser> getMe() async {
     final fields = const [
       'id',
@@ -36,6 +38,46 @@ class Mal {
     }
   }
 
+  /// Update an entry on MyAnimeList
+  /// Documentaiton: https://myanimelist.net/apiconfig/references/api/v2#operation/anime_anime_id_my_list_status_put
+  Future<bool> updateEntry({
+    required int mediaId,
+    int? episode,
+    String? status,
+    bool? isRewatching = false,
+  }) async {
+    try {
+      logger.info('Updating MyAnimeList list', {
+        'mediaId': mediaId,
+        'episode': episode,
+        'status': status,
+        'isRewatching': isRewatching,
+      });
+
+      await client.put(
+        Uri.parse('$baseUrl/anime/$mediaId/my_list_status'),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: {
+          if (status != null) 'status': status,
+          if (episode != null) 'num_watched_episodes': episode.toString(),
+          if (isRewatching != null) 'is_rewatching': isRewatching.toString(),
+        },
+      );
+
+      return true;
+    } catch (e) {
+      logger.error('Could not update MyAnimeList list', e);
+      throw MalUpdateListException(
+        mediaId: mediaId,
+      );
+    }
+  }
+
+  /// Retrieve Watch list on MyAnimeList for the current user only
+  /// Documentaiton: https://myanimelist.net/apiconfig/references/api/v2#operation/users_user_id_animelist_get
+  /// Documentation for fields: https://github.com/Chris-Kode/myanimelist-api-v2/blob/master/src/Mal_Api_Authorized/Mal_Api_List_Anime/structures.js
   Future<WatchList> getWatchList() async {
     var result = WatchList(
       provider: WatchListProvider.mal,

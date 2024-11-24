@@ -162,7 +162,7 @@ void main() {
               media: localFileMock.media!,
               watchList: WatchList(provider: WatchListProvider.anilist),
             ),
-          ).thenAnswer((_) async {});
+          ).thenAnswer((_) async => true);
 
           when(() => repository.getList(WatchListProvider.anilist))
               .thenAnswer((_) async => watchListClassMock);

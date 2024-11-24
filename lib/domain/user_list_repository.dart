@@ -41,7 +41,7 @@ class UserListRepository {
 
   /// Mark a [Media] as watched for the given episode.
   /// If `episode == 1`, will set the status of the entry to `Current`.
-  Future<void> watchedEntry({
+  Future<bool> watchedEntry({
     required int episode,
     required Media media,
     required WatchListProvider provider,
@@ -49,8 +49,8 @@ class UserListRepository {
   }) async {
     switch (provider) {
       case WatchListProvider.anilist:
-        if (media.anilistInfo == null) return;
-        if (media.anilistInfo!.id == 0) return;
+        if (media.anilistInfo == null) return false;
+        if (media.anilistInfo!.id == 0) return false;
 
         return anilist.updateEntry(
           episode: episode,
@@ -58,7 +58,28 @@ class UserListRepository {
           status: _getWatchedEntryStatus(watchList, media, episode),
         );
       case WatchListProvider.mal:
-        throw UnimplementedError();
+        if (media.malId == null) return false;
+
+        final status = switch (_getWatchedEntryStatus(
+          watchList,
+          media,
+          episode,
+        )) {
+          Enum$MediaListStatus.CURRENT ||
+          Enum$MediaListStatus.REPEATING =>
+            'watching',
+          Enum$MediaListStatus.PLANNING => 'plan_to_watch',
+          Enum$MediaListStatus.COMPLETED => 'completed',
+          Enum$MediaListStatus.DROPPED => 'dropped',
+          Enum$MediaListStatus.PAUSED => 'on_hold',
+          _ => null,
+        };
+
+        return mal.updateEntry(
+          episode: episode,
+          mediaId: media.malId!,
+          status: status,
+        );
       case WatchListProvider.kitsu:
         throw UnimplementedError();
     }
@@ -79,7 +100,12 @@ class UserListRepository {
           status: Enum$MediaListStatus.DROPPED,
         );
       case WatchListProvider.mal:
-        throw UnimplementedError();
+        if (media.malId == null) return;
+
+        await mal.updateEntry(
+          mediaId: media.malId!,
+          status: 'dropped',
+        );
       case WatchListProvider.kitsu:
         throw UnimplementedError();
     }
@@ -199,7 +225,7 @@ class UserListRepository {
           );
         }
       case WatchListProvider.mal:
-        throw UnimplementedError();
+        return watchList;
       case WatchListProvider.kitsu:
         throw UnimplementedError();
     }

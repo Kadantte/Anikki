@@ -67,6 +67,29 @@ class WatchList extends Equatable {
         _getListEntry(planning, media);
   }
 
+  MediaListEntry? findEntryFromTitle(String? title) {
+    if (title == null) return null;
+
+    return _findFromTitle(current, title) ??
+        _findFromTitle(repeating, title) ??
+        _findFromTitle(paused, title) ??
+        _findFromTitle(completed, title) ??
+        _findFromTitle(dropped, title) ??
+        _findFromTitle(planning, title);
+  }
+
+  MediaListEntry? _findFromTitle(
+    List<MediaListEntry> entries,
+    String title,
+  ) {
+    return entries.firstWhereOrNull(
+      (element) =>
+          element.media.title != null &&
+          sanitizeName(element.media.title!).toLowerCase() ==
+              sanitizeName(title).toLowerCase(),
+    );
+  }
+
   MediaListEntry? _getListEntry(
     List<MediaListEntry> entries,
     Media media,
@@ -76,7 +99,7 @@ class WatchList extends Equatable {
         WatchListProvider.anilist => media.anilistInfo?.id != null &&
             media.anilistInfo?.id != 0 &&
             element.media.anilistInfo?.id == media.anilistInfo?.id,
-        WatchListProvider.mal => media.anilistInfo?.id != null &&
+        WatchListProvider.mal => media.malInfo?.id != null &&
             element.media.malInfo?.id == media.malInfo?.id,
         WatchListProvider.kitsu => throw UnimplementedError(),
       },

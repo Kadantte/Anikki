@@ -6,7 +6,7 @@ mixin AnilistList on AnilistClient {
   /// It does not set anything else.
   ///
   /// throws [AnilistUpdateListException]
-  Future<void> updateEntry({
+  Future<bool> updateEntry({
     required int mediaId,
     int? episode,
     Enum$MediaListStatus? status,
@@ -23,6 +23,8 @@ mixin AnilistList on AnilistClient {
       );
 
       if (result.hasException) throw result.exception!;
+
+      return true;
     } on GraphQLError catch (e) {
       throw AnilistUpdateListException(error: e.message);
     } on OperationException catch (e) {

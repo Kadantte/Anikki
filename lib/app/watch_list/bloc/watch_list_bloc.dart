@@ -44,6 +44,38 @@ class WatchListBloc extends AutoRefreshBloc<WatchListEvent, WatchListState> {
     }
   }
 
+  Media _hydrateMediaWithOtherProviders(Media media) {
+    var result = media.copyWith();
+
+    /// Hydrating `media` with other exsting providers using the name to find a match
+    for (final provider in WatchListProvider.values) {
+      final currentList = state.watchLists[provider];
+
+      if (currentList == null) continue;
+
+      if (media.anilistInfo != null && provider == WatchListProvider.anilist) {
+        continue;
+      }
+
+      if (media.malInfo != null && provider == WatchListProvider.mal) continue;
+
+      final providerMedia = currentList.findEntryFromTitle(media.title);
+
+      if (providerMedia == null) continue;
+
+      result = media.copyWith(
+        anilistInfo: provider == WatchListProvider.anilist
+            ? providerMedia.media.anilistInfo
+            : null,
+        malInfo: provider == WatchListProvider.mal
+            ? providerMedia.media.malInfo
+            : null,
+      );
+    }
+
+    return result;
+  }
+
   void _onCurrentProviderUpdated(
     WatchListCurrentProviderUpdated event,
     Emitter<WatchListState> emit,
@@ -145,7 +177,7 @@ class WatchListBloc extends AutoRefreshBloc<WatchListEvent, WatchListState> {
     WatchListWatched event,
     Emitter<WatchListState> emit,
   ) async {
-    final media = event.media;
+    final media = _hydrateMediaWithOtherProviders(event.media);
     final episode = event.episode ?? 1;
 
     final currentState = state;
@@ -158,12 +190,14 @@ class WatchListBloc extends AutoRefreshBloc<WatchListEvent, WatchListState> {
       if (watchList == null) continue;
 
       try {
-        await repository.watchedEntry(
+        final updated = await repository.watchedEntry(
           provider: provider,
           episode: episode,
           media: media,
           watchList: watchList,
         );
+
+        if (!updated) continue;
 
         emit(
           WatchListNotify(
@@ -212,13 +246,14 @@ class WatchListBloc extends AutoRefreshBloc<WatchListEvent, WatchListState> {
     if (state is! WatchListLoaded) return;
 
     final currentState = state;
+    final media = _hydrateMediaWithOtherProviders(event.media);
 
     for (final provider in WatchListProvider.values) {
       if (state.connected[provider] != true) continue;
 
       try {
         await repository.removeEntry(
-          media: event.media,
+          media: media,
           provider: provider,
         );
 
