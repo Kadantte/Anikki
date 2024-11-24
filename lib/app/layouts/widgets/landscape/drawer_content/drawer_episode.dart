@@ -24,7 +24,7 @@ class DrawerEpisode extends StatelessWidget {
       return const SizedBox();
     }
 
-    final episodeTextStyle = context.textTheme.bodySmall?.copyWith(
+    final episodeTextStyle = context.textTheme.bodyMedium?.copyWith(
       fontWeight: FontWeight.bold,
     );
 
@@ -72,82 +72,90 @@ class DrawerEpisode extends StatelessWidget {
         );
       },
       onHover: (_) {},
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Badge(
-              alignment: const Alignment(0.5, -0.9),
-              backgroundColor: Colors.transparent,
-              label: media != null
-                  ? DrawerEpisodeCompleted(
-                      media: media!,
-                      index: episodeNumber,
-                    )
-                  : null,
-              child: BlocBuilder<LayoutBloc, LayoutState>(
-                builder: (context, state) {
-                  return CircleAvatar(
-                    radius: 32,
-                    backgroundImage: (thumbnail == null
-                        ? const AssetImage(
-                            'assets/images/cover_placeholder.jpg')
-                        : CachedNetworkImageProvider(
-                            thumbnail,
-                          )) as ImageProvider,
-                  );
-                },
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12.0,
-                  vertical: 12.0,
-                ),
-                child: episodeTitle != null
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          AutoSizeText(
-                            episodeTitle,
-                            maxLines: 3,
-                            style: episodeTextStyle,
-                          ),
-                          Text(
-                            'Episode $episodeNumber',
-                            style: context.textTheme.bodySmall?.copyWith(
-                              fontSize: 8.0,
-                            ),
-                          )
-                        ],
-                      )
-                    : Text(
-                        'Episode $episodeNumber',
-                        style: episodeTextStyle,
-                      ),
-              ),
-            ),
-            if (localFile != null)
-              DrawerEpisodeDeleteButton(
-                file: localFile!,
-              )
-            else if (media != null && !isNextAiringEpisode)
-              IconButton(
-                onPressed: () => BlocProvider.of<DownloaderBloc>(context).add(
-                  DownloaderRequested(
-                    media: media,
-                    episode: episodeNumber,
+      child: BlocBuilder<LayoutBloc, LayoutState>(
+        builder: (context, state) {
+          final portrait = state is LayoutPortrait;
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Badge(
+                  alignment: const Alignment(0.5, -0.9),
+                  backgroundColor: Colors.transparent,
+                  label: media != null
+                      ? DrawerEpisodeCompleted(
+                          media: media!,
+                          index: episodeNumber,
+                        )
+                      : null,
+                  child: BlocBuilder<LayoutBloc, LayoutState>(
+                    builder: (context, state) {
+                      return CircleAvatar(
+                        radius: 32,
+                        backgroundImage: (thumbnail == null
+                            ? const AssetImage(
+                                'assets/images/cover_placeholder.jpg')
+                            : CachedNetworkImageProvider(
+                                thumbnail,
+                              )) as ImageProvider,
+                      );
+                    },
                   ),
                 ),
-                iconSize: 18.0,
-                constraints: const BoxConstraints(),
-                icon: const Icon(HugeIcons.strokeRoundedDownload04),
-              )
-          ],
-        ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.0,
+                      vertical: portrait ? 0 : 24.0,
+                    ),
+                    child: episodeTitle != null
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              AutoSizeText(
+                                episodeTitle,
+                                maxLines: 2,
+                                style: episodeTextStyle,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                'Episode $episodeNumber',
+                                style: context.textTheme.bodySmall?.copyWith(
+                                  fontSize: 9.0,
+                                ),
+                              )
+                            ],
+                          )
+                        : Text(
+                            'Episode $episodeNumber',
+                            style: episodeTextStyle,
+                          ),
+                  ),
+                ),
+                if (localFile != null)
+                  DrawerEpisodeDeleteButton(
+                    file: localFile!,
+                  )
+                else if (media != null && !isNextAiringEpisode)
+                  IconButton(
+                    onPressed: () =>
+                        BlocProvider.of<DownloaderBloc>(context).add(
+                      DownloaderRequested(
+                        media: media,
+                        episode: episodeNumber,
+                      ),
+                    ),
+                    iconSize: 18.0,
+                    constraints: const BoxConstraints(),
+                    icon: const Icon(HugeIcons.strokeRoundedDownload04),
+                  )
+              ],
+            ),
+          );
+        },
       ),
     );
   }

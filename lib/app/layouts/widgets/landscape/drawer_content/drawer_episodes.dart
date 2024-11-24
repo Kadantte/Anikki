@@ -64,6 +64,7 @@ class DrawerEpisodes extends StatelessWidget {
                       maxCrossAxisExtent: 450,
                       childAspectRatio: portrait ? 48 / 9 : 32 / 9,
                       crossAxisSpacing: 8.0,
+                      mainAxisSpacing: portrait ? 8.0 : 0.0,
                     ),
                     itemCount: (numberOfEpisodes - (page * kPaginatedPerPage))
                         .clamp(0, kPaginatedPerPage),
