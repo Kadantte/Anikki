@@ -102,7 +102,7 @@ List<DrawerAction> _buildActions({
           final trailerSite = media?.anilistInfo?.trailer?.site;
           final trailerSiteId = media?.anilistInfo?.trailer?.id;
 
-          if (trailerSiteId == null || trailerSite == null) {
+          if (trailerSiteId == null || trailerSite != 'youtube') {
             return context.notify(
               message: 'No trailer available',
               isError: true,
@@ -113,8 +113,8 @@ List<DrawerAction> _buildActions({
             barrierDismissible: true,
             context: context,
             builder: (context) => Dialog(
-              child: TrailerVideoPlayer(
-                url: 'https://www.$trailerSite.com/watch?v=$trailerSiteId',
+              child: YoutubeVideoPlayer(
+                id: trailerSiteId,
               ),
             ),
           );

@@ -39,7 +39,23 @@ class _PlayerWidgetState extends State<PlayerWidget> {
       if (widget.firstIndex != null) {
         await widget.player.jump(widget.firstIndex!);
       }
+
       await widget.player.play();
+
+      widget.player.stream.playlist.listen(
+        (playlist) async {
+          final currentMedia = playlist.medias.elementAt(playlist.index);
+
+          if (currentMedia.extras?['soundTrackUri'] != null) {
+            final track = AudioTrack.uri(
+              currentMedia.extras?['soundTrackUri'],
+              title: 'default',
+            );
+
+            await widget.player.setAudioTrack(track);
+          }
+        },
+      );
 
       widget.player.stream.completed.listen((completed) {
         if (widget.player.state.duration == Duration.zero) return;
