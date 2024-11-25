@@ -120,6 +120,12 @@ class WatchListBloc extends AutoRefreshBloc<WatchListEvent, WatchListState> {
     WatchListRequested event,
     Emitter<WatchListState> emit,
   ) async {
+    while (state is WatchListLoading) {
+      await Future.delayed(
+        const Duration(milliseconds: 100),
+      );
+    }
+
     emit(
       WatchListLoading(
         watchLists: state.watchLists,
