@@ -24,15 +24,18 @@ Future<void> loginToProvider(
     WatchListProvider.mal => _loginToMal(context),
     WatchListProvider.kitsu => throw UnimplementedError(),
   };
+}
 
-  if (context.mounted) {
-    showDialog(
-      context: context,
-      builder: (context) => ProviderConnectedDialog(
-        provider: provider,
-      ),
-    );
-  }
+Future<void> _showConnected(
+  BuildContext context,
+  WatchListProvider provider,
+) async {
+  return showDialog(
+    context: context,
+    builder: (context) => ProviderConnectedDialog(
+      provider: provider,
+    ),
+  );
 }
 
 Future<void> _loginToAnilist(BuildContext context) async {
@@ -83,6 +86,10 @@ Future<void> _loginToAnilist(BuildContext context) async {
     if (event.value == null || event.deleted) return;
 
     authBloc.add(ProviderAuthLoginRequested(provider));
+
+    if (context.mounted) {
+      _showConnected(context, provider);
+    }
   });
 
   launchUrl(oauthUrl, mode: LaunchMode.externalApplication);
@@ -154,6 +161,10 @@ Future<void> _loginToMal(BuildContext context) async {
     await box.put(boxKey, jsonEncode(parsedBody));
 
     authBloc.add(ProviderAuthLoginRequested(provider));
+
+    if (context.mounted) {
+      _showConnected(context, provider);
+    }
   }
 
   box.watch(key: boxKey).listen(onMalAuthKeyUpdated);
