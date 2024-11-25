@@ -86,11 +86,11 @@ class Tmdb {
       if (initialMedia.title == null) return initialMedia;
 
       final parsedTitle = Anitomy(
-        inputString: sanitizeName(initialMedia.title!),
+        inputString: initialMedia.title!,
       );
       final title = parsedTitle.title ?? initialMedia.title!;
 
-      final tmdbInfo = await getDetails(title);
+      final tmdbInfo = await getDetails(sanitizeName(title));
 
       return initialMedia.copyWith(
         tmdbInfo: tmdbInfo,
