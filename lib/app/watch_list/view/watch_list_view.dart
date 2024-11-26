@@ -63,7 +63,7 @@ class WatchListView extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: IconButton(
                     tooltip: 'Logout of ${provider.title}',
-                    onPressed: () => logoutFromAnilist(context),
+                    onPressed: () => logoutFromProvider(provider, context),
                     icon:
                         const AnikkiIcon(icon: HugeIcons.strokeRoundedLogout02),
                   ),

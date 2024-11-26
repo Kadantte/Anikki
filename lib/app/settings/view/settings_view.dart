@@ -49,6 +49,7 @@ class _SettingsViewState extends State<SettingsView> {
                 ),
                 sections: [
                   const GeneralSection(),
+                  const ConnectionsSection(),
                   const VideoPlayerSection(),
                   const StreamingSection(),
                   const TorrentSection(),

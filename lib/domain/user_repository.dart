@@ -31,11 +31,15 @@ class UserRepository {
       return await anilist.getMe();
     } on AnilistNotConnectedException catch (e) {
       logger.warning(
-          'Could not find currently authenticated user on AniList', e);
+        'Could not find currently authenticated user on AniList',
+        e,
+      );
       return null;
     } catch (e) {
       logger.warning(
-          'Could not find currently authenticated user on AniList', e);
+        'Could not find currently authenticated user on AniList',
+        e,
+      );
       return null;
     }
   }

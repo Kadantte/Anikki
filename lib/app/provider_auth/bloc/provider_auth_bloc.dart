@@ -13,8 +13,21 @@ class ProviderAuthBloc extends Bloc<ProviderAuthEvent, ProviderAuthState> {
   final UserRepository repository;
 
   ProviderAuthBloc(this.repository) : super(ProviderAuthState()) {
+    on<ProviderAuthInitialLoginRequested>(_initialLogin);
     on<ProviderAuthLoginRequested>(_login);
     on<ProviderAuthLogoutRequested>(_logout);
+  }
+
+  Future<void> _initialLogin(
+    ProviderAuthInitialLoginRequested event,
+    Emitter<ProviderAuthState> emit,
+  ) async {
+    emit(
+      ProviderAuthState(
+        anilistUser: await repository.getAnilistCurrentUser(),
+        malUser: await repository.getMalCurrentUser(),
+      ),
+    );
   }
 
   Future<void> _login(
@@ -22,7 +35,7 @@ class ProviderAuthBloc extends Bloc<ProviderAuthEvent, ProviderAuthState> {
     Emitter<ProviderAuthState> emit,
   ) async {
     emit(
-      ProviderAuthState(
+      state.copyWith(
         anilistUser: event.provider == WatchListProvider.anilist
             ? await repository.getAnilistCurrentUser()
             : state.anilistUser,

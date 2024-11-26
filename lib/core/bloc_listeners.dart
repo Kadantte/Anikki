@@ -58,11 +58,9 @@ class BlocListeners extends StatelessWidget {
           listener: (context, state) {
             if (state is! ConnectivityOnline) return;
 
-            for (final provider in WatchListProvider.values) {
-              BlocProvider.of<ProviderAuthBloc>(context).add(
-                ProviderAuthLoginRequested(provider),
-              );
-            }
+            BlocProvider.of<ProviderAuthBloc>(context).add(
+              ProviderAuthInitialLoginRequested(),
+            );
           },
         ),
         BlocListener<DownloaderBloc, DownloaderState>(

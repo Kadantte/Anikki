@@ -12,7 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:anikki/app/provider_auth/bloc/provider_auth_bloc.dart';
 import 'package:anikki/app/provider_auth/widgets/token_input.dart';
 import 'package:anikki/core/core.dart';
-import 'package:anikki/core/widgets/connected_dialog.dart';
+import 'package:anikki/app/provider_auth/widgets/connected_dialog.dart';
 import 'package:anikki/domain/domain.dart';
 
 Future<void> loginToProvider(
