@@ -118,7 +118,7 @@ class BlocListeners extends StatelessWidget {
               );
             }
 
-            if (state.anilistUser == null) {
+            if (state.anilistUser == null && state.malUser == null) {
               BlocProvider.of<HomeBloc>(context).add(
                 const HomeRefreshed(
                   watchList: null,
@@ -130,7 +130,8 @@ class BlocListeners extends StatelessWidget {
         ),
         BlocListener<WatchListBloc, WatchListState>(
           listenWhen: (previous, current) =>
-              previous.watchLists != current.watchLists,
+              previous.watchLists != current.watchLists ||
+              previous.currentProvider != current.currentProvider,
           listener: (context, state) {
             if (state is WatchListLoaded) {
               BlocProvider.of<HomeBloc>(context).add(
