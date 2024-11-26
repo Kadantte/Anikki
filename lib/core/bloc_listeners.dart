@@ -118,7 +118,7 @@ class BlocListeners extends StatelessWidget {
               );
             }
 
-            if (state.anilistUser == null && state.malUser == null) {
+            if (state.isEmpty) {
               BlocProvider.of<HomeBloc>(context).add(
                 const HomeRefreshed(
                   watchList: null,

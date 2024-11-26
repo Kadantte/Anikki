@@ -9,6 +9,9 @@ class ProviderAuthState extends Equatable {
   final Query$Viewer$Viewer? anilistUser;
   final MalUser? malUser;
 
+  bool get isEmpty => anilistUser == null && malUser == null;
+  bool get isNotEmpty => !isEmpty;
+
   @override
   List<Object?> get props => [anilistUser, malUser];
 
