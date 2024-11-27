@@ -160,12 +160,16 @@ class Mal {
                 progress: entry.listStatus?.numEpisodesWatched,
                 score: entry.listStatus?.score?.toDouble(),
                 status: status.status,
-                updatedAt: int.tryParse(
+                updatedAt: DateTime.parse(
                   entry.listStatus?.updatedAt ?? entry.node?.updatedAt ?? '',
-                ),
+                ).millisecondsSinceEpoch,
               ),
             );
           }
+
+          currentList.sort(
+            (a, b) => (b.updatedAt ?? 0).compareTo(a.updatedAt ?? 0),
+          );
 
           result = result.copyWith(
             current: status.status == Enum$MediaListStatus.CURRENT
