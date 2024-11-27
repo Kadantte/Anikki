@@ -22,7 +22,7 @@ import 'package:anikki/core/core.dart';
 import 'package:anikki/core/widgets/empty_widget.dart';
 import 'package:anikki/core/widgets/entry/entry_tag.dart';
 import 'package:anikki/core/widgets/paginated.dart';
-import 'package:anikki/core/widgets/trailer_video_player.dart';
+import 'package:anikki/core/widgets/youtube_video_player.dart';
 import 'package:anikki/data/data.dart';
 import 'package:anikki/domain/domain.dart';
 
@@ -97,31 +97,20 @@ List<DrawerAction> _buildActions({
   LibraryEntry? libraryEntry,
 }) =>
     [
-      DrawerAction(
-        onPressed: (context) {
-          final trailerSite = media?.anilistInfo?.trailer?.site;
-          final trailerSiteId = media?.anilistInfo?.trailer?.id;
-
-          if (trailerSiteId == null || trailerSite != 'youtube') {
-            return context.notify(
-              message: 'No trailer available',
-              isError: true,
-            );
-          }
-
-          showAdaptiveDialog(
+      if (media?.youtubeId != null)
+        DrawerAction(
+          onPressed: (context) => showAdaptiveDialog(
             barrierDismissible: true,
             context: context,
             builder: (context) => Dialog(
               child: YoutubeVideoPlayer(
-                id: trailerSiteId,
+                id: media!.youtubeId!,
               ),
             ),
-          );
-        },
-        label: 'Watch trailer',
-        icon: HugeIcons.strokeRoundedVideoReplay,
-      ),
+          ),
+          label: 'Watch trailer',
+          icon: HugeIcons.strokeRoundedVideoReplay,
+        ),
       DrawerAction(
         onPressed: (context) {},
         label: 'Update list entry',

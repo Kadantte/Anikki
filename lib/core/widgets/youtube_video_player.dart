@@ -1,14 +1,14 @@
-import 'package:anikki/core/widgets/error_widget.dart';
-import 'package:anikki/core/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:media_kit/media_kit.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import 'package:anikki/app/layouts/bloc/layout_bloc.dart';
 import 'package:anikki/app/video_player/view/video_player_view.dart';
+import 'package:anikki/core/widgets/error_widget.dart';
 import 'package:anikki/core/widgets/layout_card.dart';
-import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+import 'package:anikki/core/widgets/loading_widget.dart';
 
 class YoutubeVideoPlayer extends StatelessWidget {
   const YoutubeVideoPlayer({

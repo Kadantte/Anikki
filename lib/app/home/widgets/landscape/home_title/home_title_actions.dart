@@ -31,9 +31,6 @@ class HomeTitleActions extends StatelessWidget {
 
   final Media media;
 
-  String? get trailerSite => media.anilistInfo?.trailer?.site;
-  String? get trailerSiteId => media.anilistInfo?.trailer?.id;
-
   List<HomeAction> get actions => [
         HomeAction(
           type: HomeActionType.iconAndText,
@@ -54,12 +51,12 @@ class HomeTitleActions extends StatelessWidget {
           icon: HugeIcons.strokeRoundedDownload04,
           text: 'Download',
         ),
-        if (trailerSite == 'youtube' && trailerSiteId != null)
+        if (media.youtubeId != null)
           HomeAction(
             type: HomeActionType.icon,
             onPressed: (context) {
               final trailerContent = YoutubeVideoPlayer(
-                id: trailerSiteId!,
+                id: media.youtubeId!,
               );
 
               showAdaptiveDialog(

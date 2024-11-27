@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:anikki/data/tmdb/models/tmdb_tv_details/tmdb_videos/tmdb_videos.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:anikki/data/tmdb/models/models.dart';
@@ -48,6 +49,7 @@ class TmdbTvDetails extends Equatable {
   final int? voteCount;
   final TmdbTvImages? images;
   final List<TmdbSeason>? tmdbSeasons;
+  final TmdbVideos? tmdbVideos;
 
   const TmdbTvDetails({
     this.adult,
@@ -84,6 +86,7 @@ class TmdbTvDetails extends Equatable {
     this.voteCount,
     this.images,
     this.tmdbSeasons,
+    this.tmdbVideos,
   });
 
   factory TmdbTvDetails.fromMap(Map<String, dynamic> data) => TmdbTvDetails(
@@ -147,6 +150,11 @@ class TmdbTvDetails extends Equatable {
                 ),
               )
             : null,
+        tmdbVideos: data['videos'] != null
+            ? TmdbVideos.fromMap(
+                data['videos'],
+              )
+            : null,
       );
 
   Map<String, dynamic> toMap() {
@@ -187,6 +195,7 @@ class TmdbTvDetails extends Equatable {
       'voteCount': voteCount,
       'images': images?.toMap(),
       'tmdbSeasons': tmdbSeasons?.map((x) => x.toMap()).toList(),
+      'videos': tmdbVideos?.toMap(),
     };
   }
 
@@ -242,6 +251,7 @@ class TmdbTvDetails extends Equatable {
       voteCount,
       images,
       tmdbSeasons,
+      tmdbVideos,
     ];
   }
 
@@ -280,6 +290,7 @@ class TmdbTvDetails extends Equatable {
     int? voteCount,
     TmdbTvImages? images,
     List<TmdbSeason>? tmdbSeasons,
+    TmdbVideos? tmdbVideos,
   }) {
     return TmdbTvDetails(
       adult: adult ?? this.adult,
@@ -316,6 +327,7 @@ class TmdbTvDetails extends Equatable {
       voteCount: voteCount ?? this.voteCount,
       images: images ?? this.images,
       tmdbSeasons: tmdbSeasons ?? this.tmdbSeasons,
+      tmdbVideos: tmdbVideos ?? this.tmdbVideos,
     );
   }
 }

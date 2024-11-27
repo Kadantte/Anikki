@@ -11,7 +11,7 @@ import 'package:anikki/app/home/bloc/home_bloc.dart';
 import 'package:anikki/app/home/widgets/landscape/home_title/home_title_carousel/home_title_carousel.dart';
 import 'package:anikki/app/layouts/bloc/layout_bloc.dart';
 import 'package:anikki/core/core.dart';
-import 'package:anikki/core/widgets/trailer_video_player.dart';
+import 'package:anikki/core/widgets/youtube_video_player.dart';
 import 'package:anikki/domain/domain.dart';
 
 part 'home_title_actions.dart';
@@ -69,7 +69,7 @@ class HomeTitle extends StatelessWidget {
           },
           child: Column(
             key: ValueKey(
-              entry.media.tmdbInfo?.id ?? entry.media.anilistInfo?.id,
+              entry.media.id,
             ),
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

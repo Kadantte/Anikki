@@ -62,6 +62,7 @@ class Tmdb {
       firstResultId,
       appendToResponse: [
         'images',
+        'videos',
         for (final index in List.generate(seasonsToQuery, (index) => index))
           'season/$index',
       ].join(','),

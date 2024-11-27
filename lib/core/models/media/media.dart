@@ -93,6 +93,19 @@ final class Media extends IMedia with MediaImages, MediaEpisodes {
         _ => Enum$MediaFormat.$unknown,
       };
 
+  String? get youtubeId =>
+      tmdbInfo?.tmdbVideos?.results
+          ?.firstWhereOrNull(
+            (video) =>
+                video.iso6391 == 'en' &&
+                video.site?.toLowerCase() == 'youtube' &&
+                video.type?.toLowerCase() == 'trailer',
+          )
+          ?.key ??
+      (anilistInfo?.trailer?.site?.toLowerCase() == 'youtube'
+          ? anilistInfo?.trailer?.id
+          : null);
+
   @override
   List<Object?> get props => [
         malInfo,
