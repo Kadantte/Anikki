@@ -109,6 +109,7 @@ class VideoPlayerRepository {
           watchListBloc.add(
             WatchListWatched(
               media: media!,
+              episode: file?.episode,
             ),
           );
         },
