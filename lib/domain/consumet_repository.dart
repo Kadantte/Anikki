@@ -9,6 +9,7 @@ class ConsumetRepository {
     this.providers = providers ??
         [
           Gogoanime(),
+          Anify(),
           Zoro(),
         ];
   }
@@ -42,12 +43,16 @@ class ConsumetRepository {
   }) async {
     final List<ConsumetEpisode> results = [];
 
+    logger.info('Searching for $term - $minEpisode with $provider');
+
     final search = await provider.search(
       sanitizeName(term),
       dubbed: dubbed,
     );
 
     if (search.isEmpty || search.firstOrNull?.id == null) return results;
+
+    logger.info('Found ${search.length} results with $provider');
 
     final info = await provider.fetchAnimeEpisodes(search.first.id!);
     final episodes = info.where((ep) => (ep.number ?? -1) >= minEpisode);

@@ -6,12 +6,14 @@ class AnimeEpisode extends Equatable {
     this.number,
     this.url,
     this.title,
+    this.mediaId,
   });
 
   final int? number;
   final String id;
   final String? url;
   final String? title;
+  final String? mediaId;
 
   @override
   List<Object?> get props => [
@@ -19,6 +21,7 @@ class AnimeEpisode extends Equatable {
         id,
         url,
         title,
+        mediaId,
       ];
 
   @override
