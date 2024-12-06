@@ -11,5 +11,7 @@ mixin MediaEpisodes on IMedia {
         (acc, season) => acc + (season.episodes?.length ?? 0),
       );
 
-  int? get nextAiringEpisode => anilistInfo?.nextAiringEpisode?.episode;
+  int? get nextAiringEpisode =>
+      anilistInfo?.nextAiringEpisode?.episode ??
+      tmdbInfo?.nextEpisodeToAir?.episodeNumber;
 }

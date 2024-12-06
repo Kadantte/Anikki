@@ -65,10 +65,9 @@ final class Media extends IMedia with MediaImages, MediaEpisodes {
         anilistInfo?.title?.romaji,
 
         /// All the other synonyms
-        ...((anilistInfo?.synonyms ?? malInfo?.alternativeTitles?.synonyms)
-                ?.whereType<String>()
-                .toList() ??
-            []),
+        ...(anilistInfo?.synonyms ?? []),
+        ...(malInfo?.alternativeTitles?.synonyms ?? []),
+        tmdbInfo?.name,
       }.whereType<String>().toList();
 
   Enum$MediaSeason? get season =>
