@@ -21,6 +21,7 @@ class ConsumetRepository {
   VideoSource? _getBestLink(List<VideoSource> sources) {
     return sources.firstWhereOrNull((source) => source.quality == '1080p') ??
         sources.firstWhereOrNull((source) => source.quality == 'default') ??
+        sources.firstWhereOrNull((source) => source.quality == 'auto') ??
         sources.firstWhereOrNull((source) => source.quality == '720p') ??
         sources.firstWhereOrNull((source) => source.quality == '480p') ??
         sources.firstWhereOrNull((source) => source.quality == '360p') ??
@@ -43,7 +44,7 @@ class ConsumetRepository {
   }) async {
     final List<ConsumetEpisode> results = [];
 
-    logger.info('Searching for $term - $minEpisode with $provider');
+    logger.verbose('Searching for $term > $minEpisode with $provider');
 
     final search = await provider.search(
       sanitizeName(term),
@@ -52,16 +53,24 @@ class ConsumetRepository {
 
     if (search.isEmpty || search.firstOrNull?.id == null) return results;
 
-    logger.info('Found ${search.length} results with $provider');
+    logger.verbose('Found ${search.length} results with $provider');
 
     final info = await provider.fetchAnimeEpisodes(search.first.id!);
     final episodes = info.where((ep) => (ep.number ?? -1) >= minEpisode);
 
+    logger.verbose(
+      'Found ${episodes.length} episodes matching the requirements with $provider',
+    );
+
     for (final episode in episodes) {
       if (results.length == maxLength) break;
 
+      logger.verbose('Retrieving link for episode ${episode.number}', episode);
+
       final links = await provider.fetchEpisodeSources(episode);
       final link = _getBestLink(links.sources);
+
+      logger.verbose('Retrieved link for episode ${episode.number}', episode);
 
       if (link == null) continue;
 
