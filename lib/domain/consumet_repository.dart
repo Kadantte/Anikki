@@ -9,6 +9,7 @@ class ConsumetRepository {
     this.providers = providers ??
         [
           Gogoanime(),
+          Anitaku(),
           Anify(),
           Zoro(),
         ];
@@ -116,9 +117,9 @@ class ConsumetRepository {
 
         if (results.isNotEmpty) break;
       } on NoEpisodeSourceException {
-        logger.error('Could not get links for $term');
+        logger.warning('Could not get links for $term');
       } catch (e) {
-        logger.error(
+        logger.warning(
           'Unexpected error when retrieving episode links with $provider',
           e,
         );
