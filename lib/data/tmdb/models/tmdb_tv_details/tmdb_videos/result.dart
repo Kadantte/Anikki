@@ -38,7 +38,9 @@ class Result extends Equatable {
         official: data['official'] as bool?,
         publishedAt: data['published_at'] == null
             ? null
-            : DateTime.parse(data['published_at'] as String),
+            : DateTime.tryParse(
+                data['published_at'].replaceAll(' UTC', '') as String,
+              ),
         id: data['id'] as String?,
       );
 
