@@ -9,8 +9,8 @@ class ConsumetRepository {
     this.providers = providers ??
         [
           Gogoanime(),
-          Anitaku(),
           Anify(),
+          Anitaku(),
           Zoro(),
         ];
   }
@@ -43,6 +43,14 @@ class ConsumetRepository {
     int maxLength = 100,
     bool dubbed = false,
   }) async {
+    /// Excpeiton for `Anitaku` because they show unreleased episode as the latest episode
+    /// e.g. showing ep 11 (not released yet) but when going to the page it shows ep 10
+    /// (latest release).
+    ///
+    /// This confuses `media_kit` which creates the same entry twice and can sometime
+    /// show only one episode, the one that loads the fastest, fucking up the tracking system
+    maxLength = provider is Anitaku ? 1 : maxLength;
+
     final List<ConsumetEpisode> results = [];
 
     logger.verbose('Searching for $term > $minEpisode with $provider');
@@ -57,7 +65,9 @@ class ConsumetRepository {
     logger.verbose('Found ${search.length} results with $provider');
 
     final info = await provider.fetchAnimeEpisodes(search.first.id!);
-    final episodes = info.where((ep) => (ep.number ?? -1) >= minEpisode);
+    final episodes = info
+        .where((ep) => (ep.number ?? -1) >= minEpisode)
+        .sorted((a, b) => (a.number ?? -1) > (b.number ?? -1) ? 1 : -1);
 
     logger.verbose(
       'Found ${episodes.length} episodes matching the requirements with $provider',
