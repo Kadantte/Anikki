@@ -31,6 +31,9 @@ final class Media extends IMedia with MediaImages, MediaEpisodes {
     super.malInfo,
   });
 
+  bool get isEmpty => props.every((prop) => prop == null);
+  bool get isNotEmpty => !isEmpty;
+
   int get id =>
       anilistInfo?.id ??
       malInfo?.id ??

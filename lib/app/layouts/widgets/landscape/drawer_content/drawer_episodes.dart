@@ -27,13 +27,11 @@ class DrawerEpisodes extends StatelessWidget {
     /// Listening to `LibraryBloc` so that content refreshes whenever library is updated.
     return BlocConsumer<LibraryBloc, LibraryState>(
       listener: (context, state) {
-        if (state is LibraryEmpty && media?.anilistInfo?.id == 0) {
+        if (state is LibraryEmpty) {
           Scaffold.of(context).closeEndDrawer();
         }
 
-        if (state is LibraryLoaded &&
-            media?.anilistInfo?.id == 0 &&
-            libraryEntry?.entries.isEmpty == true) {
+        if (state is LibraryLoaded && libraryEntry?.entries.isEmpty == true) {
           Scaffold.of(context).closeEndDrawer();
         }
       },
@@ -41,7 +39,7 @@ class DrawerEpisodes extends StatelessWidget {
         final currentLibraryEntry = libraryEntry ??
             (state is LibraryLoaded
                 ? state.entries.firstWhereOrNull((entry) =>
-                    entry.media?.anilistInfo?.id == media?.anilistInfo?.id)
+                    media?.id != null && entry.media?.id == media?.id)
                 : null);
 
         return Padding(
@@ -80,7 +78,8 @@ class DrawerEpisodes extends StatelessWidget {
                         (entry) => entry.episode == episodeNumber,
                       );
 
-                      if (media == null && currentLibraryEntry != null) {
+                      if (media?.isEmpty == true &&
+                          currentLibraryEntry != null) {
                         localFile = currentLibraryEntry.entries
                             .elementAtOrNull(realIndex);
                         episodeNumber = localFile?.episode ?? episodeNumber;
