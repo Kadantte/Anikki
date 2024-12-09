@@ -31,7 +31,9 @@ class DrawerEpisodes extends StatelessWidget {
           Scaffold.of(context).closeEndDrawer();
         }
 
-        if (state is LibraryLoaded && libraryEntry?.entries.isEmpty == true) {
+        if (state is LibraryLoaded &&
+            media?.isEmpty == true &&
+            libraryEntry?.entries.isEmpty == true) {
           Scaffold.of(context).closeEndDrawer();
         }
       },
@@ -87,6 +89,7 @@ class DrawerEpisodes extends StatelessWidget {
 
                       return DrawerEpisode(
                         localFile: localFile,
+                        libraryEntry: libraryEntry,
                         media: media,
                         episodeNumber: episodeNumber,
                       );
