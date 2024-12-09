@@ -6,17 +6,21 @@ class DrawerEpisode extends StatelessWidget {
     required this.localFile,
     required this.media,
     required this.episodeNumber,
+    this.libraryEntry,
   });
 
   final LocalFile? localFile;
+  final LibraryEntry? libraryEntry;
   final Media? media;
   final int episodeNumber;
 
   bool get isNextAiringEpisode => episodeNumber == media?.nextAiringEpisode;
 
-  int get seasonNumber => media?.title == null
-      ? 1
-      : Anitomy(inputString: media!.title!).season ?? 1;
+  int get seasonNumber =>
+      localFile?.season ??
+      libraryEntry?.entries.firstOrNull?.season ??
+      media?.seasonNumber ??
+      1;
 
   @override
   Widget build(BuildContext context) {

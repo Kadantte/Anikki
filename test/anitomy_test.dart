@@ -90,6 +90,7 @@ void main() {
       '[Oshi no Ko] 2nd Season',
       'Tensei Shitara Slime Datta Ken 3rd Season',
       'Youkoso Jitsuryoku Shijou Shugi no Kyoushitsu e 3rd Season',
+      '[SubsPlease] Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka S5E09 (1080p) [CBEAB559].mkv',
     ];
 
     const expectResults = [
@@ -97,6 +98,7 @@ void main() {
       2,
       3,
       3,
+      5,
     ];
 
     for (final (index, name) in seasonNames.indexed) {

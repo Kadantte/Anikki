@@ -22,6 +22,7 @@ sealed class IMedia extends Equatable {
   final MalMediaInfo? malInfo;
 
   String? get title;
+  int? get seasonNumber;
 }
 
 final class Media extends IMedia with MediaImages, MediaEpisodes {
@@ -54,6 +55,18 @@ final class Media extends IMedia with MediaImages, MediaEpisodes {
       anilistInfo?.title?.native ??
       malInfo?.alternativeTitles?.ja ??
       tmdbInfo?.originalName;
+
+  @override
+  int? get seasonNumber {
+    final parsedTitle = Anitomy(inputString: title!);
+
+    return parsedTitle.season ??
+        parsedTitle.episode ??
+        synonyms?.fold<int?>(
+          null,
+          (value, synonym) => value ?? Anitomy(inputString: synonym).season,
+        );
+  }
 
   List<String>? get synonyms => {
         title,

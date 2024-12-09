@@ -82,14 +82,17 @@ class Tmdb {
     return tmdbInfo;
   }
 
-  Future<Media> hydrateMediaWithTmdb(Media initialMedia) async {
+  Future<Media> hydrateMediaWithTmdb(
+    Media initialMedia, [
+    String? searchTitle,
+  ]) async {
     try {
       if (initialMedia.title == null) return initialMedia;
 
       final parsedTitle = Anitomy(
         inputString: initialMedia.title!,
       );
-      final title = parsedTitle.title ?? initialMedia.title!;
+      final title = searchTitle ?? parsedTitle.title ?? initialMedia.title!;
 
       final tmdbInfo = await getDetails(sanitizeName(title));
 

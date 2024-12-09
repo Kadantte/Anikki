@@ -34,6 +34,7 @@ class LocalFile extends Equatable {
   LocalFile({
     required this.path,
     this.media,
+    int? season,
     int? episode,
     File? file,
   }) {
@@ -42,6 +43,7 @@ class LocalFile extends Equatable {
     final parser = Anitomy(inputString: basename(path));
     title = parser.title;
     this.episode = episode ?? parser.episode;
+    this.season = season ?? parser.season;
     releaseGroup = parser.releaseGroup;
 
     parser.dispose();
@@ -58,6 +60,9 @@ class LocalFile extends Equatable {
 
   /// Parsed episode using the [Anitomy] parser.
   late final int? episode;
+
+  /// Parsed episode using the [Anitomy] parser.
+  late final int? season;
 
   /// Parsed release group using the [Anitomy] parser.
   late final String? releaseGroup;
@@ -102,11 +107,13 @@ class LocalFile extends Equatable {
     int? episode,
     File? file,
     Media? media,
+    int? season,
   }) {
     return LocalFile(
       path: path ?? this.path,
       media: media ?? this.media,
       episode: episode,
+      season: season,
       file: file,
     );
   }
@@ -114,7 +121,7 @@ class LocalFile extends Equatable {
   Map<String, dynamic> toMap() {
     return {
       'path': path,
-      'media': media?.toJson(),
+      'media': media?.toMap(),
     };
   }
 
@@ -127,11 +134,7 @@ class LocalFile extends Equatable {
 
   String toJson() => json.encode(toMap());
 
-  factory LocalFile.fromJson(String source) =>
-      LocalFile.fromMap(json.decode(source));
-
-  @override
-  String toString() {
-    return 'LocalFile(path: $path, file: $file, title: $title, episode: $episode, releaseGroup: $releaseGroup, media: $media)';
-  }
+  factory LocalFile.fromJson(String source) => LocalFile.fromMap(
+        json.decode(source),
+      );
 }

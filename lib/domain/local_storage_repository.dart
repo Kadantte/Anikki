@@ -134,16 +134,22 @@ class LocalStorageRepository {
       final info = await anilist.infoFromMultiple(entryNames);
 
       for (int index = 0; index < results.length; index++) {
-        final media = await tmdb.hydrateMediaWithTmdb(
-          Media(
-            anilistInfo: anilist.getInfoFromInfo(
-              results[index].title!,
-              info,
-            ),
-          ),
+        final entry = results[index];
+        final anilistInfo = anilist.getInfoFromInfo(
+          _getTitleFromEntryTitle(entry) ?? entry.title!,
+          info,
         );
 
-        results[index] = results[index].copyWith(
+        final media = await tmdb.hydrateMediaWithTmdb(
+          Media(
+            anilistInfo: anilistInfo,
+          ),
+          entry.season != null
+              ? anilistInfo?.title?.english ?? entry.title
+              : null,
+        );
+
+        results[index] = entry.copyWith(
           media: media,
         );
       }
@@ -155,12 +161,16 @@ class LocalStorageRepository {
     }
   }
 
+  String? _getTitleFromEntryTitle(LocalFile entry) => entry.season != null
+      ? '${entry.title} Season ${entry.season}'
+      : entry.title;
+
   /// Returns a [Set] of unique names from given [LocalFile]s
   List<String> _getUniqNames(List<LocalFile> files) {
     final List<String> entryNames = [];
 
     for (final entry in files) {
-      final title = entry.title;
+      final title = _getTitleFromEntryTitle(entry);
 
       if (title != null && !entryNames.contains(title)) {
         entryNames.add(title);
